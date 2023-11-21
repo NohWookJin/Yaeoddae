@@ -1,30 +1,29 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/loginPage/LoginPage";
+import MainPage from "./pages/mainPage/MainPage";
+import SearchPage from "./pages/searchPage/SearchPage";
+import CartPage from "./pages/cartPage/CartPage";
+import MyPage from "./pages/myPage/MyPage";
+import ReservationPage from "./pages/reservationPage/ReservationPage";
+import DetailPage from "./pages/detailPage/DetailPage";
+import HeaderRoute from "./routes/HeaderRoute";
+import MainStyleRoute from "./routes/MainStyleRoute";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <Routes>
+      <Route element={<MainStyleRoute />}>
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<HeaderRoute />}>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/reservation" element={<ReservationPage />} />
+          <Route path="/detail/:id" element={<DetailPage />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 
