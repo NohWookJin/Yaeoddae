@@ -1,5 +1,7 @@
 # YA어때!
 
+[사이트 링크](https://mini-6-frontend.web.app/)
+
 ## :clap: Contributors
 
 <table>
