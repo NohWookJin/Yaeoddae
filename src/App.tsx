@@ -8,7 +8,6 @@ import ReservationPage from "./pages/reservationPage/ReservationPage";
 import DetailPage from "./pages/detailPage/DetailPage";
 import HeaderRoute from "./routes/HeaderRoute";
 import MainStyleRoute from "./routes/MainStyleRoute";
-import SignupPage from "./pages/loginPage/SignupPage";
 
 function App() {
   return (
