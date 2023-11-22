@@ -1,5 +1,7 @@
 # YA어때!
 
+[사이트 링크](https://mini-6-frontend.web.app/)
+
 ## :clap: Contributors
 
 <table>
@@ -12,10 +14,10 @@
     </tr>
     <tr>
         <td align="center"><a href="https://github.com/wowba">이영욱</a></td>
-        <td align="center"><a href="https://github.com/SOL-MI">윤석민</a></td>
-        <td align="center"><a href="https://github.com/applevalley">이진욱</a></td>
-        <td align="center"><a href="https://github.com/applevalley">노욱진</a></td>
-        <td align="center"><a href="https://github.com/applevalley">김소정</a></td>
+        <td align="center"><a href="https://github.com/dbstjrals">윤석민</a></td>
+        <td align="center"><a href="https://github.com/KittelLee">이진욱</a></td>
+        <td align="center"><a href="https://github.com/NohWookJin">노욱진</a></td>
+        <td align="center"><a href="https://github.com/KSJT">김소정</a></td>
     </tr>
 </table>
 
