@@ -13,8 +13,8 @@ function App() {
   return (
     <Routes>
       <Route element={<MainStyleRoute />}>
-        <Route path="/login" element={<LoginPage />} />
         <Route element={<HeaderRoute />}>
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<MainPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/cart" element={<CartPage />} />
