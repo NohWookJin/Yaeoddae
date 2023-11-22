@@ -35,6 +35,8 @@ const theme = {
     captionFontColor: "#d1d1d1",
     defaultFontColor: "#717071",
     mutedFontColor: "#d5d5d5",
+
+    componentColor: "#ffffff",
   },
 
   Border: {
@@ -48,6 +50,7 @@ const theme = {
     modalTitle: "1.12rem",
     tagTitle: "1.12rem",
     default: "0.875rem",
+    caption: "0.625rem",
   },
 
   // Border-radius
