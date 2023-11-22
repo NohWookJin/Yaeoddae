@@ -8,12 +8,14 @@ import ReservationPage from "./pages/reservationPage/ReservationPage";
 import DetailPage from "./pages/detailPage/DetailPage";
 import HeaderRoute from "./routes/HeaderRoute";
 import MainStyleRoute from "./routes/MainStyleRoute";
+import SignupPage from "./pages/loginPage/SignupPage";
 
 function App() {
   return (
     <Routes>
       <Route element={<MainStyleRoute />}>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route element={<HeaderRoute />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/search" element={<SearchPage />} />

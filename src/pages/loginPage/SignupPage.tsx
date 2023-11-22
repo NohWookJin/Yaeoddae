@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import JoinModal from "../../components/JoinModal";
 
-function LoginPage() {
+function SignupPage() {
   return (
-    <LoginContainer>
+    <SignupContainer>
       <h2>YA어때!</h2>
+      <h4>회원가입</h4>
       <form action="/submit-your-login-form" method="post">
         <InputWrap>
           <span>
@@ -17,16 +19,32 @@ function LoginPage() {
           </span>
           <input type="password" name="password" placeholder="비밀번호를 입력해주세요." />
         </InputWrap>
-        <button type="submit">로그인</button>
-        <a href="#">회원가입</a>
+        <InputWrap>
+          <span>
+            비밀번호 확인 <strong>*</strong>
+          </span>
+          <input
+            type="password"
+            name="passwordCheck"
+            placeholder="비밀번호를 한번더 입력해주세요."
+          />
+        </InputWrap>
+        <InputWrap>
+          <span>
+            휴대폰 번호 <strong>*</strong>
+          </span>
+          <input type="text" name="phoneNumber" placeholder="휴대폰 번호를 입력해주세요." />
+        </InputWrap>
+        <button type="submit">회원가입 완료</button>
+        <JoinModal />
       </form>
-    </LoginContainer>
+    </SignupContainer>
   );
 }
 
-export default LoginPage;
+export default SignupPage;
 
-const LoginContainer = styled.div`
+const SignupContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: ${(props) => props.theme.Br.default};
@@ -38,6 +56,13 @@ const LoginContainer = styled.div`
     margin-bottom: 20px;
     font-weight: bold;
     font-size: 1.4rem;
+  }
+
+  h4 {
+    display: flex;
+    color: ${(props) => props.theme.Color.mainColor};
+    font-weight: bold;
+    margin-bottom: 16px;
   }
 
   button {
