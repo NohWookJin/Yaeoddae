@@ -2,11 +2,11 @@
 import styled, { css } from "styled-components";
 
 // logo
-import HeaderLogo from "../../../public/assets/logo/headerLogo.svg?react";
+import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
 
 // Icon
-import ArrowUp from "../../../public/assets/icons/arrowUp.svg?react";
-import ArrowRight from "../../../public/assets/icons/arrowRight.svg?react";
+import ArrowUp from "../../assets/icons/arrowUp.svg?react";
+import ArrowRight from "../../assets/icons/arrowRight.svg?react";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
