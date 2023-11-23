@@ -7,12 +7,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
 // logo
-import HeaderLogo from "../../../public/assets/logo/headerLogo.svg?react";
+import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
 
 // icon
-import List from "../../../public/assets/icons/list.svg?react";
-import Cart from "../../../public/assets/icons/cart.svg?react";
-import ArrowLeft from "../../../public/assets/icons/arrowLeft.svg?react";
+import List from "../../assets/icons/list.svg?react";
+import Cart from "../../assets/icons/cart.svg?react";
+import ArrowLeft from "../../assets/icons/arrowLeft.svg?react";
 
 function Header() {
   const navigate = useNavigate();
