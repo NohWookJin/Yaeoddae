@@ -48,6 +48,8 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
 export default Sidebar;
 
 const SidebarLayout = styled.div<{ $isOpen: boolean }>`
+  z-index: 2;
+
   transition: all 0.75s ease;
 
   position: fixed;
@@ -70,7 +72,7 @@ const SidebarTopBox = styled.div`
   width: 100%;
   height: 13rem;
 
-  padding: ${({ theme }) => theme.Padding.default};
+  padding: ${({ theme }) => theme.Padding.header};
 
   display: flex;
   flex-direction: column;

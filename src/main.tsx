@@ -19,6 +19,15 @@ export const GlobalStyle = createGlobalStyle`
       box-sizing: border-box;
       font-family: 'Noto Sans KR', sans-serif;
   }
+    
+  // hide scroll
+  * {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    ::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
+  }
 `;
 
 const theme = {
@@ -62,7 +71,9 @@ const theme = {
   Bs: {
     default: "3px 4px 16px 2px rgba(0, 0, 0, 0.06)",
   },
+
   Padding: {
+    header: "0.75rem 1.25rem 0.75rem 1.25rem",
     default: "0.5rem",
   },
 };

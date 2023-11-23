@@ -48,17 +48,17 @@ function Header() {
         </>
       );
 
-    case "login":
-      return (
-        <HeaderLayout $isLoginPage>
-          <HeaderLogoSVG onClick={handleTitleClick} />
-        </HeaderLayout>
-      );
+    // case "login":
+    //   return (
+    //     <HeaderLayout $isLoginPage>
+    //       <HeaderLogoSVG onClick={handleTitleClick} />
+    //     </HeaderLayout>
+    //   );
 
     case "search":
       return (
         <>
-          <HeaderLayout>
+          <HeaderLayout $isBorderBottom>
             <ListSVG onClick={handleListClick} />
             <HeaderLogoSVG onClick={handleTitleClick} />
             <CartSVG onClick={handleCartClick} />
@@ -70,7 +70,7 @@ function Header() {
     case "detail":
       return (
         <>
-          <HeaderLayout>
+          <HeaderLayout $isBorderBottom>
             <ListSVG onClick={handleListClick} />
             <HeaderLogoSVG onClick={handleTitleClick} />
             <CartSVG onClick={handleCartClick} />
@@ -91,7 +91,7 @@ function Header() {
 
     case "mypage":
       return (
-        <HeaderLayout>
+        <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
             <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>내 정보 관리</HeaderTitle>
@@ -101,7 +101,7 @@ function Header() {
 
     case "reservation":
       return (
-        <HeaderLayout>
+        <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
             <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>예약</HeaderTitle>
@@ -124,9 +124,8 @@ const HeaderLayout = styled.div<{ $isBorderBottom?: boolean; $isLoginPage?: bool
   justify-content: ${(props) => (props.$isLoginPage ? "center" : "space-between")};
 
   width: 100%;
-  height: 2.5rem;
 
-  padding: ${({ theme }) => theme.Padding.default};
+  padding: ${({ theme }) => theme.Padding.header};
 
   ${(props) =>
     props.$isBorderBottom &&
