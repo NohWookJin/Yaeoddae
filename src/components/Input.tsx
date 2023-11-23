@@ -9,7 +9,7 @@ interface InputProps {
   setValue?: React.Dispatch<React.SetStateAction<string | number>>;
   marginTop?: string;
   marginBottom?: string;
-  onError?: boolean;
+  errorState?: boolean;
   helpMessage?: string;
 }
 
@@ -33,7 +33,7 @@ function Input(data: InputProps) {
         value={data.value}
         onChange={handleInputChange}
       />
-      <div>{data.onError && data.helpMessage}</div>
+      <div>{data.errorState && data.helpMessage}</div>
     </Container>
   );
 }
