@@ -20,4 +20,9 @@ const MainStyleRouteLayoutWrapper = styled.div`
 
 const MainStyleRouteLayout = styled.div`
   width: 375px;
+
+  border-left: ${({ theme }) => theme.Border.thickBorder};
+  border-right: ${({ theme }) => theme.Border.thickBorder};
+
+  box-shadow: ${({ theme }) => theme.Bs.default};
 `;

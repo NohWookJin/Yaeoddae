@@ -48,6 +48,8 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
 export default Sidebar;
 
 const SidebarLayout = styled.div<{ $isOpen: boolean }>`
+  z-index: 2;
+
   transition: all 0.75s ease;
 
   position: fixed;
@@ -66,11 +68,11 @@ const SidebarLayout = styled.div<{ $isOpen: boolean }>`
 `;
 
 const SidebarTopBox = styled.div`
-  background-color: ${(props) => props.theme.Color.mainColor};
+  background-color: ${({ theme }) => theme.Color.mainColor};
   width: 100%;
   height: 13rem;
 
-  padding: ${(props) => props.theme.Padding.default};
+  padding: ${({ theme }) => theme.Padding.header};
 
   display: flex;
   flex-direction: column;
@@ -88,7 +90,7 @@ const ArrowUpSVG = styled(ArrowUp)`
 `;
 
 const TransparentArrowUpSVG = styled(ArrowUp)`
-  fill: ${(props) => props.theme.Color.mainColor};
+  fill: ${({ theme }) => theme.Color.mainColor};
 `;
 
 const HeaderLogoSVG = styled(HeaderLogo)`
@@ -100,7 +102,7 @@ const SidebarTopBoxText = styled.p`
   margin: 1rem 0 0 0;
 
   color: white;
-  font-size: ${(props) => props.theme.Fs.default};
+  font-size: ${({ theme }) => theme.Fs.default};
   font-weight: 400;
   text-align: center;
 `;
@@ -109,7 +111,7 @@ const SidebarTopLogoutBtnBox = styled.button`
   margin: 4rem 0 0 0;
 
   font-weight: 400;
-  font-size: ${(props) => props.theme.Fs.default};
+  font-size: ${({ theme }) => theme.Fs.default};
   color: white;
 
   display: flex;
@@ -130,7 +132,7 @@ const ArrowRightSVG = styled(ArrowRight)`
 `;
 
 const SidebarBottomBox = styled.div`
-  background-color: ${(props) => props.theme.Color.borderColor};
+  background-color: ${({ theme }) => theme.Color.borderColor};
 
   width: 100%;
   height: calc(100% - 13rem);

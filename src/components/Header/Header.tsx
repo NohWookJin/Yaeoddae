@@ -48,17 +48,17 @@ function Header() {
         </>
       );
 
-    case "login":
-      return (
-        <HeaderLayout $isLoginPage>
-          <HeaderLogoSVG onClick={handleTitleClick} />
-        </HeaderLayout>
-      );
+    // case "login":
+    //   return (
+    //     <HeaderLayout $isLoginPage>
+    //       <HeaderLogoSVG onClick={handleTitleClick} />
+    //     </HeaderLayout>
+    //   );
 
     case "search":
       return (
         <>
-          <HeaderLayout>
+          <HeaderLayout $isBorderBottom>
             <ListSVG onClick={handleListClick} />
             <HeaderLogoSVG onClick={handleTitleClick} />
             <CartSVG onClick={handleCartClick} />
@@ -70,7 +70,7 @@ function Header() {
     case "detail":
       return (
         <>
-          <HeaderLayout>
+          <HeaderLayout $isBorderBottom>
             <ListSVG onClick={handleListClick} />
             <HeaderLogoSVG onClick={handleTitleClick} />
             <CartSVG onClick={handleCartClick} />
@@ -91,7 +91,7 @@ function Header() {
 
     case "mypage":
       return (
-        <HeaderLayout>
+        <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
             <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>내 정보 관리</HeaderTitle>
@@ -101,7 +101,7 @@ function Header() {
 
     case "reservation":
       return (
-        <HeaderLayout>
+        <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
             <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>예약</HeaderTitle>
@@ -114,14 +114,18 @@ function Header() {
 export default Header;
 
 const HeaderLayout = styled.div<{ $isBorderBottom?: boolean; $isLoginPage?: boolean }>`
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background-color: ${({ theme }) => theme.Color.componentColor};
+
   display: flex;
   align-items: center;
   justify-content: ${(props) => (props.$isLoginPage ? "center" : "space-between")};
 
   width: 100%;
-  height: 2.5rem;
 
-  padding: ${(props) => props.theme.Padding.default};
+  padding: ${({ theme }) => theme.Padding.header};
 
   ${(props) =>
     props.$isBorderBottom &&
@@ -138,7 +142,7 @@ const HeaderLeftBox = styled.div`
 
 const HeaderLogoSVG = styled(HeaderLogo)`
   cursor: pointer;
-  fill: ${(props) => props.theme.Color.mainColor};
+  fill: ${({ theme }) => theme.Color.mainColor};
   margin: 0 0 0 0.25rem;
 `;
 
@@ -156,5 +160,5 @@ const CartSVG = styled(Cart)`
 
 const HeaderTitle = styled.p`
   font-weight: 700;
-  font-size: ${(props) => props.theme.Fs.tagTitle};
+  font-size: ${({ theme }) => theme.Fs.tagTitle};
 `;
