@@ -49,7 +49,7 @@ function SignupPage() {
             isRequired={true}
             label={"휴대폰 번호"}
             placeholder={"휴대폰 번호 입력해주세요."}
-            type={"number"}
+            type={"text"}
           />
         </InputWrap>
         <button type="button" onClick={toggleModal}>
