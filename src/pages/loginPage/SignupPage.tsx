@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import HeaderLogo from "../../../public/assets/logo/headerLogo.svg?react";
+import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
 import JoinModal from "../../components/JoinModal";
+import Input from "../../components/Input";
 
 function SignupPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +15,7 @@ function SignupPage() {
   const navigateToHome = () => {
     navigate("/");
   };
+
   return (
     <SignupContainer>
       <LogoWrap onClick={navigateToHome}>
@@ -22,32 +24,33 @@ function SignupPage() {
       <h4>회원가입</h4>
       <form action="#" method="post">
         <InputWrap>
-          <span>
-            이메일 <strong>*</strong>
-          </span>
-          <input type="text" name="email" placeholder="이메일을 입력해주세요." />
-        </InputWrap>
-        <InputWrap>
-          <span>
-            비밀번호 <strong>*</strong>
-          </span>
-          <input type="password" name="password" placeholder="비밀번호를 입력해주세요." />
-        </InputWrap>
-        <InputWrap>
-          <span>
-            비밀번호 확인 <strong>*</strong>
-          </span>
-          <input
-            type="password"
-            name="passwordCheck"
-            placeholder="비밀번호를 한번더 입력해주세요."
+          <Input
+            isRequired={true}
+            label={"이메일"}
+            placeholder={"이메일을 입력해주세요."}
+            type={"text"}
           />
-        </InputWrap>
-        <InputWrap>
-          <span>
-            휴대폰 번호 <strong>*</strong>
-          </span>
-          <input type="text" name="phoneNumber" placeholder="휴대폰 번호를 입력해주세요." />
+
+          <Input
+            isRequired={true}
+            label={"비밀번호"}
+            placeholder={"비밀번호를 입력해주세요."}
+            type={"password"}
+          />
+
+          <Input
+            isRequired={true}
+            label={"비밀번호 확인"}
+            placeholder={"비밀번호를 한번더 입력해주세요."}
+            type={"password"}
+          />
+
+          <Input
+            isRequired={true}
+            label={"휴대폰 번호"}
+            placeholder={"휴대폰 번호 입력해주세요."}
+            type={"number"}
+          />
         </InputWrap>
         <button type="button" onClick={toggleModal}>
           회원가입
@@ -134,15 +137,5 @@ const InputWrap = styled.div`
   input::placeholder {
     color: ${(props) => props.theme.Color.defaultFontColor};
     opacity: 0.4;
-  }
-
-  span {
-    display: flex;
-    font-size: ${(props) => props.theme.Fs.default};
-  }
-
-  strong {
-    color: ${(props) => props.theme.Color.mainColor};
-    margin-left: 1px;
   }
 `;

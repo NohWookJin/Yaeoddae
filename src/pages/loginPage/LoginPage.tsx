@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import HeaderLogo from "../../../public/assets/logo/headerLogo.svg?react";
+import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
+import Input from "../../components/Input";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -15,16 +16,18 @@ function LoginPage() {
       </LogoWrap>
       <form action="#" method="post">
         <InputWrap>
-          <span>
-            이메일 <strong>*</strong>
-          </span>
-          <input type="text" name="email" placeholder="이메일을 입력해주세요." />
-        </InputWrap>
-        <InputWrap>
-          <span>
-            비밀번호 <strong>*</strong>
-          </span>
-          <input type="password" name="password" placeholder="비밀번호를 입력해주세요." />
+          <Input
+            isRequired={true}
+            label={"이메일"}
+            placeholder={"이메일을 입력해주세요."}
+            type={"text"}
+          />
+          <Input
+            isRequired={true}
+            label={"비밀번호"}
+            placeholder={"비밀번호를 입력해주세요."}
+            type={"password"}
+          />
         </InputWrap>
         <button type="submit">로그인</button>
         <a href="./Signup">회원가입</a>
@@ -95,15 +98,5 @@ const InputWrap = styled.div`
   input::placeholder {
     color: ${(props) => props.theme.Color.defaultFontColor};
     opacity: 0.4;
-  }
-
-  span {
-    display: flex;
-    font-size: ${(props) => props.theme.Fs.default};
-  }
-
-  strong {
-    color: ${(props) => props.theme.Color.mainColor};
-    margin-left: 1px;
   }
 `;

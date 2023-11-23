@@ -19,7 +19,7 @@ function DetailPage() {
 export default DetailPage;
 
 const Container = styled.section`
-  border-left:  ${({ theme }) => theme.Border.thinBorder};
-  border-right:  ${({ theme }) => theme.Border.thinBorder};
-  background-color: ${({ theme }) => theme.Color.backgroundColor}};
+  border-left: ${({ theme }) => theme.Border.thinBorder};
+  border-right: ${({ theme }) => theme.Border.thinBorder};
+  background-color: ${({ theme }) => theme.Color.backgroundColor};
 `;
