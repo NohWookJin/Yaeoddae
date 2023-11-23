@@ -1,12 +1,26 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import HeaderLogo from "../../../public/assets/logo/headerLogo.svg?react";
 import JoinModal from "../../components/JoinModal";
 
 function SignupPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+  const navigate = useNavigate();
+
+  const navigateToHome = () => {
+    navigate("/");
+  };
   return (
     <SignupContainer>
-      <h2>YA어때!</h2>
+      <LogoWrap onClick={navigateToHome}>
+        <HeaderLogoSVG />
+      </LogoWrap>
       <h4>회원가입</h4>
-      <form action="/submit-your-login-form" method="post">
+      <form action="#" method="post">
         <InputWrap>
           <span>
             이메일 <strong>*</strong>
@@ -35,8 +49,10 @@ function SignupPage() {
           </span>
           <input type="text" name="phoneNumber" placeholder="휴대폰 번호를 입력해주세요." />
         </InputWrap>
-        <button type="submit">회원가입 완료</button>
-        <JoinModal />
+        <button type="button" onClick={toggleModal}>
+          회원가입
+        </button>
+        {isModalOpen && <JoinModal />}
       </form>
     </SignupContainer>
   );
@@ -48,7 +64,6 @@ const SignupContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: ${(props) => props.theme.Br.default};
-  box-shadow: ${(props) => props.theme.Bs.default};
   text-align: center;
 
   h2 {
@@ -85,6 +100,18 @@ const SignupContainer = styled.div`
   a {
     font-size: ${(props) => props.theme.Fs.default};
   }
+`;
+
+const LogoWrap = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const HeaderLogoSVG = styled(HeaderLogo)`
+  cursor: pointer;
+  fill: ${(props) => props.theme.Color.mainColor};
+  margin-bottom: 20px;
+  font-size: 1.4rem;
 `;
 
 const InputWrap = styled.div`

@@ -1,10 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import HeaderLogo from "../../../public/assets/logo/headerLogo.svg?react";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
+  const navigateToHome = () => {
+    navigate("/");
+  };
   return (
     <LoginContainer>
-      <h2>YA어때!</h2>
-      <form action="/submit-your-login-form" method="post">
+      <LogoWrap onClick={navigateToHome}>
+        <HeaderLogoSVG />
+      </LogoWrap>
+      <form action="#" method="post">
         <InputWrap>
           <span>
             이메일 <strong>*</strong>
@@ -18,7 +27,7 @@ function LoginPage() {
           <input type="password" name="password" placeholder="비밀번호를 입력해주세요." />
         </InputWrap>
         <button type="submit">로그인</button>
-        <a href="#">회원가입</a>
+        <a href="./Signup">회원가입</a>
       </form>
     </LoginContainer>
   );
@@ -30,15 +39,7 @@ const LoginContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: ${(props) => props.theme.Br.default};
-  box-shadow: ${(props) => props.theme.Bs.default};
   text-align: center;
-
-  h2 {
-    color: ${(props) => props.theme.Color.mainColor};
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 1.4rem;
-  }
 
   button {
     width: 100%;
@@ -60,6 +61,18 @@ const LoginContainer = styled.div`
   a {
     font-size: ${(props) => props.theme.Fs.default};
   }
+`;
+
+const LogoWrap = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const HeaderLogoSVG = styled(HeaderLogo)`
+  cursor: pointer;
+  fill: ${(props) => props.theme.Color.mainColor};
+  margin-bottom: 20px;
+  font-size: 1.4rem;
 `;
 
 const InputWrap = styled.div`
