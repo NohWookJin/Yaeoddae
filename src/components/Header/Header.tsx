@@ -48,13 +48,6 @@ function Header() {
         </>
       );
 
-    // case "login":
-    //   return (
-    //     <HeaderLayout $isLoginPage>
-    //       <HeaderLogoSVG onClick={handleTitleClick} />
-    //     </HeaderLayout>
-    //   );
-
     case "search":
       return (
         <>
