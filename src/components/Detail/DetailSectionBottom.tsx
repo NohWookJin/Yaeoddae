@@ -1,25 +1,58 @@
 import styled from "styled-components";
 
-function DetailSectionBottom() {
+import Cart from "../../assets/icons/cart.svg?react";
+import { useDateFormatter } from "../../hook/useDateFormat";
+
+interface IRoom {
+  room: {
+    id: null;
+    roomTypeId: number;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+    stock: number;
+    capacity: number;
+    accommodation: null;
+  };
+  checkIn: string;
+  checkOut: string;
+}
+
+function DetailSectionBottom({ room, checkIn, checkOut }: IRoom) {
+  const { name, price, stock, image } = room;
+  const { formatTimeCheckIn, formatTimeCheckOut } = useDateFormatter(checkIn, checkOut);
+
   return (
     <Container>
       <div>
-        <TitleSection>프티 퀸</TitleSection>
-        <img src="/mockImage.png" alt="" />
+        <TitleSection>{name}</TitleSection>
+        <img src={image} alt="room-image" />
       </div>
       <BottomSection>
         <PriceSection>
           <span>가격</span>
-          <span>170,000원</span>
+          <span>{price}원</span>
         </PriceSection>
         <RoomSection>
           <span>객실 이용 안내</span>
           <button>바로가기</button>
         </RoomSection>
         <ReserveSection>
-          <span>남은 객실 1</span>
+          <ReserveSectionInfo>
+            <div>
+              <span>
+                체크인 {formatTimeCheckIn} ~ 체크아웃 {formatTimeCheckOut}
+              </span>
+            </div>
+            <div>
+              <span>남은 객실 {stock}</span>
+            </div>
+          </ReserveSectionInfo>
           <div>
-            <button className="cartButton">장</button>
+            <button className="cartButton">
+              <Cart />
+            </button>
             <button>예약하기</button>
           </div>
         </ReserveSection>
@@ -57,7 +90,7 @@ const BottomSection = styled.div`
   flex-direction: column;
   border: ${({ theme }) => theme.Border.thinBorder};
   border-radius: ${({ theme }) => theme.Br.default};
-  margin-top: 0.2rem;
+  margin-top: 0.35rem;
 `;
 
 const PriceSection = styled.div`
@@ -113,6 +146,7 @@ const ReserveSection = styled.div`
    font-weight: 600;
   }
   div {
+    display: flex;
     button {
       all: unset;
       cursor: pointer;
@@ -129,6 +163,7 @@ const ReserveSection = styled.div`
       }
      }
      button.cartButton {
+      padding: 0.4rem 0.5rem;
       background-color: ${theme.Color.componentColor};
       border: ${theme.Border.thinBorder};
       &:hover {
@@ -143,4 +178,11 @@ const ReserveSection = styled.div`
   padding: 0.75rem;
   padding-bottom: 0.5rem;
   `}
+`;
+
+const ReserveSectionInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
 `;
