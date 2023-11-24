@@ -1,14 +1,24 @@
+// interface
+import { IAccmodation } from "../../pages/detailPage/DetailPage";
+
+// style
 import styled from "styled-components";
 
-function DetailSectionTop() {
+interface AccommodationInfo {
+  accommodation: IAccmodation;
+}
+
+function DetailSectionTop({ accommodation }: AccommodationInfo) {
+  const { name, location, image } = accommodation.accommodation;
+
   return (
     <Container>
       <ImageSection>
-        <img src="/mockImage.png" alt="detail-image" />
+        <img src={image} alt="detail-image" />
       </ImageSection>
       <TextSection>
-        <h3>호텔 크레센도 서울</h3>
-        <span>서울 강남구 삼성동 113-5</span>
+        <h3>{name}</h3>
+        <span>{location}</span>
       </TextSection>
     </Container>
   );
@@ -27,8 +37,11 @@ const Container = styled.section`
 
 const ImageSection = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: -0.15rem;
   img {
-    max-width: 375px;
+    max-width: 371.9px;
   }
 `;
 

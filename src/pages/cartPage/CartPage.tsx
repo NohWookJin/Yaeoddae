@@ -20,7 +20,5 @@ const Container = styled.section`
   position: relative;
   min-height: 100vh;
   overflow: scroll;
-  border-left:  ${({ theme }) => theme.Border.thinBorder};
-  border-right:  ${({ theme }) => theme.Border.thinBorder};
   background-color: ${({ theme }) => theme.Color.backgroundColor}};
 `;
