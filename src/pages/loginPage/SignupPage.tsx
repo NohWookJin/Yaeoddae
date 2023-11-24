@@ -1,19 +1,27 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
+import JoinModal from "../../components/JoinModal";
 import Input from "../../components/Input";
 
-function LoginPage() {
+function SignupPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   const navigate = useNavigate();
 
   const navigateToHome = () => {
     navigate("/");
   };
+
   return (
-    <LoginContainer>
+    <SignupContainer>
       <LogoWrap onClick={navigateToHome}>
         <HeaderLogoSVG />
       </LogoWrap>
+      <h4>회원가입</h4>
       <form action="#" method="post">
         <InputWrap>
           <Input
@@ -22,27 +30,58 @@ function LoginPage() {
             placeholder={"이메일을 입력해주세요."}
             type={"text"}
           />
+
           <Input
             isRequired={true}
             label={"비밀번호"}
             placeholder={"비밀번호를 입력해주세요."}
             type={"password"}
           />
+
+          <Input
+            isRequired={true}
+            label={"비밀번호 확인"}
+            placeholder={"비밀번호를 한번더 입력해주세요."}
+            type={"password"}
+          />
+
+          <Input
+            isRequired={true}
+            label={"휴대폰 번호"}
+            placeholder={"휴대폰 번호 입력해주세요."}
+            type={"text"}
+          />
         </InputWrap>
-        <button type="submit">로그인</button>
-        <a href="./Signup">회원가입</a>
+        <button type="button" onClick={toggleModal}>
+          회원가입
+        </button>
+        {isModalOpen && <JoinModal />}
       </form>
-    </LoginContainer>
+    </SignupContainer>
   );
 }
 
-export default LoginPage;
+export default SignupPage;
 
-const LoginContainer = styled.div`
+const SignupContainer = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: ${(props) => props.theme.Br.default};
   text-align: center;
+
+  h2 {
+    color: ${(props) => props.theme.Color.mainColor};
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.4rem;
+  }
+
+  h4 {
+    display: flex;
+    color: ${(props) => props.theme.Color.mainColor};
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
 
   button {
     width: 100%;
