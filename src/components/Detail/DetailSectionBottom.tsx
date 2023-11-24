@@ -1,27 +1,23 @@
+// icon
+import Cart from "../../assets/icons/cart.svg?react";
+
+// style
 import styled from "styled-components";
 
-import Cart from "../../assets/icons/cart.svg?react";
-import { useDateFormatter } from "../../hook/useDateFormat";
-
-interface IRoom {
+interface AccommodationRoom {
   room: {
     id: null;
     roomTypeId: number;
     name: string;
     description: string;
-    price: number;
     image: string;
     stock: number;
     capacity: number;
-    accommodation: null;
   };
-  checkIn: string;
-  checkOut: string;
 }
 
-function DetailSectionBottom({ room, checkIn, checkOut }: IRoom) {
-  const { name, price, stock, image } = room;
-  const { formatTimeCheckIn, formatTimeCheckOut } = useDateFormatter(checkIn, checkOut);
+function DetailSectionBottom({ room }: AccommodationRoom) {
+  const { name, stock, image } = room;
 
   return (
     <Container>
@@ -32,23 +28,16 @@ function DetailSectionBottom({ room, checkIn, checkOut }: IRoom) {
       <BottomSection>
         <PriceSection>
           <span>가격</span>
-          <span>{price}원</span>
+          <span>100,000원</span>
         </PriceSection>
         <RoomSection>
           <span>객실 이용 안내</span>
           <button>바로가기</button>
         </RoomSection>
         <ReserveSection>
-          <ReserveSectionInfo>
-            <div>
-              <span>
-                체크인 {formatTimeCheckIn} ~ 체크아웃 {formatTimeCheckOut}
-              </span>
-            </div>
-            <div>
-              <span>남은 객실 {stock}</span>
-            </div>
-          </ReserveSectionInfo>
+          <div>
+            <span>남은 객실 {stock}</span>
+          </div>
           <div>
             <button className="cartButton">
               <Cart />
@@ -178,11 +167,4 @@ const ReserveSection = styled.div`
   padding: 0.75rem;
   padding-bottom: 0.5rem;
   `}
-`;
-
-const ReserveSectionInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
 `;

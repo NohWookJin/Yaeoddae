@@ -1,13 +1,15 @@
-import styled from "styled-components";
-
+// interface
 import { IAccmodation } from "../../pages/detailPage/DetailPage";
 
-interface IInfo {
+// style
+import styled from "styled-components";
+
+interface AccommodationInfo {
   accommodation: IAccmodation;
 }
 
-function DetailSectionTop({ accommodation }: IInfo) {
-  const { name, address, image } = accommodation.accommodation;
+function DetailSectionTop({ accommodation }: AccommodationInfo) {
+  const { name, location, image } = accommodation.accommodation;
 
   return (
     <Container>
@@ -16,7 +18,7 @@ function DetailSectionTop({ accommodation }: IInfo) {
       </ImageSection>
       <TextSection>
         <h3>{name}</h3>
-        <span>{address}</span>
+        <span>{location}</span>
       </TextSection>
     </Container>
   );

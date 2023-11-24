@@ -1,32 +1,29 @@
 import { useEffect, useState } from "react";
 
+// components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
 import DetailDateAndCount from "../../components/Detail/DetailDateAndCount";
 import DetailSectionBottomBox from "../../components/Detail/DetailSectionBottomBox";
 
+// style
 import styled from "styled-components";
 
 export interface IAccmodation {
   id: number;
-  guest_number: number;
-  check_in: string;
-  check_out: string;
   accommodation: {
     name: string;
-    address: string;
+    location: string;
     image: string;
   };
-  rooms: [
+  room: [
     {
       id: null;
       roomTypeId: number;
       name: string;
       description: string;
-      price: number;
       image: string;
       stock: number;
       capacity: number;
-      accommodation: null;
     },
   ];
 }
@@ -35,7 +32,7 @@ function DetailPage() {
   const [accommodation, setAccommodation] = useState<null | IAccmodation>(null);
 
   useEffect(() => {
-    fetch("/data/roomsData.json", {
+    fetch("/mock/roomsData.json", {
       method: "GET",
     })
       .then((res) => res.json())
@@ -46,7 +43,7 @@ function DetailPage() {
     return (
       <Container>
         <DetailSectionTop accommodation={accommodation} />
-        <DetailDateAndCount accommodation={accommodation} />
+        <DetailDateAndCount />
         <DetailSectionBottomBox accommodation={accommodation} />
       </Container>
     );

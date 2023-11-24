@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
 
-// components, interface, customHook
-import { IAccmodation } from "../../pages/detailPage/DetailPage";
-import { useDateFormatter } from "../../hook/useDateFormat";
-
-// style
-import styled from "styled-components";
+// hook
+import { useDate } from "../../hook/useDate";
 
 // icons
 import Member from "../../assets/icons/User.svg?react";
 import Calendar from "../../assets/icons/Calendar.svg?react";
 
-interface IDate {
-  accommodation: IAccmodation;
-}
+// style
+import styled from "styled-components";
 
-function DetailDateAndCount({ accommodation }: IDate) {
-  const { check_in, check_out } = accommodation;
-  const { formatCheckIn, formatCheckOut } = useDateFormatter(check_in, check_out);
-
+function DetailDateAndCount() {
   const [member, setMember] = useState<number>(1);
+  const { month, date } = useDate();
 
   useEffect(() => {
     if (member < 1) {
@@ -37,9 +30,7 @@ function DetailDateAndCount({ accommodation }: IDate) {
         <DateSectionLeft>
           <CalendarSVG />
           <div>
-            <span>
-              {formatCheckIn} ~ {formatCheckOut}
-            </span>
+            <span>{month && date ? `${month}월 ${date}일 ~ ${month}월 ${date + 1}일` : null}</span>
             <span>· 1박</span>
           </div>
         </DateSectionLeft>
@@ -60,7 +51,7 @@ function DetailDateAndCount({ accommodation }: IDate) {
               setMember((prev) => prev + 1);
             }}
           >
-            추가
+            증가
           </button>
           &nbsp;
           <button
