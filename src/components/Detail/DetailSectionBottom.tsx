@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 export interface AccommodationRoom {
   room: {
-    id: null;
+    id: number;
     roomTypeId: number;
     name: string;
     description: string;
@@ -18,7 +18,7 @@ export interface AccommodationRoom {
 }
 
 function DetailSectionBottom({ room }: AccommodationRoom) {
-  const { name, stock, image, capacity, description } = room;
+  const { name, stock, image, capacity, description, id } = room;
 
   const roomState = {
     name: name,
@@ -30,8 +30,7 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
   const navigate = useNavigate();
 
   const moveRoomDetail = () => {
-    console.log(roomState);
-    navigate("/room", { state: { roomState } });
+    navigate(`/room/${id}`, { state: { roomState } });
   };
 
   return (
