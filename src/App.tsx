@@ -9,6 +9,7 @@ import DetailPage from "./pages/detailPage/DetailPage";
 import HeaderRoute from "./routes/HeaderRoute";
 import MainStyleRoute from "./routes/MainStyleRoute";
 import SignupPage from "./pages/loginPage/SignupPage";
+import RoomDetailPage from "./pages/roomDetailPage/RoomDetailPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/reservation" element={<ReservationPage />} />
           <Route path="/detail/:id" element={<DetailPage />} />
+          <Route path="/room" element={<RoomDetailPage />} />
         </Route>
       </Route>
     </Routes>
