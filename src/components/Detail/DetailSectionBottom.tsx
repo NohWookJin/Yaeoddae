@@ -1,10 +1,11 @@
 // icon
+import { useNavigate } from "react-router-dom";
 import Cart from "../../assets/icons/cart.svg?react";
 
 // style
 import styled from "styled-components";
 
-interface AccommodationRoom {
+export interface AccommodationRoom {
   room: {
     id: null;
     roomTypeId: number;
@@ -17,7 +18,21 @@ interface AccommodationRoom {
 }
 
 function DetailSectionBottom({ room }: AccommodationRoom) {
-  const { name, stock, image } = room;
+  const { name, stock, image, capacity, description } = room;
+
+  const roomState = {
+    name: name,
+    description: description,
+    image: image,
+    capacity: capacity,
+  };
+
+  const navigate = useNavigate();
+
+  const moveRoomDetail = () => {
+    console.log(roomState);
+    navigate("/room", { state: { roomState } });
+  };
 
   return (
     <Container>
@@ -28,22 +43,36 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
       <BottomSection>
         <PriceSection>
           <span>가격</span>
-          <span>100,000원</span>
+          {stock !== 0 ? <span>100,000원</span> : <span className="stockNonePrice">100,000원</span>}
         </PriceSection>
         <RoomSection>
           <span>객실 이용 안내</span>
-          <button>바로가기</button>
+          <button onClick={moveRoomDetail}>바로가기</button>
         </RoomSection>
         <ReserveSection>
-          <div>
+          {/* stock값에 다른 코드 : 정리 필요 */}
+          <ReserveSectionTop>
+            {stock !== 0 && (
+              <div>
+                <span>기준 2인</span>
+                <span> &nbsp;/&nbsp;</span>
+                <span>최대 {capacity}인</span>
+              </div>
+            )}
             <span>남은 객실 {stock}</span>
-          </div>
-          <div>
-            <button className="cartButton">
-              <Cart />
-            </button>
-            <button>예약하기</button>
-          </div>
+          </ReserveSectionTop>
+          {stock !== 0 ? (
+            <div>
+              <button className="cartButton">
+                <Cart />
+              </button>
+              <button>예약하기</button>
+            </div>
+          ) : (
+            <div className="disabledButton">
+              <span>예약 마감</span>
+            </div>
+          )}
         </ReserveSection>
       </BottomSection>
     </Container>
@@ -89,6 +118,9 @@ const PriceSection = styled.div`
       color: ${theme.Color.mainFontColor};
       font-size: ${theme.Fs.default};
       font-weight: 600;
+    }
+    span.stockNonePrice {
+      color: ${theme.Color.captionFontColor};
     }
     display: flex;
     justify-content: space-between;
@@ -167,4 +199,9 @@ const ReserveSection = styled.div`
   padding: 0.75rem;
   padding-bottom: 0.5rem;
   `}
+`;
+const ReserveSectionTop = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 `;
