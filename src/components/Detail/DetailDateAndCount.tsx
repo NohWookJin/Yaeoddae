@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 // hook
 import { useDate } from "../../hook/useDate";
 
@@ -9,17 +7,14 @@ import Calendar from "../../assets/icons/Calendar.svg?react";
 
 // style
 import styled from "styled-components";
+import { useCountStore } from "../../store/memberCount";
 
 function DetailDateAndCount() {
-  const [member, setMember] = useState<number>(1);
   const { month, date } = useDate();
 
-  useEffect(() => {
-    if (member < 1) {
-      alert("예약 인원은 최소 1명 이상이어야 합니다.");
-      setMember(1);
-    }
-  }, [member]);
+  const member = useCountStore((state) => state.counts);
+  const increaseMember = useCountStore((state) => state.increaseCount);
+  const decreaseMember = useCountStore((state) => state.decreaseCount);
 
   return (
     <Container>
@@ -46,21 +41,12 @@ function DetailDateAndCount() {
           </div>
         </MemberCountSectionLeft>
         <div>
-          <button
-            onClick={() => {
-              setMember((prev) => prev + 1);
-            }}
-          >
-            증가
-          </button>
-          &nbsp;
-          <button
-            onClick={() => {
-              setMember((prev) => prev - 1);
-            }}
-          >
-            감소
-          </button>
+          <button onClick={increaseMember}>증가</button>
+          {member > 1 && (
+            <button onClick={decreaseMember} style={{ paddingLeft: "0.3rem" }}>
+              감소
+            </button>
+          )}
         </div>
       </MemberCountSection>
     </Container>
