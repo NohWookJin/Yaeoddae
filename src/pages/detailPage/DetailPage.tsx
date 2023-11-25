@@ -17,7 +17,7 @@ export interface IAccmodation {
   };
   room: [
     {
-      id: null;
+      id: number;
       roomTypeId: number;
       name: string;
       description: string;
