@@ -1,9 +1,12 @@
-import { SectionContainer, SectionLabel } from "./reservationStyles";
-import { SectionDivider } from "./SectionDivider";
-import Input from "../Input";
-import styled from "styled-components";
-import Checkbox from "./Checkbox";
+// library
 import { useEffect, useState } from "react";
+import styled from "styled-components";
+
+// component
+import { SectionContainer, SectionLabel } from "./reservationStyles";
+import { SectionDivider } from "./reservationStyles";
+import Input from "../Input";
+import Checkbox from "./Checkbox";
 
 function ActualUserInfoSection({
   reservationPersonName,
@@ -17,7 +20,6 @@ function ActualUserInfoSection({
   const [actualUserContact, setActualUserContact] = useState<string>("");
 
   useEffect(() => {
-    if (reservationPersonName === undefined || reservationPersonContact === undefined) return;
     if (isChecked) {
       setActualUserName(reservationPersonName);
       setActualUserContact(reservationPersonContact);
@@ -25,7 +27,7 @@ function ActualUserInfoSection({
       setActualUserName("");
       setActualUserContact("");
     }
-  }, [isChecked]);
+  }, [isChecked, reservationPersonName, reservationPersonContact]);
 
   return (
     <>

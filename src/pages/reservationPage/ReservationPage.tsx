@@ -1,10 +1,12 @@
+// library
 import { useState } from "react";
-import GoBackHeader from "../../components/reservation/GoBackHeader";
-import ReservationInfoSection from "../../components/reservation/ReservationInfoSection";
-import ReservationPersonInfoSection from "../../components/reservation/ReservationPersonInfoSection";
-import ActualUserInfoSection from "../../components/reservation/ActualUserInfoSection";
-import PaymentSelectionSection from "../../components/reservation/PaymentSelectionSection";
-import PaymentCautions from "../../components/reservation/PaymentCautions";
+
+// component
+import ReservationInfoSection from "../../components/Reservation/ReservationInfoSection";
+import ReservationPersonInfoSection from "../../components/Reservation/ReservationPersonInfoSection";
+import ActualUserInfoSection from "../../components/Reservation/ActualUserInfoSection";
+import PaymentSelectionSection from "../../components/Reservation/PaymentSelectionSection";
+import PaymentCautions from "../../components/Reservation/PaymentCautions";
 
 export interface ReservationInfo {
   accommodationName: string;
@@ -23,7 +25,6 @@ function ReservationPage() {
 
   return (
     <>
-      <GoBackHeader pageTitle="예약" />
       <ReservationInfoSection reservationInfo={Dummy} />
       <ReservationPersonInfoSection
         reservationPersonName={reservationPersonName}

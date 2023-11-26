@@ -1,22 +1,26 @@
+// library
 import styled from "styled-components";
-import { ReservationInfo } from "../../pages/reservationPage/ReservationPage";
+
+// component
 import DateInfoWrapper from "./DateInfoWrapper";
-import personIcon from "../../assets/personIcon.svg";
-import { SectionDivider } from "./SectionDivider";
-import { SectionContainer } from "./reservationStyles";
+import { ReservationInfo } from "../../pages/reservationPage/ReservationPage";
+import { SectionContainer, SectionDivider } from "./reservationStyles";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
+
+// icon
+import personIcon from "../../assets/personIcon.svg";
 
 function ReservationInfoSection({ reservationInfo }: { reservationInfo: ReservationInfo }) {
   return (
     <>
-      <SectionContainer $needMarginTop>
+      <SectionContainer>
         <AccommodationInfo>
           <h1>{reservationInfo.accommodationName}</h1>
           <h2>{reservationInfo.roomName}</h2>
         </AccommodationInfo>
         <DateInfo>
           <DateInfoWrapper isCheckIn={true} date={reservationInfo.checkInDate} />
-          <DateInfoWrapper isCheckIn={false} date={reservationInfo.checkInDate} />
+          <DateInfoWrapper isCheckIn={false} date={reservationInfo.checkOutDate} />
         </DateInfo>
         <PersonNumberInfo>
           <img src={personIcon} alt="인원" />

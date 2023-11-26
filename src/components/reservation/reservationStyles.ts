@@ -1,3 +1,4 @@
+// library
 import styled from "styled-components";
 
 export const SectionContainer = styled.section<{ $needMarginTop?: boolean }>`
@@ -16,4 +17,9 @@ export const SectionLabel = styled.div`
   span {
     color: ${(props) => props.theme.Color.mainColor};
   }
+`;
+
+export const SectionDivider = styled.div`
+  height: 8px;
+  background-color: ${(props) => props.theme.Color.borderColor};
 `;

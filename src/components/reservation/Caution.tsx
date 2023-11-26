@@ -1,5 +1,7 @@
-import React from "react";
+// library
 import styled from "styled-components";
+
+// icon
 import infoIcon from "../../assets/infoIcon.svg";
 
 function Caution({ title, content }: { title: string; content: string }) {

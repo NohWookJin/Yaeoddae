@@ -1,8 +1,13 @@
+// library
 import { useState } from "react";
-import { SectionContainer, SectionLabel } from "./reservationStyles";
-import { SectionDivider } from "./SectionDivider";
 import styled from "styled-components";
+
+// component
+import { SectionDivider } from "./reservationStyles";
+import { SectionContainer, SectionLabel } from "./reservationStyles";
 import PaymentOptionBox from "./PaymentOptionBox";
+
+// constant
 import { PAYMENT_OPTIONS } from "./constants";
 
 function PaymentSelectionSection() {

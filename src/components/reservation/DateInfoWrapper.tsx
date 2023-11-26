@@ -1,3 +1,4 @@
+// library
 import styled from "styled-components";
 
 function DateInfoWrapper({ isCheckIn, date }: { isCheckIn: boolean; date: string }) {

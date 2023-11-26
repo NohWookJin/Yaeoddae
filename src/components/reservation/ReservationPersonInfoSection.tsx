@@ -1,7 +1,9 @@
+// library
 import React from "react";
+
+// component
 import Input from "../Input";
-import { SectionContainer, SectionLabel } from "./reservationStyles";
-import { SectionDivider } from "./SectionDivider";
+import { SectionContainer, SectionLabel, SectionDivider } from "./reservationStyles";
 
 function ReservationPersonInfoSection({
   reservationPersonName,

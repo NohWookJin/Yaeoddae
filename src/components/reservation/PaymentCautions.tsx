@@ -1,5 +1,10 @@
+// library
 import styled from "styled-components";
+
+// component
 import Caution from "./Caution";
+
+// constant
 import { CAUTIONS_LIST } from "./constants";
 
 function PaymentCautions() {
@@ -15,7 +20,7 @@ function PaymentCautions() {
 export default PaymentCautions;
 
 const Container = styled.div`
-  margin: 20px 0 30px;
+  margin: 20px 16px 30px;
   padding: 12px;
   border-radius: ${(props) => props.theme.Br.default};
   background: rgba(255, 141, 141, 0.1);
