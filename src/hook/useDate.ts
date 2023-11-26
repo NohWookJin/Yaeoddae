@@ -1,15 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+// libraries
+import moment from "moment";
 
 export const useDate = () => {
-  const [month, setMonth] = useState<number | null>(null);
-  const [date, setDate] = useState<number | null>(null);
+  // custom hook
+  const [checkIn, setCheckIn] = useState<string>("");
+  const [checkOut, setCheckOut] = useState<string>("");
 
-  useEffect(() => {
-    const currentTime = new Date();
+  const currentDate = moment(new Date());
+  const today = currentDate.format("MM월 DD일");
 
-    setMonth(currentTime.getMonth() + 1);
-    setDate(currentTime.getDate());
-  }, []);
+  const nextDate = currentDate.add(1, "days");
+  const formattedNextDate = nextDate.format("MM월 DD일");
 
-  return { month, date };
+  const checkInMoment = moment(checkIn, "MM월 DD일");
+  const checkOutMoment = moment(checkOut, "MM월 DD일");
+  const differenceInDays = checkOutMoment.diff(checkInMoment, "days");
+
+  return { today, formattedNextDate, checkIn, setCheckIn, checkOut, setCheckOut, differenceInDays };
 };
