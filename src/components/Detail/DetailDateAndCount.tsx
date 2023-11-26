@@ -1,5 +1,10 @@
 // hook
+import { useEffect, useState } from "react";
 import { useDate } from "../../hook/useDate";
+import { useLocation } from "react-router-dom";
+
+// components
+import DatePickModal from "./DatePickModal";
 
 // icons
 import Member from "../../assets/icons/User.svg?react";
@@ -10,11 +15,30 @@ import styled from "styled-components";
 import { useCountStore } from "../../store/memberCount";
 
 function DetailDateAndCount() {
-  const { month, date } = useDate();
-
   const member = useCountStore((state) => state.counts);
   const increaseMember = useCountStore((state) => state.increaseCount);
   const decreaseMember = useCountStore((state) => state.decreaseCount);
+
+  const { today, formattedNextDate, checkIn, setCheckIn, checkOut, setCheckOut, differenceInDays } =
+    useDate();
+
+  const [isDateModalOpen, setIsDateModalOpen] = useState<boolean>(false);
+  const [isUserChangeDate, setIsUserChangeDate] = useState<boolean>(false);
+
+  const location = useLocation();
+
+  const handleDateModalClick = () => {
+    setIsDateModalOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    setIsUserChangeDate(true);
+
+    if (location.state && location.state.checkInAndCheckOut) {
+      setCheckIn(location.state.checkInAndCheckOut.checkIn);
+      setCheckOut(location.state.checkInAndCheckOut.checkOut);
+    }
+  }, [location, setCheckIn, setCheckOut]);
 
   return (
     <Container>
@@ -24,13 +48,25 @@ function DetailDateAndCount() {
       <DateSection>
         <DateSectionLeft>
           <CalendarSVG />
-          <div>
-            <span>{month && date ? `${month}월 ${date}일 ~ ${month}월 ${date + 1}일` : null}</span>
-            <span>· 1박</span>
-          </div>
+          {!isUserChangeDate || !checkOut ? (
+            <div>
+              <span>
+                {today} ~ {formattedNextDate}
+              </span>
+              <span>· 1박</span>
+            </div>
+          ) : (
+            <div>
+              <span>
+                {checkIn} ~ {checkOut}
+              </span>
+              <span>· {differenceInDays}박</span>
+            </div>
+          )}
         </DateSectionLeft>
         <div>
-          <button>변경</button>
+          <button onClick={handleDateModalClick}>변경</button>
+          <DatePickModal isOpen={isDateModalOpen} setIsOpen={setIsDateModalOpen} />
         </div>
       </DateSection>
       <MemberCountSection>
