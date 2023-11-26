@@ -1,5 +1,6 @@
-// icon
 import { useNavigate } from "react-router-dom";
+
+// icon
 import Cart from "../../assets/icons/cart.svg?react";
 
 // style
