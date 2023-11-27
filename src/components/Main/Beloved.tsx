@@ -24,7 +24,7 @@ export default Beloved;
 const BelovedItem = styled.div`
   display: flex;
   justify-content: space-around;
-  margin: 20px;
+  margin: 1rem;
 `;
 
 const ImageOverlay = styled.div`
