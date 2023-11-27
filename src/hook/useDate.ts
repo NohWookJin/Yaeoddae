@@ -10,13 +10,25 @@ export const useDate = () => {
 
   const currentDate = moment(new Date());
   const today = currentDate.format("MM월 DD일");
+  const asTodayCheckIn = currentDate.format("YYMMDD");
 
   const nextDate = currentDate.add(1, "days");
   const formattedNextDate = nextDate.format("MM월 DD일");
+  const asTodayCheckOut = nextDate.format("YYMMDD");
 
   const checkInMoment = moment(checkIn, "MM월 DD일");
   const checkOutMoment = moment(checkOut, "MM월 DD일");
   const differenceInDays = checkOutMoment.diff(checkInMoment, "days");
 
-  return { today, formattedNextDate, checkIn, setCheckIn, checkOut, setCheckOut, differenceInDays };
+  return {
+    today,
+    formattedNextDate,
+    checkIn,
+    setCheckIn,
+    checkOut,
+    setCheckOut,
+    differenceInDays,
+    asTodayCheckIn,
+    asTodayCheckOut,
+  };
 };
