@@ -9,20 +9,31 @@ import ArrowUp from "../../assets/icons/arrowUp.svg?react";
 import ArrowRight from "../../assets/icons/arrowRight.svg?react";
 import { useNavigate } from "react-router-dom";
 
+import { UserContext } from "../Context/UserContext";
+import { useContext } from "react";
+
 interface Props {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Sidebar({ isOpen, setIsOpen }: Props) {
+  const { userName, setUserName, isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const handleBackGroundClick = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleLoginBtnClick = () => {
-    navigate("/login");
+  const handleAuthBtnClick = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      setUserName("");
+    } else {
+      navigate("/login");
+    }
     setIsOpen(false);
   };
 
@@ -34,9 +45,11 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
           <HeaderLogoSVG />
           <TransparentArrowUpSVG />
         </SidebarTopBoxLogo>
-        <SidebarTopBoxText>로그인 후 예약하세요!</SidebarTopBoxText>
-        <SidebarTopLogoutBtnBox onClick={handleLoginBtnClick}>
-          로그인
+        <SidebarTopBoxText>
+          {isLoggedIn ? `${userName} 환영합니다!` : "로그인 후 예약하세요!"}
+        </SidebarTopBoxText>
+        <SidebarTopLogoutBtnBox onClick={handleAuthBtnClick}>
+          {isLoggedIn ? "로그아웃" : "로그인"}
           <ArrowRightSVG />
         </SidebarTopLogoutBtnBox>
       </SidebarTopBox>

@@ -24,8 +24,9 @@ function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
+      const { token } = data.data;
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", token);
         navigate("/");
       } else {
         throw new Error(data.message || "로그인 실패");
