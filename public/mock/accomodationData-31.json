@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "name": "경기",
+    "location": {
+      "address": "fake address",
+      "phone": "fake phone",
+      "areaCode": "fake area code",
+      "latitude": "fake latitude",
+      "longitude": "fake longitude"
+    },
+    "image": "images/seoul-01.jpg",
+    "description": "fake description"
+  },
+  {
+    "id": 2,
+    "name": "경기",
+    "location": {
+      "address": "fake address",
+      "phone": "fake phone",
+      "areaCode": "fake area code",
+      "latitude": "fake latitude",
+      "longitude": "fake longitude"
+    },
+    "image": "images/seoul-02.jpg",
+    "description": "fake description"
+  },
+  {
+    "id": 3,
+    "name": "경기",
+    "location": {
+      "address": "fake address",
+      "phone": "fake phone",
+      "areaCode": "fake area code",
+      "latitude": "fake latitude",
+      "longitude": "fake longitude"
+    },
+    "image": "images/seoul-01.jpg",
+    "description": "fake description"
+  },
+  {
+    "id": 4,
+    "name": "경기",
+    "location": {
+      "address": "fake address",
+      "phone": "fake phone",
+      "areaCode": "fake area code",
+      "latitude": "fake latitude",
+      "longitude": "fake longitude"
+    },
+    "image": "images/seoul-02.jpg",
+    "description": "fake description"
+  }
+]
