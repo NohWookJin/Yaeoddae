@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // icon
 import Cart from "../../assets/icons/cart.svg?react";
@@ -29,9 +29,22 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
   };
 
   const navigate = useNavigate();
+  const params = useParams();
 
   const moveRoomDetail = () => {
     navigate(`/room/${id}`, { state: { roomState } });
+  };
+
+  const moveReservationPage = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const reservationData = {
+      accomodationId: params.id,
+      roomId: id,
+      checkIn: searchParams.get("checkIn"),
+      checkOut: searchParams.get("checkOut"),
+      memberCount: searchParams.get("memberCount"),
+    };
+    navigate("/reservation", { state: { reservationData } });
   };
 
   return (
@@ -49,31 +62,33 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
           <span>객실 이용 안내</span>
           <button onClick={moveRoomDetail}>바로가기</button>
         </RoomSection>
-        <ReserveSection>
-          {/* stock값에 다른 코드 : 정리 필요 */}
-          <ReserveSectionTop>
-            {stock !== 0 && (
+        {stock !== 0 ? (
+          <ReserveSection>
+            <ReserveSectionTop>
               <div>
                 <span>기준 2인</span>
                 <span> &nbsp;/&nbsp;</span>
                 <span>최대 {capacity}인</span>
               </div>
-            )}
-            <span>남은 객실 {stock}</span>
-          </ReserveSectionTop>
-          {stock !== 0 ? (
+              <span>남은 객실 {stock}</span>
+            </ReserveSectionTop>
             <div>
               <button className="cartButton">
                 <Cart />
               </button>
-              <button>예약하기</button>
+              <button onClick={moveReservationPage}>예약하기</button>
             </div>
-          ) : (
+          </ReserveSection>
+        ) : (
+          <ReserveSection>
+            <ReserveSectionTop>
+              <span>남은 객실 {stock}</span>
+            </ReserveSectionTop>
             <div className="disabledButton">
               <span>예약 마감</span>
             </div>
-          )}
-        </ReserveSection>
+          </ReserveSection>
+        )}
       </BottomSection>
     </Container>
   );
