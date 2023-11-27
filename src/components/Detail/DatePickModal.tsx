@@ -20,11 +20,16 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
+  const [queryStartDate, setQueryStartDate] = useState<string>("");
+  const [queryEndDate, setQueryEndDate] = useState<string>("");
+
   const navigate = useNavigate();
   const params = useParams();
 
   const moveDetail = () => {
-    navigate(`/detail/${params.id}`, { state: { checkInAndCheckOut } });
+    navigate(`/detail/${params.id}?checkIn=${queryStartDate}&checkOut=${queryEndDate}`, {
+      state: { checkInAndCheckOut },
+    });
     setIsOpen((prev) => !prev);
   };
 
@@ -40,6 +45,8 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
   const handleChangeDate = (e) => {
     const startDateFormat = moment(e[0]).format("MM월 DD일");
     const endDateFormat = moment(e[1]).format("MM월 DD일");
+    setQueryStartDate(moment(e[0]).format("YYMMDD"));
+    setQueryEndDate(moment(e[1]).format("YYMMDD"));
     setStartDate(startDateFormat);
     setEndDate(endDateFormat);
   };
