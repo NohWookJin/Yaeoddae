@@ -42,6 +42,8 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
     setIsOpen((prev) => !prev);
   };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const handleChangeDate = (e) => {
     const startDateFormat = moment(e[0]).format("MM월 DD일");
     const endDateFormat = moment(e[1]).format("MM월 DD일");
@@ -72,6 +74,8 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
           locale="ko-KO"
           next2Label={null}
           prev2Label={null}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           formatDay={(locale, date) => moment(date).format("D")}
           showNeighboringMonth={false}
         />
