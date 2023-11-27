@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Beloved = () => {
+function Beloved() {
   return (
     <BelovedItem>
       <ItemImage $text="jeju">
@@ -17,7 +17,7 @@ const Beloved = () => {
       </ItemImage>
     </BelovedItem>
   );
-};
+}
 
 export default Beloved;
 

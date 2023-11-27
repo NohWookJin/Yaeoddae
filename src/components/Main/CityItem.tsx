@@ -5,14 +5,14 @@ interface CityItemProps {
   item: ItemType;
 }
 
-const CityItem = ({ item }: CityItemProps) => {
+function CityItem({ item }: CityItemProps) {
   return (
     <ItemContainer>
       <ImageContainer $image={item.image} />
       <ItemTitle>{item.name}</ItemTitle>
     </ItemContainer>
   );
-};
+}
 
 export default CityItem;
 
