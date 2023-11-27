@@ -82,6 +82,16 @@ function Header() {
         </HeaderLayout>
       );
 
+    case "room":
+      return (
+        <HeaderLayout $isBorderBottom>
+          <HeaderLeftBox>
+            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+            <HeaderTitle>객실상세</HeaderTitle>
+          </HeaderLeftBox>
+        </HeaderLayout>
+      );
+
     case "mypage":
       return (
         <HeaderLayout $isBorderBottom>
