@@ -1,48 +1,44 @@
+// library
 import styled from "styled-components";
 
+// icon
+import Search from "../../assets/icons/search.svg?react";
+
 interface InputProps {
-  isRequired: boolean;
-  label: string;
   placeholder: string;
-  type: "text" | "password";
-  value?: string;
-  setValue?: React.Dispatch<React.SetStateAction<string>>;
+  keyword: string;
+  setKeyword: React.Dispatch<React.SetStateAction<string>>;
   marginTop?: string;
   marginBottom?: string;
   errorState?: boolean;
   helpMessage?: string;
-  readOnly?: boolean;
 }
 
-function Input(data: InputProps) {
+function SearchInput(data: InputProps) {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (data.setValue) {
-      data.setValue(event.target.value);
+    if (data.setKeyword) {
+      data.setKeyword(event.target.value);
     }
   };
 
   return (
     <Container $marginTop={data.marginTop} $marginBottom={data.marginBottom}>
-      <label htmlFor="input">
-        <span>{data.label}</span>
-        <span>{data.isRequired ? "*" : ""}</span>
-      </label>
       <input
-        type={data.type}
-        id="input"
+        type="text"
         placeholder={data.placeholder}
-        value={data.value}
+        value={data.keyword}
         onChange={handleInputChange}
-        readOnly={data.readOnly}
       />
-      <div>{data.errorState && data.helpMessage}</div>
+      <SearchIcon />
     </Container>
   );
 }
 
-export default Input;
+export default SearchInput;
 
 const Container = styled.div<{ $marginTop: string | undefined; $marginBottom: string | undefined }>`
+  position: relative;
+
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -61,7 +57,7 @@ const Container = styled.div<{ $marginTop: string | undefined; $marginBottom: st
   }
 
   input {
-    padding: 10px 16px;
+    padding: 10px 16px 10px 32px;
     border: ${(props) => props.theme.Border.thinBorder};
     border-radius: ${(props) => props.theme.Br.default};
     outline: none;
@@ -78,4 +74,11 @@ const Container = styled.div<{ $marginTop: string | undefined; $marginBottom: st
     line-height: 1.6;
     color: ${(props) => props.theme.Color.activeColor};
   }
+`;
+
+const SearchIcon = styled(Search)`
+  position: absolute;
+
+  top: 0.75rem;
+  left: 0.5rem;
 `;

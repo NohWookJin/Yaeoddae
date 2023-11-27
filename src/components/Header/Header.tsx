@@ -51,7 +51,7 @@ function Header() {
     case "search":
       return (
         <>
-          <HeaderLayout $isBorderBottom>
+          <HeaderLayout>
             <ListSVG onClick={handleListClick} />
             <HeaderLogoSVG onClick={handleTitleClick} />
             <CartSVG onClick={handleCartClick} />

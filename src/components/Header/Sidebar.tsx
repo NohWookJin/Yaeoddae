@@ -76,9 +76,12 @@ const SidebarTopBox = styled.div`
 
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 const SidebarTopBoxLogo = styled.div`
+  width: 100%;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
