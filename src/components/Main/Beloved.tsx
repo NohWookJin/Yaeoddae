@@ -27,6 +27,15 @@ const BelovedItem = styled.div`
   margin: 20px;
 `;
 
+const ImageOverlay = styled.div`
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+`;
+
 const ItemImage = styled.a<{ $text?: string }>`
   width: 80px;
   height: 80px;
@@ -39,23 +48,13 @@ const ItemImage = styled.a<{ $text?: string }>`
   overflow: hidden;
   position: relative;
   z-index: 1;
-`;
-
-const ImageOverlay = styled.div`
-  background-color: black;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  opacity: 0.3;
-  transition: opacity 0.2s;
-
-  &:hover {
+  &:hover > ${ImageOverlay} {
     opacity: 0;
   }
 `;
 
 const ItemText = styled.h4`
-  font-size: 12px;
+  font-size: ${({ theme }) => theme.Fs.default};
   z-index: 3;
   color: white;
   position: absolute;

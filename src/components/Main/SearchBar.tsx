@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
-import searchSVG from "../../assets/icons/search.svg?react";
+import searchSVG from "../../assets/icons/mainSearch.svg?react";
 
 function SearchBar() {
   const [isSearching, setIsSearching] = useState(false);
