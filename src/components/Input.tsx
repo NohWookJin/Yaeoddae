@@ -4,14 +4,15 @@ interface InputProps {
   isRequired: boolean;
   label: string;
   placeholder: string;
-  type: "number" | "text" | "password";
-  value?: string | number;
-  setValue?: React.Dispatch<React.SetStateAction<string | number>>;
+  type: "text" | "password";
+  value?: string;
+  setValue?: React.Dispatch<React.SetStateAction<string>>;
   marginTop?: string;
   marginBottom?: string;
   errorState?: boolean;
   helpMessage?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
 }
 
 function Input(data: InputProps) {
@@ -33,6 +34,7 @@ function Input(data: InputProps) {
         placeholder={data.placeholder}
         value={data.value}
         onChange={handleInputChange}
+        readOnly={data.readOnly}
       />
       <div>{data.errorState && data.helpMessage}</div>
     </Container>
