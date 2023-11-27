@@ -11,6 +11,7 @@ interface InputProps {
   marginBottom?: string;
   errorState?: boolean;
   helpMessage?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function Input(data: InputProps) {

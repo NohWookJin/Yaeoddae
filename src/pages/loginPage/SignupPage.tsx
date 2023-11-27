@@ -7,6 +7,11 @@ import Input from "../../components/Input";
 
 function SignupPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
@@ -16,19 +21,42 @@ function SignupPage() {
     navigate("/");
   };
 
+  const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const response = await fetch("https://travel-server.up.railway.app/members/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        navigate("/");
+      } else {
+        console.error("Signup failed");
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+    }
+  };
+
   return (
     <SignupContainer>
       <LogoWrap onClick={navigateToHome}>
         <HeaderLogoSVG />
       </LogoWrap>
       <h4>회원가입</h4>
-      <form action="#" method="post">
+      <form onSubmit={handleSignup}>
         <InputWrap>
           <Input
             isRequired={true}
             label={"이메일"}
             placeholder={"이메일을 입력해주세요."}
             type={"text"}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <Input
@@ -36,6 +64,8 @@ function SignupPage() {
             label={"비밀번호"}
             placeholder={"비밀번호를 입력해주세요."}
             type={"password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <Input
@@ -43,6 +73,8 @@ function SignupPage() {
             label={"비밀번호 확인"}
             placeholder={"비밀번호를 한번더 입력해주세요."}
             type={"password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
           <Input
@@ -50,9 +82,11 @@ function SignupPage() {
             label={"휴대폰 번호"}
             placeholder={"휴대폰 번호 입력해주세요."}
             type={"text"}
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
           />
         </InputWrap>
-        <button type="button" onClick={toggleModal}>
+        <button type="submit" onClick={toggleModal}>
           회원가입
         </button>
         {isModalOpen && <JoinModal />}
