@@ -1,15 +1,17 @@
 // interface
-import { IAccmodation } from "../../pages/detailPage/DetailPage";
+import { HotelAccomodation } from "../../pages/detailPage/DetailPage";
 
 // style
 import styled from "styled-components";
 
 interface AccommodationInfo {
-  accommodation: IAccmodation;
+  accommodation: HotelAccomodation;
 }
 
 function DetailSectionTop({ accommodation }: AccommodationInfo) {
-  const { name, location, image } = accommodation.accommodation;
+  const { name, image, location } = accommodation;
+
+  console.log(accommodation.name);
 
   return (
     <Container>
@@ -18,7 +20,7 @@ function DetailSectionTop({ accommodation }: AccommodationInfo) {
       </ImageSection>
       <TextSection>
         <h3>{name}</h3>
-        <span>{location}</span>
+        <span>{location.address}</span>
       </TextSection>
     </Container>
   );

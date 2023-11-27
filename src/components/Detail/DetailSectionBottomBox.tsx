@@ -1,10 +1,10 @@
 // component & interface
 import DetailSectionBottom from "./DetailSectionBottom";
-import { IAccmodation } from "../../pages/detailPage/DetailPage";
+import { RoomAccmodation } from "../../pages/detailPage/DetailPage";
 import { useCountStore } from "../../store/memberCount";
 
 interface AccommodationRooms {
-  accommodation: IAccmodation;
+  accommodation: RoomAccmodation;
 }
 
 function DetailSectionBottomBox({ accommodation }: AccommodationRooms) {

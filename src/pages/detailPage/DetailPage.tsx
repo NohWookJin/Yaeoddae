@@ -10,13 +10,22 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDate } from "../../hook/useDate";
 
-export interface IAccmodation {
+export interface HotelAccomodation {
   id: number;
-  accommodation: {
-    name: string;
-    location: string;
-    image: string;
+  name: string;
+  description: string;
+  image: string;
+  location: {
+    address: string;
+    phone: string;
+    areaCode: string;
+    latitude: number;
+    longitude: number;
   };
+}
+
+export interface RoomAccmodation {
+  id: number;
   room: [
     {
       id: number;
@@ -31,31 +40,55 @@ export interface IAccmodation {
 }
 
 function DetailPage() {
-  const [accommodation, setAccommodation] = useState<null | IAccmodation>(null);
+  const [hotelAccommodation, setHotelAccommodation] = useState<null | HotelAccomodation>(null);
+  const [roomAccommodation, setRoomAccommodation] = useState<null | RoomAccmodation>(null);
 
   const { asTodayCheckIn, asTodayCheckOut } = useDate();
 
   const navigate = useNavigate();
   const params = useParams();
 
+  const MOCK_AREA_CODE = "서울"; // params.areaCode
+  const MOCK_KEYWORD = "강릉세인트존스호텔"; // params.keyword
+
   useEffect(() => {
     navigate(
-      `/detail/${params.id}?checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
+      `/detail/${params.id}?keyword=${MOCK_KEYWORD}&area-code=${MOCK_AREA_CODE}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
     );
 
+    // 호텔 정보 조회(GET, parameters = keywords, areaCode)
+    fetch("/mock/roomsDataOri.json", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        result.map((item: HotelAccomodation) => {
+          if (item.id === Number(`${params.id}`)) {
+            setHotelAccommodation(item);
+          }
+        });
+      });
+
+    // 객실 정보 조회
     fetch("/mock/roomsData.json", {
       method: "GET",
     })
       .then((res) => res.json())
-      .then((result) => setAccommodation(result));
+      .then((result) => {
+        result.map((item: RoomAccmodation) => {
+          if (item.id === Number(`${params.id}`)) {
+            setRoomAccommodation(item);
+          }
+        });
+      });
   }, [navigate, params.id, asTodayCheckIn, asTodayCheckOut]);
 
-  if (accommodation) {
+  if (hotelAccommodation && roomAccommodation) {
     return (
       <Container>
-        <DetailSectionTop accommodation={accommodation} />
+        <DetailSectionTop accommodation={hotelAccommodation} />
         <DetailDateAndCount />
-        <DetailSectionBottomBox accommodation={accommodation} />
+        <DetailSectionBottomBox accommodation={roomAccommodation} />
       </Container>
     );
   }

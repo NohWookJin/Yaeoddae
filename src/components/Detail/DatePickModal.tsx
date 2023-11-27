@@ -26,10 +26,16 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
   const navigate = useNavigate();
   const params = useParams();
 
+  const MOCK_AREA_CODE = "서울"; // params.areaCode
+  const MOCK_KEYWORD = "강릉세인트존스호텔"; // params.keyword
+
   const moveDetail = () => {
-    navigate(`/detail/${params.id}?checkIn=${queryStartDate}&checkOut=${queryEndDate}`, {
-      state: { checkInAndCheckOut },
-    });
+    navigate(
+      `/detail/${params.id}?keyword=${MOCK_KEYWORD}&area-code=${MOCK_AREA_CODE}&checkIn=${queryStartDate}&checkOut=${queryEndDate}`,
+      {
+        state: { checkInAndCheckOut },
+      }
+    );
     setIsOpen((prev) => !prev);
   };
 
