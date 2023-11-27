@@ -16,12 +16,6 @@ interface InputProps {
 }
 
 function Input(data: InputProps) {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (data.setValue) {
-      data.setValue(event.target.value);
-    }
-  };
-
   return (
     <Container $marginTop={data.marginTop} $marginBottom={data.marginBottom}>
       <label htmlFor="input">
@@ -33,7 +27,7 @@ function Input(data: InputProps) {
         id="input"
         placeholder={data.placeholder}
         value={data.value}
-        onChange={handleInputChange}
+        onChange={data.onChange}
         readOnly={data.readOnly}
       />
       <div>{data.errorState && data.helpMessage}</div>

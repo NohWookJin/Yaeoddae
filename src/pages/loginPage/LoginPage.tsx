@@ -1,34 +1,70 @@
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
 import Input from "../../components/Input";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error] = useState("");
 
-  const navigateToHome = () => {
-    navigate("/");
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("https://travel-server.up.railway.app/members/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        navigate("/");
+      } else {
+        throw new Error(data.message || "로그인 실패");
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("알 수 없는 오류가 발생했습니다.");
+      }
+    }
   };
+
   return (
     <LoginContainer>
-      <LogoWrap onClick={navigateToHome}>
+      <CustomToastContainer />
+      <LogoWrap onClick={() => navigate("/")}>
         <HeaderLogoSVG />
       </LogoWrap>
-      <form action="#" method="post">
+      <form onSubmit={handleSubmit}>
         <InputWrap>
           <Input
             isRequired={true}
             label={"이메일"}
             placeholder={"이메일을 입력해주세요."}
             type={"text"}
+            value={email}
+            onChange={handleEmailChange}
           />
           <Input
             isRequired={true}
             label={"비밀번호"}
             placeholder={"비밀번호를 입력해주세요."}
             type={"password"}
+            value={password}
+            onChange={handlePasswordChange}
           />
         </InputWrap>
+        {error && <p>{error}</p>}
         <button type="submit">로그인</button>
         <a href="./Signup">회원가입</a>
       </form>
@@ -98,5 +134,27 @@ const InputWrap = styled.div`
   input::placeholder {
     color: ${(props) => props.theme.Color.defaultFontColor};
     opacity: 0.4;
+  }
+`;
+
+const CustomToastContainer = styled(ToastContainer)`
+  .Toastify__toast-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .Toastify__close-button {
+    height: auto;
+    width: auto;
+    min-width: auto;
+    padding: 2px;
+  }
+
+  .Toastify__toast {
+    min-height: auto;
+    padding: 10px;
+    font-size: 14px;
   }
 `;
