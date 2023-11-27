@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
-
 // hook
+import { useEffect, useState } from "react";
 import { useDate } from "../../hook/useDate";
+import { useLocation, useParams } from "react-router-dom";
+
+// components
+import DatePickModal from "./DatePickModal";
+import { useCountStore } from "../../store/memberCount";
 
 // icons
 import Member from "../../assets/icons/User.svg?react";
@@ -11,15 +15,41 @@ import Calendar from "../../assets/icons/Calendar.svg?react";
 import styled from "styled-components";
 
 function DetailDateAndCount() {
-  const [member, setMember] = useState<number>(1);
-  const { month, date } = useDate();
+  const member = useCountStore((state) => state.counts);
+  const increaseMember = useCountStore((state) => state.increaseCount);
+  const decreaseMember = useCountStore((state) => state.decreaseCount);
+
+  const { today, formattedNextDate, checkIn, setCheckIn, checkOut, setCheckOut, differenceInDays } =
+    useDate();
+
+  const [isDateModalOpen, setIsDateModalOpen] = useState<boolean>(false);
+  const [isUserChangeDate, setIsUserChangeDate] = useState<boolean>(false);
+
+  const location = useLocation();
+  const params = useParams();
+
+  const handleDateModalClick = () => {
+    setIsDateModalOpen((prev) => !prev);
+  };
 
   useEffect(() => {
-    if (member < 1) {
-      alert("예약 인원은 최소 1명 이상이어야 합니다.");
-      setMember(1);
+    setIsUserChangeDate(true);
+
+    if (location.state && location.state.checkInAndCheckOut) {
+      setCheckIn(location.state.checkInAndCheckOut.checkIn);
+      setCheckOut(location.state.checkInAndCheckOut.checkOut);
     }
-  }, [member]);
+  }, [location, setCheckIn, setCheckOut]);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("memberCount", member.toString());
+    history.replaceState(
+      { search: searchParams.toString() },
+      "",
+      `/detail/${params.id}?${searchParams}`
+    );
+  }, [location.search, member, params.id]);
 
   return (
     <Container>
@@ -29,13 +59,25 @@ function DetailDateAndCount() {
       <DateSection>
         <DateSectionLeft>
           <CalendarSVG />
-          <div>
-            <span>{month && date ? `${month}월 ${date}일 ~ ${month}월 ${date + 1}일` : null}</span>
-            <span>· 1박</span>
-          </div>
+          {!isUserChangeDate || !checkOut ? (
+            <div>
+              <span>
+                {today} ~ {formattedNextDate}
+              </span>
+              <span>· 1박</span>
+            </div>
+          ) : (
+            <div>
+              <span>
+                {checkIn} ~ {checkOut}
+              </span>
+              <span>· {differenceInDays}박</span>
+            </div>
+          )}
         </DateSectionLeft>
         <div>
-          <button>변경</button>
+          <button onClick={handleDateModalClick}>변경</button>
+          <DatePickModal isOpen={isDateModalOpen} setIsOpen={setIsDateModalOpen} />
         </div>
       </DateSection>
       <MemberCountSection>
@@ -46,21 +88,12 @@ function DetailDateAndCount() {
           </div>
         </MemberCountSectionLeft>
         <div>
-          <button
-            onClick={() => {
-              setMember((prev) => prev + 1);
-            }}
-          >
-            증가
-          </button>
-          &nbsp;
-          <button
-            onClick={() => {
-              setMember((prev) => prev - 1);
-            }}
-          >
-            감소
-          </button>
+          <button onClick={increaseMember}>증가</button>
+          {member > 1 && (
+            <button onClick={decreaseMember} style={{ paddingLeft: "0.3rem" }}>
+              감소
+            </button>
+          )}
         </div>
       </MemberCountSection>
     </Container>
