@@ -9,7 +9,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-01.jpg",
+    "image": "https://github.com/KSJT/mini/assets/118329943/fa30e68b-83b0-4f33-88da-d3c35a3cc199",
     "description": "fake description"
   },
   {
@@ -22,7 +22,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-02.jpg",
+    "image": "https://github.com/KSJT/mini/assets/118329943/1ad0d716-76fe-445a-96b2-7e15ad5783de",
     "description": "fake description"
   },
   {
@@ -35,7 +35,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-01.jpg",
+    "image": "https://github.com/KSJT/mini/assets/118329943/fa30e68b-83b0-4f33-88da-d3c35a3cc199",
     "description": "fake description"
   },
   {
@@ -48,7 +48,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-02.jpg",
+    "image": "https://github.com/KSJT/mini/assets/118329943/1ad0d716-76fe-445a-96b2-7e15ad5783de",
     "description": "fake description"
   }
 ]
