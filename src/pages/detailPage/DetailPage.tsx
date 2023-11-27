@@ -7,6 +7,8 @@ import DetailSectionBottomBox from "../../components/Detail/DetailSectionBottomB
 
 // style
 import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDate } from "../../hook/useDate";
 
 export interface IAccmodation {
   id: number;
@@ -17,7 +19,7 @@ export interface IAccmodation {
   };
   room: [
     {
-      id: null;
+      id: number;
       roomTypeId: number;
       name: string;
       description: string;
@@ -31,13 +33,22 @@ export interface IAccmodation {
 function DetailPage() {
   const [accommodation, setAccommodation] = useState<null | IAccmodation>(null);
 
+  const { asTodayCheckIn, asTodayCheckOut } = useDate();
+
+  const navigate = useNavigate();
+  const params = useParams();
+
   useEffect(() => {
+    navigate(
+      `/detail/${params.id}?checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
+    );
+
     fetch("/mock/roomsData.json", {
       method: "GET",
     })
       .then((res) => res.json())
       .then((result) => setAccommodation(result));
-  }, []);
+  }, [navigate, params.id, asTodayCheckIn, asTodayCheckOut]);
 
   if (accommodation) {
     return (

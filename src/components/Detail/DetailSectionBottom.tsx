@@ -1,12 +1,14 @@
+import { useNavigate, useParams } from "react-router-dom";
+
 // icon
 import Cart from "../../assets/icons/cart.svg?react";
 
 // style
 import styled from "styled-components";
 
-interface AccommodationRoom {
+export interface AccommodationRoom {
   room: {
-    id: null;
+    id: number;
     roomTypeId: number;
     name: string;
     description: string;
@@ -17,7 +19,33 @@ interface AccommodationRoom {
 }
 
 function DetailSectionBottom({ room }: AccommodationRoom) {
-  const { name, stock, image } = room;
+  const { name, stock, image, capacity, description, id } = room;
+
+  const roomState = {
+    name: name,
+    description: description,
+    image: image,
+    capacity: capacity,
+  };
+
+  const navigate = useNavigate();
+  const params = useParams();
+
+  const moveRoomDetail = () => {
+    navigate(`/room/${id}`, { state: { roomState } });
+  };
+
+  const moveReservationPage = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const reservationData = {
+      accomodationId: params.id,
+      roomId: id,
+      checkIn: searchParams.get("checkIn"),
+      checkOut: searchParams.get("checkOut"),
+      memberCount: searchParams.get("memberCount"),
+    };
+    navigate("/reservation", { state: { reservationData } });
+  };
 
   return (
     <Container>
@@ -28,23 +56,39 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
       <BottomSection>
         <PriceSection>
           <span>가격</span>
-          <span>100,000원</span>
+          {stock !== 0 ? <span>100,000원</span> : <span className="stockNonePrice">100,000원</span>}
         </PriceSection>
         <RoomSection>
           <span>객실 이용 안내</span>
-          <button>바로가기</button>
+          <button onClick={moveRoomDetail}>바로가기</button>
         </RoomSection>
-        <ReserveSection>
-          <div>
-            <span>남은 객실 {stock}</span>
-          </div>
-          <div>
-            <button className="cartButton">
-              <Cart />
-            </button>
-            <button>예약하기</button>
-          </div>
-        </ReserveSection>
+        {stock !== 0 ? (
+          <ReserveSection>
+            <ReserveSectionTop>
+              <div>
+                <span>기준 2인</span>
+                <span> &nbsp;/&nbsp;</span>
+                <span>최대 {capacity}인</span>
+              </div>
+              <span>남은 객실 {stock}</span>
+            </ReserveSectionTop>
+            <div>
+              <button className="cartButton">
+                <Cart />
+              </button>
+              <button onClick={moveReservationPage}>예약하기</button>
+            </div>
+          </ReserveSection>
+        ) : (
+          <ReserveSection>
+            <ReserveSectionTop>
+              <span>남은 객실 {stock}</span>
+            </ReserveSectionTop>
+            <div className="disabledButton">
+              <span>예약 마감</span>
+            </div>
+          </ReserveSection>
+        )}
       </BottomSection>
     </Container>
   );
@@ -89,6 +133,9 @@ const PriceSection = styled.div`
       color: ${theme.Color.mainFontColor};
       font-size: ${theme.Fs.default};
       font-weight: 600;
+    }
+    span.stockNonePrice {
+      color: ${theme.Color.captionFontColor};
     }
     display: flex;
     justify-content: space-between;
@@ -167,4 +214,9 @@ const ReserveSection = styled.div`
   padding: 0.75rem;
   padding-bottom: 0.5rem;
   `}
+`;
+const ReserveSectionTop = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 `;
