@@ -1,10 +1,11 @@
 // hook
 import { useEffect, useState } from "react";
 import { useDate } from "../../hook/useDate";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 // components
 import DatePickModal from "./DatePickModal";
+import { useCountStore } from "../../store/memberCount";
 
 // icons
 import Member from "../../assets/icons/User.svg?react";
@@ -12,7 +13,6 @@ import Calendar from "../../assets/icons/Calendar.svg?react";
 
 // style
 import styled from "styled-components";
-import { useCountStore } from "../../store/memberCount";
 
 function DetailDateAndCount() {
   const member = useCountStore((state) => state.counts);
@@ -26,6 +26,7 @@ function DetailDateAndCount() {
   const [isUserChangeDate, setIsUserChangeDate] = useState<boolean>(false);
 
   const location = useLocation();
+  const params = useParams();
 
   const handleDateModalClick = () => {
     setIsDateModalOpen((prev) => !prev);
@@ -39,6 +40,16 @@ function DetailDateAndCount() {
       setCheckOut(location.state.checkInAndCheckOut.checkOut);
     }
   }, [location, setCheckIn, setCheckOut]);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("memberCount", member.toString());
+    history.replaceState(
+      { search: searchParams.toString() },
+      "",
+      `/detail/${params.id}?${searchParams}`
+    );
+  }, [location.search, member, params.id]);
 
   return (
     <Container>
