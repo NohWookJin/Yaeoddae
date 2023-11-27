@@ -41,7 +41,7 @@ const ItemImage = styled.a<{ $text?: string }>`
   height: 80px;
   border-radius: 50%;
   cursor: pointer;
-  background-image: url(${({ $text }) => `src/assets/images/${$text}.png`});
+  background-image: url(${({ $text }) => `images/${$text}.png`});
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

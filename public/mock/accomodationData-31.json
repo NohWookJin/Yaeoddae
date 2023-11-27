@@ -9,7 +9,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-01.jpg",
+    "image": "images/seoul-01.jpg",
     "description": "fake description"
   },
   {
@@ -22,7 +22,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-02.jpg",
+    "image": "images/seoul-02.jpg",
     "description": "fake description"
   },
   {
@@ -35,7 +35,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-01.jpg",
+    "image": "images/seoul-01.jpg",
     "description": "fake description"
   },
   {
@@ -48,7 +48,7 @@
       "latitude": "fake latitude",
       "longitude": "fake longitude"
     },
-    "image": "src/assets/images/seoul-02.jpg",
+    "image": "images/seoul-02.jpg",
     "description": "fake description"
   }
 ]
