@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 
 // libraries
 import axios from "axios";
-// import { useQuery } from "@tanstack/react-query";
+
+// config
+import { API_BASE_URL } from "../../api/config";
 
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
@@ -40,10 +42,21 @@ function DetailPage() {
   const params = useParams();
   const { search } = useLocation();
 
+  const queryParams = new URLSearchParams(search);
+
+  let keyword = queryParams.get("keyword") as string;
+  if (keyword?.includes("[")) {
+    keyword = keyword.split("[")[0] as string;
+  }
+
+  const areaCode = queryParams.get("area-code") as string;
+
+  const accommodationId = params.id;
+
   const refreshAccommodation = async (keyword: string, areaCode: string) => {
     try {
       const response = await axios.get(
-        `https://travel-server.up.railway.app/accommodations?keyword=${keyword}&area-code=${areaCode}`
+        `${API_BASE_URL}/accommodations?keyword=${keyword}&area-code=${areaCode}`
       );
 
       const { data } = response.data;
@@ -55,9 +68,7 @@ function DetailPage() {
 
   const refreshAccommodationRooms = async (accommodationId: string) => {
     try {
-      const response = await axios.get(
-        `https://travel-server.up.railway.app/rooms/${accommodationId}`
-      );
+      const response = await axios.get(`${API_BASE_URL}/rooms/${accommodationId}`);
 
       const { data } = response.data;
       setRoomAccommodation(data);
@@ -67,17 +78,6 @@ function DetailPage() {
   };
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(search);
-
-    let keyword = queryParams.get("keyword");
-    if (keyword?.includes("[")) {
-      keyword = keyword.split("[")[0];
-    }
-
-    const areaCode = queryParams.get("area-code");
-
-    const accommodationId = params.id;
-
     history.replaceState(
       null,
       "",
@@ -86,7 +86,17 @@ function DetailPage() {
 
     refreshAccommodation(keyword as string, areaCode as string);
     refreshAccommodationRooms(accommodationId as string);
-  }, [asTodayCheckIn, asTodayCheckOut, params.areaCode, params.id, params.keyword, search]);
+  }, [
+    accommodationId,
+    areaCode,
+    asTodayCheckIn,
+    asTodayCheckOut,
+    keyword,
+    params.areaCode,
+    params.id,
+    params.keyword,
+    search,
+  ]);
 
   if (hotelAccommodation && roomAccommodation) {
     return (

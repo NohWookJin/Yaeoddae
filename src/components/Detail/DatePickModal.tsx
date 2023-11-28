@@ -1,6 +1,6 @@
 // hooks
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 // zustand
 import { useCountStore } from "../../store/memberCount";
@@ -29,6 +29,7 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
   const [queryEndDate, setQueryEndDate] = useState<string>("");
 
   const params = useParams();
+  const { search } = useLocation();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
@@ -47,10 +48,15 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
   };
 
   const moveDetail = () => {
+    const queryParams = new URLSearchParams(search);
+
+    const keyword = queryParams.get("keyword");
+    const areaCode = queryParams.get("area-code");
+
     history.replaceState(
       { checkInAndCheckOut },
       "",
-      `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${queryStartDate}&checkOut=${queryEndDate}&countMember=${member}`
+      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${queryStartDate}&checkOut=${queryEndDate}&countMember=${member}`
     );
     setIsOpen((prev) => !prev);
   };

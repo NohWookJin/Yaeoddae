@@ -1,7 +1,15 @@
-import { useNavigate, useParams } from "react-router-dom";
+// hooks
+import { useParams, useNavigate } from "react-router-dom";
+
+// libraries
+import axios from "axios";
+
+// config
+import { API_BASE_URL } from "../../api/config";
 
 // icon
 import Cart from "../../assets/icons/cart.svg?react";
+import Hotel from "../../assets/icons/defaultHotel.svg";
 
 // style
 import styled from "styled-components";
@@ -11,10 +19,10 @@ export interface AccommodationRoom {
     roomTypeId: number;
     name: string;
     description: string;
-    image: string;
+    image?: string;
     stock: number;
     capacity: number;
-    price: number;
+    price?: number;
   };
 }
 
@@ -35,7 +43,35 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
     navigate(`/room/${roomTypeId}`, { state: { roomState } });
   };
 
-  const moveReservationPage = () => {
+  const sendCart = async () => {
+    const searchParams = new URLSearchParams(location.search);
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/carts`,
+        {
+          roomId: roomTypeId,
+          accommodationId: parseInt(params.id as string),
+          guestNumber: parseInt(searchParams.get("memberCount") as string),
+          checkIn: searchParams.get("checkIn"),
+          checkOut: searchParams.get("checkOut"),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const moveReservation = () => {
     const searchParams = new URLSearchParams(location.search);
     const reservationData = {
       accomodationId: params.id,
@@ -52,7 +88,7 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
     <Container>
       <div>
         <TitleSection>{name}</TitleSection>
-        <img src={image} alt="room-image" />
+        {!image ? <img src={Hotel} alt="non-image" /> : <img src={image} alt="room-image" />}
       </div>
       <BottomSection>
         <PriceSection>
@@ -75,9 +111,9 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
             </ReserveSectionTop>
             <div>
               <button className="cartButton">
-                <Cart />
+                <Cart onClick={sendCart} />
               </button>
-              <button onClick={moveReservationPage}>예약하기</button>
+              <button onClick={moveReservation}>예약하기</button>
             </div>
           </ReserveSection>
         ) : (
