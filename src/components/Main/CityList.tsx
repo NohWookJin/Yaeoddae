@@ -25,7 +25,11 @@ function CityList({ areacode }: CityListProp) {
   }, []);
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return (
+      <ListContainer>
+        <Loader />
+      </ListContainer>
+    );
   }
 
   if (isError) {
@@ -48,6 +52,29 @@ const ListContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   overflow: hidden;
+`;
+
+const Loader = styled.div`
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2rem;
+  height: 2rem;
+  border: 5px solid gray;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 export interface ItemType {
