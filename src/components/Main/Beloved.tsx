@@ -6,11 +6,11 @@ function Beloved() {
 
   return (
     <BelovedItem>
-      <ItemImage onClick={() => navigate("/search?area-code=JEJU")} $text="JEJU">
+      <ItemImage onClick={() => navigate("/search?area-code=JEJU")} $text="jeju">
         <ItemText>제주도</ItemText>
         <ImageOverlay />
       </ItemImage>
-      <ItemImage onClick={() => navigate("/search?area-code=BUSAN")} $text="BUSAN">
+      <ItemImage onClick={() => navigate("/search?area-code=BUSAN")} $text="busan">
         <ItemText>부산</ItemText>
         <ImageOverlay />
       </ItemImage>
