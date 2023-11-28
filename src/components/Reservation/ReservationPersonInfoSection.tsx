@@ -16,7 +16,6 @@ function ReservationPersonInfoSection({
   reservationPersonContact: string;
   setReservationPersonContact: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  console.log(reservationPersonName);
   return (
     <>
       <SectionContainer>

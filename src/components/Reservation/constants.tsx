@@ -13,7 +13,7 @@ export const CAUTIONS_LIST = [
   },
 ];
 
-import kakaopayIcon from "../../assets/kakaopayIcon.png";
+import kakaopayIcon from "../../assets/icons/kakaopay.png";
 export const PAYMENT_OPTIONS = [
   {
     name: "kakaopay",

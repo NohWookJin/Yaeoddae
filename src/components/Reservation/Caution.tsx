@@ -2,7 +2,7 @@
 import styled from "styled-components";
 
 // icon
-import infoIcon from "../../assets/infoIcon.svg";
+import infoIcon from "../../assets/icons/info.svg";
 
 function Caution({ title, content }: { title: string; content: string }) {
   return (

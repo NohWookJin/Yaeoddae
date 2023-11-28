@@ -8,7 +8,7 @@ import { SectionContainer, SectionDivider } from "./reservationStyles";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 
 // icon
-import personIcon from "../../assets/personIcon.svg";
+import personIcon from "../../assets/icons/person.svg";
 
 function ReservationInfoSection({ reservationInfo }: { reservationInfo: ReservationInfo }) {
   return (
