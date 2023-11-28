@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useCountStore } from "../../store/memberCount";
 
 // styles
 import styled, { css } from "styled-components";
@@ -16,6 +17,7 @@ interface Props {
 
 function DatePickModal({ isOpen, setIsOpen }: Props) {
   const today = moment(new Date()).format("MM월 DD일");
+  const member = useCountStore((state) => state.counts);
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -23,18 +25,13 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
   const [queryStartDate, setQueryStartDate] = useState<string>("");
   const [queryEndDate, setQueryEndDate] = useState<string>("");
 
-  const navigate = useNavigate();
   const params = useParams();
 
-  const MOCK_AREA_CODE = "서울"; // params.areaCode
-  const MOCK_KEYWORD = "강릉세인트존스호텔"; // params.keyword
-
   const moveDetail = () => {
-    navigate(
-      `/detail/${params.id}?keyword=${MOCK_KEYWORD}&area-code=${MOCK_AREA_CODE}&checkIn=${queryStartDate}&checkOut=${queryEndDate}`,
-      {
-        state: { checkInAndCheckOut },
-      }
+    history.replaceState(
+      { state: checkInAndCheckOut },
+      "",
+      `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${queryStartDate}&checkOut=${queryEndDate}&countMember=${member}`
     );
     setIsOpen((prev) => !prev);
   };

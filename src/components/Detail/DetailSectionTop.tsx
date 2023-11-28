@@ -9,9 +9,7 @@ interface AccommodationInfo {
 }
 
 function DetailSectionTop({ accommodation }: AccommodationInfo) {
-  const { name, image, location } = accommodation;
-
-  console.log(accommodation.name);
+  const { name, image, address } = accommodation;
 
   return (
     <Container>
@@ -20,7 +18,7 @@ function DetailSectionTop({ accommodation }: AccommodationInfo) {
       </ImageSection>
       <TextSection>
         <h3>{name}</h3>
-        <span>{location.address}</span>
+        <span>{address}</span>
       </TextSection>
     </Container>
   );

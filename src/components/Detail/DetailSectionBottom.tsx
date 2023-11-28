@@ -8,18 +8,18 @@ import styled from "styled-components";
 
 export interface AccommodationRoom {
   room: {
-    id: number;
     roomTypeId: number;
     name: string;
     description: string;
     image: string;
     stock: number;
     capacity: number;
+    price: number;
   };
 }
 
 function DetailSectionBottom({ room }: AccommodationRoom) {
-  const { name, stock, image, capacity, description, id } = room;
+  const { name, stock, image, capacity, description, roomTypeId, price } = room;
 
   const roomState = {
     name: name,
@@ -32,17 +32,18 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
   const params = useParams();
 
   const moveRoomDetail = () => {
-    navigate(`/room/${id}`, { state: { roomState } });
+    navigate(`/room/${roomTypeId}`, { state: { roomState } });
   };
 
   const moveReservationPage = () => {
     const searchParams = new URLSearchParams(location.search);
     const reservationData = {
       accomodationId: params.id,
-      roomId: id,
+      roomId: roomTypeId,
       checkIn: searchParams.get("checkIn"),
       checkOut: searchParams.get("checkOut"),
       memberCount: searchParams.get("memberCount"),
+      price: price,
     };
     navigate("/reservation", { state: { reservationData } });
   };
@@ -56,7 +57,7 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
       <BottomSection>
         <PriceSection>
           <span>가격</span>
-          {stock !== 0 ? <span>100,000원</span> : <span className="stockNonePrice">100,000원</span>}
+          {stock !== 0 ? <span>{price}</span> : <span className="stockNonePrice">{price}</span>}
         </PriceSection>
         <RoomSection>
           <span>객실 이용 안내</span>

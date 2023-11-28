@@ -1,7 +1,7 @@
 // hook
 import { useEffect, useState } from "react";
 import { useDate } from "../../hook/useDate";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 // components
 import DatePickModal from "./DatePickModal";
@@ -19,13 +19,21 @@ function DetailDateAndCount() {
   const increaseMember = useCountStore((state) => state.increaseCount);
   const decreaseMember = useCountStore((state) => state.decreaseCount);
 
-  const { today, formattedNextDate, checkIn, setCheckIn, checkOut, setCheckOut, differenceInDays } =
-    useDate();
+  const {
+    today,
+    formattedNextDate,
+    checkIn,
+    setCheckIn,
+    checkOut,
+    setCheckOut,
+    differenceInDays,
+    asTodayCheckIn,
+    asTodayCheckOut,
+  } = useDate();
 
   const [isDateModalOpen, setIsDateModalOpen] = useState<boolean>(false);
   const [isUserChangeDate, setIsUserChangeDate] = useState<boolean>(false);
 
-  const location = useLocation();
   const params = useParams();
 
   const handleDateModalClick = () => {
@@ -35,21 +43,29 @@ function DetailDateAndCount() {
   useEffect(() => {
     setIsUserChangeDate(true);
 
-    if (location.state && location.state.checkInAndCheckOut) {
-      setCheckIn(location.state.checkInAndCheckOut.checkIn);
-      setCheckOut(location.state.checkInAndCheckOut.checkOut);
+    if (history.state && history.state.checkInAndCheckOut) {
+      setCheckIn(history.state.checkInAndCheckOut.checkIn);
+      setCheckOut(history.state.checkInAndCheckOut.checkOut);
     }
-  }, [location, setCheckIn, setCheckOut]);
+  }, [setCheckIn, setCheckOut]);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set("memberCount", member.toString());
-    history.replaceState(
-      { search: searchParams.toString() },
-      "",
-      `/detail/${params.id}?${searchParams}`
-    );
-  }, [location.search, member, params.id]);
+    if (checkIn === "" || checkOut === "") {
+      history.replaceState(
+        null,
+        "",
+        `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${member}`
+      );
+    } else {
+      history.replaceState(
+        null,
+        "",
+        `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${String(
+          checkIn
+        )}&checkOut=${String(checkOut)}&memberCount=${member}`
+      );
+    }
+  }, [checkIn, checkOut, member, params.id, asTodayCheckIn, asTodayCheckOut]);
 
   return (
     <Container>
