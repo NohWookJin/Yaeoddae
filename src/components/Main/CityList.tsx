@@ -62,7 +62,7 @@ const Loader = styled.div`
   transform: translate(-50%, -50%);
   width: 2rem;
   height: 2rem;
-  border: 5px solid gray;
+  border: 0.3rem solid gray;
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
