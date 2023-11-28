@@ -1,16 +1,16 @@
-import { useState, useContext, ChangeEvent, FormEvent } from "react";
-import { UserContext } from "../../components/Context/UserContext";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
 import Input from "../../components/Input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useUserStore from "../../components/Store/UserStore";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { setUserEmail, setIsLoggedIn } = useUserStore();
   const [email, setEmail] = useState("");
-  const { setUserEmail, setIsLoggedIn } = useContext(UserContext);
   const [password, setPassword] = useState("");
   const [error] = useState("");
 
@@ -29,8 +29,6 @@ function LoginPage() {
       if (response.ok) {
         const { token } = data.data;
         localStorage.setItem("token", token);
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/");

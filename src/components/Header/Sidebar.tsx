@@ -9,8 +9,7 @@ import ArrowUp from "../../assets/icons/arrowUp.svg?react";
 import ArrowRight from "../../assets/icons/arrowRight.svg?react";
 import { useNavigate } from "react-router-dom";
 
-import { UserContext } from "../Context/UserContext";
-import { useContext } from "react";
+import useUserStore from "../../components/Store/UserStore";
 
 interface Props {
   isOpen: boolean;
@@ -18,7 +17,7 @@ interface Props {
 }
 
 function Sidebar({ isOpen, setIsOpen }: Props) {
-  const { userEmail, setUserEmail, isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const { userEmail, setUserEmail, isLoggedIn, setIsLoggedIn } = useUserStore();
 
   const navigate = useNavigate();
 
@@ -29,8 +28,6 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
   const handleAuthBtnClick = () => {
     if (isLoggedIn) {
       localStorage.removeItem("token");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("isLoggedIn");
       setIsLoggedIn(false);
       setUserEmail("");
     } else {
