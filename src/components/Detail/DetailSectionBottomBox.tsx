@@ -1,15 +1,18 @@
-// component & interface
-import DetailSectionBottom from "./DetailSectionBottom";
-import { RoomAccmodation } from "../../pages/detailPage/DetailPage";
-import { useCountStore } from "../../store/memberCount";
 import { useEffect, useState } from "react";
 
+// component & interface
+import DetailSectionBottom from "./DetailSectionBottom";
+import { IAccommodationRooms } from "../../pages/detailPage/DetailPage";
+
+// zustand
+import { useCountStore } from "../../store/memberCount";
+
 interface AccommodationRooms {
-  accommodation: RoomAccmodation[];
+  accommodation: IAccommodationRooms[];
 }
 
 function DetailSectionBottomBox({ accommodation }: AccommodationRooms) {
-  const [rooms, setRooms] = useState<RoomAccmodation[]>([]);
+  const [rooms, setRooms] = useState<IAccommodationRooms[]>([]);
 
   useEffect(() => {
     setRooms(accommodation);

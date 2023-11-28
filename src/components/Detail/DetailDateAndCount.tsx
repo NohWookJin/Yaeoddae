@@ -1,7 +1,7 @@
 // hook
 import { useEffect, useState } from "react";
 import { useDate } from "../../hook/useDate";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 // components
 import DatePickModal from "./DatePickModal";
@@ -31,10 +31,11 @@ function DetailDateAndCount() {
     asTodayCheckOut,
   } = useDate();
 
+  const params = useParams();
+  const { search } = useLocation();
+
   const [isDateModalOpen, setIsDateModalOpen] = useState<boolean>(false);
   const [isUserChangeDate, setIsUserChangeDate] = useState<boolean>(false);
-
-  const params = useParams();
 
   const handleDateModalClick = () => {
     setIsDateModalOpen((prev) => !prev);
@@ -43,29 +44,26 @@ function DetailDateAndCount() {
   useEffect(() => {
     setIsUserChangeDate(true);
 
-    if (history.state && history.state.checkInAndCheckOut) {
+    if (history.state) {
       setCheckIn(history.state.checkInAndCheckOut.checkIn);
       setCheckOut(history.state.checkInAndCheckOut.checkOut);
     }
-  }, [setCheckIn, setCheckOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history.state, setCheckIn, setCheckOut, setIsDateModalOpen]);
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(search);
+    const keyword = queryParams.get("keyword");
+    const areaCode = queryParams.get("area-code");
+
     if (checkIn === "" || checkOut === "") {
       history.replaceState(
         null,
         "",
-        `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${member}`
-      );
-    } else {
-      history.replaceState(
-        null,
-        "",
-        `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${String(
-          checkIn
-        )}&checkOut=${String(checkOut)}&memberCount=${member}`
+        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${member}`
       );
     }
-  }, [checkIn, checkOut, member, params.id, asTodayCheckIn, asTodayCheckOut]);
+  }, [checkIn, checkOut, member, params.id, asTodayCheckIn, asTodayCheckOut, search]);
 
   return (
     <Container>

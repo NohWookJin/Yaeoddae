@@ -1,11 +1,11 @@
 // interface
-import { HotelAccomodation } from "../../pages/detailPage/DetailPage";
+import { IAccommodation } from "../../pages/detailPage/DetailPage";
 
 // style
 import styled from "styled-components";
 
 interface AccommodationInfo {
-  accommodation: HotelAccomodation;
+  accommodation: IAccommodation;
 }
 
 function DetailSectionTop({ accommodation }: AccommodationInfo) {

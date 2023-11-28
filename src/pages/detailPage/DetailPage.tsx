@@ -1,6 +1,9 @@
+// hooks
 import { useEffect, useState } from "react";
-// import { useQuery } from "@tanstack/react-query";
+
+// libraries
 import axios from "axios";
+// import { useQuery } from "@tanstack/react-query";
 
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
@@ -9,17 +12,17 @@ import DetailSectionBottomBox from "../../components/Detail/DetailSectionBottomB
 
 // style
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDate } from "../../hook/useDate";
 
-export interface HotelAccomodation {
+export interface IAccommodation {
   id: number;
   name: string;
   image: string;
   address: string;
 }
 
-export interface RoomAccmodation {
+export interface IAccommodationRooms {
   roomTypeId: number;
   name: string;
   description: string;
@@ -30,37 +33,17 @@ export interface RoomAccmodation {
 }
 
 function DetailPage() {
-  const [hotelAccommodation, setHotelAccommodation] = useState<null | HotelAccomodation>(null);
-  const [roomAccommodation, setRoomAccommodation] = useState<RoomAccmodation[]>([]);
-
+  const [hotelAccommodation, setHotelAccommodation] = useState<null | IAccommodation>(null);
+  const [roomAccommodation, setRoomAccommodation] = useState<IAccommodationRooms[]>([]);
   const { asTodayCheckIn, asTodayCheckOut } = useDate();
 
-  const navigate = useNavigate();
   const params = useParams();
+  const { search } = useLocation();
 
-  const MOCK_AREA_CODE = "SEOUL";
-  const MOCK_KEYWORD = "고운";
-
-  const testLoginAPI = async () => {
-    try {
-      const response = await axios.post(`https://travel-server.up.railway.app/members/signin`, {
-        email: "test3@gmail.com",
-        password: "12345",
-      });
-
-      const { token } = response.data.data;
-
-      localStorage.setItem("ImsiToken", token);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  // // 호텔 정보 조회(GET, parameters = keywords, areaCode)
-  const refreshHotelAPI = async () => {
+  const refreshAccommodation = async (keyword: string, areaCode: string) => {
     try {
       const response = await axios.get(
-        `https://travel-server.up.railway.app/accommodations?keyword=${MOCK_KEYWORD}&area-code=${MOCK_AREA_CODE}`
+        `https://travel-server.up.railway.app/accommodations?keyword=${keyword}&area-code=${areaCode}`
       );
 
       const { data } = response.data;
@@ -70,10 +53,11 @@ function DetailPage() {
     }
   };
 
-  // // 방 정보 조회(GET, parameter = accommodationId)
-  const refreshRoomAPI = async () => {
+  const refreshAccommodationRooms = async (accommodationId: string) => {
     try {
-      const response = await axios.get(`https://travel-server.up.railway.app/rooms/2950469`);
+      const response = await axios.get(
+        `https://travel-server.up.railway.app/rooms/${accommodationId}`
+      );
 
       const { data } = response.data;
       setRoomAccommodation(data);
@@ -83,16 +67,26 @@ function DetailPage() {
   };
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(search);
+
+    let keyword = queryParams.get("keyword");
+    if (keyword?.includes("[")) {
+      keyword = keyword.split("[")[0];
+    }
+
+    const areaCode = queryParams.get("area-code");
+
+    const accommodationId = params.id;
+
     history.replaceState(
       null,
       "",
-      `/detail/${params.id}?keyword=${MOCK_KEYWORD}&area-code=${MOCK_AREA_CODE}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
+      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
     );
 
-    testLoginAPI();
-    refreshHotelAPI();
-    refreshRoomAPI();
-  }, [navigate, params.id, asTodayCheckIn, asTodayCheckOut]);
+    refreshAccommodation(keyword as string, areaCode as string);
+    refreshAccommodationRooms(accommodationId as string);
+  }, [asTodayCheckIn, asTodayCheckOut, params.areaCode, params.id, params.keyword, search]);
 
   if (hotelAccommodation && roomAccommodation) {
     return (

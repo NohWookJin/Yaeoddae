@@ -1,14 +1,17 @@
+// hooks
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useCountStore } from "../../store/memberCount";
 
-// styles
-import styled, { css } from "styled-components";
-import "react-calendar/dist/Calendar.css";
+// zustand
+import { useCountStore } from "../../store/memberCount";
 
 // libraries
 import Calendar from "react-calendar";
 import moment from "moment";
+
+// styles
+import styled, { css } from "styled-components";
+import "react-calendar/dist/Calendar.css";
 
 interface Props {
   isOpen: boolean;
@@ -27,24 +30,6 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
 
   const params = useParams();
 
-  const moveDetail = () => {
-    history.replaceState(
-      { state: checkInAndCheckOut },
-      "",
-      `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${queryStartDate}&checkOut=${queryEndDate}&countMember=${member}`
-    );
-    setIsOpen((prev) => !prev);
-  };
-
-  const checkInAndCheckOut = {
-    checkIn: startDate,
-    checkOut: endDate,
-  };
-
-  const handleBackGroundClick = () => {
-    setIsOpen((prev) => !prev);
-  };
-
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const handleChangeDate = (e) => {
@@ -54,6 +39,24 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
     setQueryEndDate(moment(e[1]).format("YYMMDD"));
     setStartDate(startDateFormat);
     setEndDate(endDateFormat);
+  };
+
+  const checkInAndCheckOut = {
+    checkIn: startDate,
+    checkOut: endDate,
+  };
+
+  const moveDetail = () => {
+    history.replaceState(
+      { checkInAndCheckOut },
+      "",
+      `/detail/${params.id}?keyword=고운&area-code=SEOUL&checkIn=${queryStartDate}&checkOut=${queryEndDate}&countMember=${member}`
+    );
+    setIsOpen((prev) => !prev);
+  };
+
+  const handleBackGroundClick = () => {
+    setIsOpen((prev) => !prev);
   };
 
   return (
