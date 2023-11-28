@@ -6,9 +6,11 @@ import JoinModal from "../../components/JoinModal";
 import Input from "../../components/Input";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useUserStore from "../../components/Store/UserStore";
 
 function SignupPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { setUserEmail, setIsLoggedIn } = useUserStore();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -52,6 +54,8 @@ function SignupPage() {
 
       if (response.ok) {
         console.log("회원가입 성공");
+        setUserEmail(email);
+        setIsLoggedIn(true);
         navigate("/login");
       } else {
         toast.error("회원가입 실패");

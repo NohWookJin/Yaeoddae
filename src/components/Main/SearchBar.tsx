@@ -1,11 +1,18 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import searchSVG from "../../assets/icons/mainSearch.svg?react";
+import { useNavigate } from "react-router-dom";
 
 function SearchBar() {
   const [isSearching, setIsSearching] = useState(false);
+  const [input, setInput] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
 
   const handleClick = () => {
     if (inputRef.current) {
@@ -22,13 +29,23 @@ function SearchBar() {
     setIsSearching(false);
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      navigate(`/search?keyword=${input}`);
+    }
+  };
+
   return (
     <SearchBarStyle>
       <SearchInput
+        type="text"
         ref={inputRef}
         placeholder="어디로 갈까요?"
         onFocus={handleFocus}
         onBlur={handleBlur}
+        onChange={(event) => handleChange(event)}
+        value={input}
+        onKeyDown={handleKeyPress}
       />
       {!isSearching ? <SearchIcon onClick={handleClick} /> : null}
     </SearchBarStyle>

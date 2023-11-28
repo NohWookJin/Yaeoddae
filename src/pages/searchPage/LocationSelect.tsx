@@ -1,18 +1,14 @@
 // library
 import { useRef } from "react";
+import { SetURLSearchParams } from "react-router-dom";
 import Select, { SelectInstance } from "react-select";
 
 interface Props {
-  location: { label: string; value: string };
-  setLocation: React.Dispatch<
-    React.SetStateAction<{
-      label: string;
-      value: string;
-    }>
-  >;
+  areaCode: string;
+  setSearchParams: SetURLSearchParams;
 }
 
-function LocationSelect({ location, setLocation }: Props) {
+function LocationSelect({ areaCode, setSearchParams }: Props) {
   const selectRef = useRef<SelectInstance>(null);
 
   const optionList = [
@@ -36,9 +32,16 @@ function LocationSelect({ location, setLocation }: Props) {
     { label: "제주", value: "JEJU" },
   ];
 
+  const location = optionList.filter((option) => option.value === areaCode);
+
   const handleOnChange = (nextValue: unknown) => {
     selectRef.current!.blur();
-    setLocation(nextValue as { label: string; value: string });
+    const location = nextValue as { label: string; value: string };
+
+    setSearchParams((prev) => {
+      const prevKeyword = prev.get("keyword") || "";
+      return { keyword: prevKeyword, ["area-code"]: location.value };
+    });
   };
 
   return (

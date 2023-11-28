@@ -5,9 +5,11 @@ import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
 import Input from "../../components/Input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useUserStore from "../../components/Store/UserStore";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { setUserEmail, setIsLoggedIn } = useUserStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error] = useState("");
@@ -25,7 +27,10 @@ function LoginPage() {
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        const { token } = data.data;
+        localStorage.setItem("token", token);
+        setIsLoggedIn(true);
+        setUserEmail(email);
         navigate("/");
       } else {
         throw new Error(data.message || "로그인 실패");
