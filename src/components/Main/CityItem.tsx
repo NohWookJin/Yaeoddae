@@ -19,7 +19,8 @@ function CityItem({ item }: CityItemProps) {
 
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(`/detail/${item.AccommodationId}?name=${item.name}&area-code=${areaString}`);
+    console.log(item.AccommodationId, item.name, item.location.areaCode);
+    navigate(`/detail/${item.AccommodationId}?keyword=_&name=${item.name}&area-code=${areaString}`);
   };
 
   return (
