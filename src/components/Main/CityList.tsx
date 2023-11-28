@@ -1,28 +1,20 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import CityItem from "./CityItem";
 import styled from "styled-components";
 import { API_BASE_URL } from "../../api/config";
+import { useQuery } from "@tanstack/react-query";
 
 function CityList({ areacode }: CityListProp) {
-  const [res, setRes] = useState<null | ItemType[]>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState<null | string>(null);
+  const fetchData = () => {
+    return axios.get(`${API_BASE_URL}/accommodations/page/1?keyword=_&area-code=${areacode}`);
+  };
 
-  useEffect(() => {
-    axios
-      .get(`${API_BASE_URL}/accommodations/page/1?keyword=_&area-code=${areacode}`)
-      .then((response) => {
-        const res = response.data.data;
-        setRes(res.slice(0, 4));
-      })
-      .catch((err) => {
-        setIsError(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const { isLoading, data, isError, error } = useQuery({
+    queryKey: ["main", areacode],
+    queryFn: fetchData,
+  });
+
+  const res: ItemType[] = data?.data.data.slice(0, 4);
 
   if (isLoading) {
     return (
@@ -36,7 +28,8 @@ function CityList({ areacode }: CityListProp) {
   }
 
   if (isError) {
-    return <ListContainer>{isError}</ListContainer>;
+    const errorMessage = (error as Error).message;
+    return <ListContainer>{errorMessage}</ListContainer>;
   }
 
   return (
