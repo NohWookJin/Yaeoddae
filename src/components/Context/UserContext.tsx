@@ -1,31 +1,48 @@
-import { createContext, useState, Dispatch, SetStateAction } from "react";
+import { createContext, useState } from "react";
 
 // UserContext의 타입 정의
 type UserContextType = {
-  userName: string;
+  userEmail: string;
   isLoggedIn: boolean;
-  setUserName: Dispatch<SetStateAction<string>>;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+  setUserEmail: (email: string) => void;
+  setIsLoggedIn: (loggedIn: boolean) => void;
 };
 
 // 초기 상태 정의
 const initialUserState: UserContextType = {
-  userName: "",
+  userEmail: "",
   isLoggedIn: false,
-  setUserName: () => {},
+  setUserEmail: () => {},
   setIsLoggedIn: () => {},
 };
 
-// UserContext 생성
 export const UserContext = createContext<UserContextType>(initialUserState);
 
-// UserProvider 컴포넌트
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [userName, setUserName] = useState<string>("");
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userEmail, setUserEmail] = useState<string>(localStorage.getItem("userEmail") || "");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
+
+  const handleSetUserEmail = (email: string) => {
+    localStorage.setItem("userEmail", email);
+    setUserEmail(email);
+  };
+
+  const handleSetIsLoggedIn = (loggedIn: boolean) => {
+    localStorage.setItem("isLoggedIn", loggedIn.toString());
+    setIsLoggedIn(loggedIn);
+  };
 
   return (
-    <UserContext.Provider value={{ userName, isLoggedIn, setUserName, setIsLoggedIn }}>
+    <UserContext.Provider
+      value={{
+        userEmail,
+        isLoggedIn,
+        setUserEmail: handleSetUserEmail,
+        setIsLoggedIn: handleSetIsLoggedIn,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

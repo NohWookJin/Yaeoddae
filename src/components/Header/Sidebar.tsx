@@ -18,7 +18,7 @@ interface Props {
 }
 
 function Sidebar({ isOpen, setIsOpen }: Props) {
-  const { userName, setUserName, isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const { userEmail, setUserEmail, isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -29,8 +29,10 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
   const handleAuthBtnClick = () => {
     if (isLoggedIn) {
       localStorage.removeItem("token");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("isLoggedIn");
       setIsLoggedIn(false);
-      setUserName("");
+      setUserEmail("");
     } else {
       navigate("/login");
     }
@@ -46,7 +48,7 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
           <TransparentArrowUpSVG />
         </SidebarTopBoxLogo>
         <SidebarTopBoxText>
-          {isLoggedIn ? `${userName} 환영합니다!` : "로그인 후 예약하세요!"}
+          {isLoggedIn ? `${userEmail}님 환영합니다!` : "로그인 후 예약하세요!"}
         </SidebarTopBoxText>
         <SidebarTopLogoutBtnBox onClick={handleAuthBtnClick}>
           {isLoggedIn ? "로그아웃" : "로그인"}
