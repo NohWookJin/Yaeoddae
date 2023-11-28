@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 // icon
 import Search from "../../assets/icons/search.svg?react";
+import { useRef } from "react";
 
 interface InputProps {
   placeholder: string;
@@ -15,19 +16,19 @@ interface InputProps {
 }
 
 function SearchInput(data: InputProps) {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (data.setKeyword) {
-      data.setKeyword(event.target.value);
-    }
-  };
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <Container $marginTop={data.marginTop} $marginBottom={data.marginBottom}>
       <input
+        ref={inputRef}
         type="text"
         placeholder={data.placeholder}
-        value={data.keyword}
-        onChange={handleInputChange}
+        onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === "Enter") {
+            data.setKeyword(inputRef.current!.value);
+          }
+        }}
       />
       <SearchIcon />
     </Container>

@@ -9,7 +9,7 @@ import SearchReslutList from "./SearchReslutList";
 
 function SearchPage() {
   const [keyword, setKeyword] = useState("");
-  const [location, setLocation] = useState({ label: "전체", value: "전체" });
+  const [location, setLocation] = useState({ label: "전체", value: "" });
 
   return (
     <SearchPageLayout>
@@ -22,7 +22,7 @@ function SearchPage() {
           <LocationSelect location={location} setLocation={setLocation} />
         </SelectLocationBox>
       </SearchPageHeader>
-      <SearchReslutList />
+      <SearchReslutList keyword={keyword} location={location.value} />
     </SearchPageLayout>
   );
 }
