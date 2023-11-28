@@ -4,6 +4,7 @@ import React from "react";
 // component
 import Input from "../Input";
 import { SectionContainer, SectionLabel, SectionDivider } from "./reservationStyles";
+import { handleInputChange } from "../../utils/handleInputChange";
 
 function ReservationPersonInfoSection({
   reservationPersonName,
@@ -16,6 +17,13 @@ function ReservationPersonInfoSection({
   reservationPersonContact: string;
   setReservationPersonContact: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e, setReservationPersonName);
+  };
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e, setReservationPersonContact);
+  };
+
   return (
     <>
       <SectionContainer>
@@ -30,7 +38,7 @@ function ReservationPersonInfoSection({
           type="text"
           marginTop="20px"
           value={reservationPersonName}
-          setValue={setReservationPersonName}
+          onChange={handleNameChange}
         />
         <Input
           isRequired={true}
@@ -39,7 +47,7 @@ function ReservationPersonInfoSection({
           type="text"
           marginTop="20px"
           value={reservationPersonContact}
-          setValue={setReservationPersonContact}
+          onChange={handleContactChange}
         />
       </SectionContainer>
       <SectionDivider />
