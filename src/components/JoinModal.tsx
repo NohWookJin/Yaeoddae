@@ -111,7 +111,7 @@ const JoinModal = () => {
           </form>
         </div>
         <ModalFooter>
-          <button type="button">동의하고 계속하기</button>
+          <button type="submit">동의하고 계속하기</button>
         </ModalFooter>
       </ModalContainer>
     </ModalBackground>
