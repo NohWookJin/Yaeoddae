@@ -171,6 +171,10 @@ const SidebarMenuListBox = styled.div`
   & > div:last-child {
     border: none;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SidebarMenuBox = styled.div`
