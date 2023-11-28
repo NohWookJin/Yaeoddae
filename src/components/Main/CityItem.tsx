@@ -5,13 +5,21 @@ import { useNavigate } from "react-router-dom";
 function removeTextAfterBracket(name: string) {
   return name.replace(/\[.*/, "");
 }
+enum AreaCodeMapping {
+  SEOUL = "1",
+  GYEONGGI = "31",
+  GANGWON = "32",
+  BUSAN = "6",
+}
 
 function CityItem({ item }: CityItemProps) {
+  const areaString = Object.keys(AreaCodeMapping).find(
+    (key) => AreaCodeMapping[key as keyof typeof AreaCodeMapping] === item.location.areaCode
+  );
+
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(
-      `/detail/${item.AccommodationId}?name=${item.name}&area-code=${item.location.areaCode}`
-    );
+    navigate(`/detail/${item.AccommodationId}?name=${item.name}&area-code=${areaString}`);
   };
 
   return (

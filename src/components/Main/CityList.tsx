@@ -6,6 +6,7 @@ import { API_BASE_URL } from "../../api/config";
 
 function CityList({ areacode }: CityListProp) {
   const [res, setRes] = useState<null | ItemType[]>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState<null | string>(null);
 
   useEffect(() => {
@@ -17,8 +18,15 @@ function CityList({ areacode }: CityListProp) {
       })
       .catch((err) => {
         setIsError(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
 
   if (isError) {
     return <ListContainer>{isError}</ListContainer>;

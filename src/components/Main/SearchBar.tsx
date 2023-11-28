@@ -38,6 +38,7 @@ function SearchBar() {
   return (
     <SearchBarStyle>
       <SearchInput
+        type="text"
         ref={inputRef}
         placeholder="어디로 갈까요?"
         onFocus={handleFocus}
