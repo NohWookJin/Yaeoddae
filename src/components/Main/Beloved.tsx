@@ -1,17 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function Beloved() {
+  const navigate = useNavigate();
+
   return (
     <BelovedItem>
-      <ItemImage $text="jeju">
+      <ItemImage onClick={() => navigate("/search?area-code=JEJU")} $text="JEJU">
         <ItemText>제주도</ItemText>
         <ImageOverlay />
       </ItemImage>
-      <ItemImage $text="busan">
+      <ItemImage onClick={() => navigate("/search?area-code=BUSAN")} $text="BUSAN">
         <ItemText>부산</ItemText>
         <ImageOverlay />
       </ItemImage>
-      <ItemImage $text="kangwon">
+      <ItemImage onClick={() => navigate("/search?area-code=GANGWON")} $text="GANGWON">
         <ItemText>강원도</ItemText>
         <ImageOverlay />
       </ItemImage>
@@ -36,7 +39,7 @@ const ImageOverlay = styled.div`
   transition: opacity 0.2s;
 `;
 
-const ItemImage = styled.a<{ $text?: string }>`
+const ItemImage = styled.div<{ $text?: string }>`
   width: 80px;
   height: 80px;
   border-radius: 50%;
