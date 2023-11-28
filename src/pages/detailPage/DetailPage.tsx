@@ -1,4 +1,11 @@
+// hooks
 import { useEffect, useState } from "react";
+
+// libraries
+import axios from "axios";
+
+// config
+import { API_BASE_URL } from "../../api/config";
 
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
@@ -7,55 +14,96 @@ import DetailSectionBottomBox from "../../components/Detail/DetailSectionBottomB
 
 // style
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDate } from "../../hook/useDate";
 
-export interface IAccmodation {
+export interface IAccommodation {
   id: number;
-  accommodation: {
-    name: string;
-    location: string;
-    image: string;
-  };
-  room: [
-    {
-      id: number;
-      roomTypeId: number;
-      name: string;
-      description: string;
-      image: string;
-      stock: number;
-      capacity: number;
-    },
-  ];
+  name: string;
+  image: string;
+  address: string;
+}
+
+export interface IAccommodationRooms {
+  roomTypeId: number;
+  name: string;
+  description: string;
+  image: string;
+  stock: number;
+  capacity: number;
+  price: number;
 }
 
 function DetailPage() {
-  const [accommodation, setAccommodation] = useState<null | IAccmodation>(null);
-
+  const [hotelAccommodation, setHotelAccommodation] = useState<null | IAccommodation>(null);
+  const [roomAccommodation, setRoomAccommodation] = useState<IAccommodationRooms[]>([]);
   const { asTodayCheckIn, asTodayCheckOut } = useDate();
 
-  const navigate = useNavigate();
   const params = useParams();
+  const { search } = useLocation();
+
+  const queryParams = new URLSearchParams(search);
+
+  let keyword = queryParams.get("keyword") as string;
+  if (keyword?.includes("[")) {
+    keyword = keyword.split("[")[0] as string;
+  }
+
+  const areaCode = queryParams.get("area-code") as string;
+
+  const accommodationId = params.id;
+
+  const refreshAccommodation = async (keyword: string, areaCode: string) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/accommodations?keyword=${keyword}&area-code=${areaCode}`
+      );
+
+      const { data } = response.data;
+      setHotelAccommodation(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const refreshAccommodationRooms = async (accommodationId: string) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/rooms/${accommodationId}`);
+
+      const { data } = response.data;
+      setRoomAccommodation(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
-    navigate(
-      `/detail/${params.id}?checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
+    history.replaceState(
+      null,
+      "",
+      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
     );
 
-    fetch("/mock/roomsData.json", {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((result) => setAccommodation(result));
-  }, [navigate, params.id, asTodayCheckIn, asTodayCheckOut]);
+    refreshAccommodation(keyword as string, areaCode as string);
+    refreshAccommodationRooms(accommodationId as string);
+  }, [
+    accommodationId,
+    areaCode,
+    asTodayCheckIn,
+    asTodayCheckOut,
+    keyword,
+    params.areaCode,
+    params.id,
+    params.keyword,
+    search,
+  ]);
 
-  if (accommodation) {
+  if (hotelAccommodation && roomAccommodation) {
     return (
       <Container>
-        <DetailSectionTop accommodation={accommodation} />
+        <DetailSectionTop accommodation={hotelAccommodation} />
         <DetailDateAndCount />
-        <DetailSectionBottomBox accommodation={accommodation} />
+        <DetailSectionBottomBox accommodation={roomAccommodation} />
       </Container>
     );
   }
