@@ -1,17 +1,54 @@
 // library
-import { useQuery } from "@tanstack/react-query";
-
-// api
-import getSearchResult from "../../api/mockSearchApi";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
-const SearchReslutList = () => {
+// hook
+import useIntersect from "../../hook/useIntersect";
+
+// api
+import getSearchResult from "../../api/search";
+
+// tyoe
+import SearchResult from "../../types/searchResult";
+
+// icon
+import defaultHotel from "../../assets/icons/defaultHotel.svg";
+
+interface Props {
+  keyword: string;
+  location: string;
+}
+
+const SearchReslutList = ({ keyword, location }: Props) => {
   const navigate = useNavigate();
-  const { data, isLoading } = useQuery({ queryKey: ["search"], queryFn: getSearchResult });
 
-  const handleSearchResultClick = (id: number) => {
-    navigate(`/detail/${id}`);
+  const { data, isLoading, fetchNextPage } = useInfiniteQuery({
+    queryKey: [keyword + location],
+    queryFn: ({ pageParam = 1 }) => getSearchResult(pageParam, keyword, location),
+    getNextPageParam: ({ data, page }) => {
+      if (data.data.length !== 10) {
+        return undefined;
+      } else {
+        return page + 1;
+      }
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  const searchResults = useMemo(
+    () => (data ? data.pages.flatMap(({ data }) => data.data) : []),
+    [data]
+  );
+
+  const ref = useIntersect((entry, observer) => {
+    observer.unobserve(entry.target);
+    fetchNextPage();
+  });
+
+  const handleSearchResultClick = (id: number, keyword: string, areaCode: string) => {
+    navigate(`/detail/${id}?keyword=${keyword}&area-code=${areaCode}`);
   };
 
   if (isLoading) {
@@ -20,17 +57,27 @@ const SearchReslutList = () => {
 
   return (
     <SearchResultListLayout>
-      {data?.map((item) => {
+      {searchResults.map((searchResult: SearchResult) => {
         return (
-          <SearchResultLayout key={item.id} onClick={() => handleSearchResultClick(item.id)}>
-            <SearchResultImg src={item.image} alt="" />
+          <SearchResultLayout
+            key={searchResult.AccommodationId}
+            onClick={() =>
+              handleSearchResultClick(
+                searchResult.AccommodationId,
+                searchResult.name,
+                searchResult.location.areaCode
+              )
+            }
+          >
+            <SearchResultImg src={searchResult.image ? searchResult.image : defaultHotel} alt="" />
             <SearchResultInfoBox>
-              <SearchResultName>{item.name}</SearchResultName>
-              <SearchResultDesc>{item.description}</SearchResultDesc>
+              <SearchResultName>{searchResult.name}</SearchResultName>
+              <SearchResultDesc>{searchResult.location.address}</SearchResultDesc>
             </SearchResultInfoBox>
           </SearchResultLayout>
         );
       })}
+      <Target ref={ref} />
     </SearchResultListLayout>
   );
 };
@@ -83,4 +130,8 @@ const SearchResultName = styled.p`
 
 const SearchResultDesc = styled.p`
   font-size: ${({ theme }) => theme.Fs.default};
+`;
+
+const Target = styled.div`
+  height: 1px;
 `;

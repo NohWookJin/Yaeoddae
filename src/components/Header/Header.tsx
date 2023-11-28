@@ -64,7 +64,7 @@ function Header() {
       return (
         <>
           <HeaderLayout $isBorderBottom>
-            <ListSVG onClick={handleListClick} />
+            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderLogoSVG onClick={handleTitleClick} />
             <CartSVG onClick={handleCartClick} />
           </HeaderLayout>
