@@ -1,4 +1,5 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, useContext, ChangeEvent, FormEvent } from "react";
+import { UserContext } from "../../components/Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import HeaderLogo from "../../assets/logo/headerLogo.svg?react";
@@ -9,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const { setUserEmail, setIsLoggedIn } = useContext(UserContext);
   const [password, setPassword] = useState("");
   const [error] = useState("");
 
@@ -25,7 +27,12 @@ function LoginPage() {
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        const { token } = data.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("isLoggedIn", "true");
+        setIsLoggedIn(true);
+        setUserEmail(email);
         navigate("/");
       } else {
         throw new Error(data.message || "로그인 실패");
