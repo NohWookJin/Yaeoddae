@@ -1,6 +1,6 @@
 // library
 import styled from "styled-components";
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 // component
 import SearchInput from "./SearchInput";
@@ -8,21 +8,27 @@ import LocationSelect from "./LocationSelect";
 import SearchReslutList from "./SearchReslutList";
 
 function SearchPage() {
-  const [keyword, setKeyword] = useState("");
-  const [location, setLocation] = useState({ label: "전체", value: "전체" });
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const keyword = searchParams.get("keyword") || "";
+  const areaCode = searchParams.get("area-code") || "";
 
   return (
     <SearchPageLayout>
       <SearchPageHeader>
-        <SearchInput placeholder="숙소명을 입력하세요" keyword={keyword} setKeyword={setKeyword} />
+        <SearchInput
+          placeholder="숙소명을 입력하세요"
+          keyword={keyword}
+          setSearchParams={setSearchParams}
+        />
         <SelectLocationBox>
           <LocationSign>
             <div>지역</div>
           </LocationSign>
-          <LocationSelect location={location} setLocation={setLocation} />
+          <LocationSelect areaCode={areaCode} setSearchParams={setSearchParams} />
         </SelectLocationBox>
       </SearchPageHeader>
-      <SearchReslutList />
+      <SearchReslutList keyword={keyword} areaCode={areaCode} />
     </SearchPageLayout>
   );
 }

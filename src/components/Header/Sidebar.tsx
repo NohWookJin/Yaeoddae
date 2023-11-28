@@ -9,20 +9,35 @@ import ArrowUp from "../../assets/icons/arrowUp.svg?react";
 import ArrowRight from "../../assets/icons/arrowRight.svg?react";
 import { useNavigate } from "react-router-dom";
 
+import useUserStore from "../../components/Store/UserStore";
+
 interface Props {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Sidebar({ isOpen, setIsOpen }: Props) {
+  const { userEmail, setUserEmail, isLoggedIn, setIsLoggedIn } = useUserStore();
+
   const navigate = useNavigate();
 
   const handleBackGroundClick = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleLoginBtnClick = () => {
-    navigate("/login");
+  const handleAuthBtnClick = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      setUserEmail("");
+    } else {
+      navigate("/login");
+    }
+    setIsOpen(false);
+  };
+
+  const handleSidebarMenuClick = (url: string) => {
+    navigate(url);
     setIsOpen(false);
   };
 
@@ -34,13 +49,27 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
           <HeaderLogoSVG />
           <TransparentArrowUpSVG />
         </SidebarTopBoxLogo>
-        <SidebarTopBoxText>로그인 후 예약하세요!</SidebarTopBoxText>
-        <SidebarTopLogoutBtnBox onClick={handleLoginBtnClick}>
-          로그인
+        <SidebarTopBoxText>
+          {isLoggedIn ? `${userEmail}님 환영합니다!` : "로그인 후 예약하세요!"}
+        </SidebarTopBoxText>
+        <SidebarTopLogoutBtnBox onClick={handleAuthBtnClick}>
+          {isLoggedIn ? "로그아웃" : "로그인"}
           <ArrowRightSVG />
         </SidebarTopLogoutBtnBox>
       </SidebarTopBox>
-      <SidebarBottomBox onClick={handleBackGroundClick} />
+      {isLoggedIn ? (
+        <SidebarMenuListBox>
+          <SidebarMenuBox onClick={() => handleSidebarMenuClick("/mypage")}>
+            내 정보 관리
+          </SidebarMenuBox>
+          <SidebarMenuBox onClick={() => handleSidebarMenuClick("/cart")}>장바구니</SidebarMenuBox>
+          <SidebarMenuBox onClick={() => handleSidebarMenuClick("/reservationlist")}>
+            예약내역
+          </SidebarMenuBox>
+        </SidebarMenuListBox>
+      ) : null}
+
+      <SidebarBottomBox $isLoggedIn={isLoggedIn} onClick={handleBackGroundClick} />
     </SidebarLayout>
   );
 }
@@ -134,10 +163,34 @@ const ArrowRightSVG = styled(ArrowRight)`
   fill: white;
 `;
 
-const SidebarBottomBox = styled.div`
+const SidebarMenuListBox = styled.div`
+  background-color: #fff;
+
+  padding: 0 1rem;
+
+  & > div:last-child {
+    border: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const SidebarMenuBox = styled.div`
+  height: 5rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  border-bottom: ${({ theme }) => theme.Border.thinBorder};
+`;
+
+const SidebarBottomBox = styled.div<{ $isLoggedIn: boolean }>`
   background-color: ${({ theme }) => theme.Color.borderColor};
 
   width: 100%;
-  height: calc(100% - 13rem);
-  opacity: 0.1;
+  height: ${(props) => (props.$isLoggedIn ? "calc(100% - 28rem)" : "calc(100% - 13rem)")};
+  opacity: 0.7;
 `;

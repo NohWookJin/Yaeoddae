@@ -37,17 +37,6 @@ function Header() {
 
   switch (currentPath.split("/")[1]) {
     case "":
-      return (
-        <>
-          <HeaderLayout>
-            <ListSVG onClick={handleListClick} />
-            <HeaderLogoSVG onClick={handleTitleClick} />
-            <CartSVG onClick={handleCartClick} />
-          </HeaderLayout>
-          <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-        </>
-      );
-
     case "search":
       return (
         <>
@@ -62,14 +51,11 @@ function Header() {
 
     case "detail":
       return (
-        <>
-          <HeaderLayout $isBorderBottom>
-            <ListSVG onClick={handleListClick} />
-            <HeaderLogoSVG onClick={handleTitleClick} />
-            <CartSVG onClick={handleCartClick} />
-          </HeaderLayout>
-          <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-        </>
+        <HeaderLayout $isBorderBottom>
+          <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+          <HeaderLogoSVG onClick={handleTitleClick} />
+          <CartSVG onClick={handleCartClick} />
+        </HeaderLayout>
       );
 
     case "cart":
@@ -108,6 +94,16 @@ function Header() {
           <HeaderLeftBox>
             <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>예약</HeaderTitle>
+          </HeaderLeftBox>
+        </HeaderLayout>
+      );
+
+    case "reservationlist":
+      return (
+        <HeaderLayout $isBorderBottom>
+          <HeaderLeftBox>
+            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+            <HeaderTitle>예약 내역 조회</HeaderTitle>
           </HeaderLeftBox>
         </HeaderLayout>
       );
