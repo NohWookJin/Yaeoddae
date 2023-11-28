@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 // library
 import styled, { css } from "styled-components";
 
@@ -36,6 +37,16 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email") || "";
+
+    if (token) {
+      setIsLoggedIn(true);
+      setUserEmail(email);
+    }
+  }, [setIsLoggedIn, setUserEmail]);
+
   return (
     <SidebarLayout $isOpen={isOpen}>
       <SidebarTopBox>
@@ -45,7 +56,7 @@ function Sidebar({ isOpen, setIsOpen }: Props) {
           <TransparentArrowUpSVG />
         </SidebarTopBoxLogo>
         <SidebarTopBoxText>
-          {isLoggedIn ? `${userEmail}님 환영합니다!` : "로그인 후 예약하세요!"}
+          {isLoggedIn ? `안녕하세요 ${userEmail}님 환영합니다!` : "로그인 후 예약하세요!"}
         </SidebarTopBoxText>
         <SidebarTopLogoutBtnBox onClick={handleAuthBtnClick}>
           {isLoggedIn ? "로그아웃" : "로그인"}
