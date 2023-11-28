@@ -18,15 +18,38 @@ import defaultHotel from "../../assets/icons/defaultHotel.svg";
 
 interface Props {
   keyword: string;
-  location: string;
+  areaCode: string;
 }
 
-const SearchReslutList = ({ keyword, location }: Props) => {
+type ObjType = {
+  [index: string]: string;
+};
+const AREACODE: ObjType = {
+  "1": "SEOUL",
+  "2": "INCHEON",
+  "3": "DAEJEON",
+  "4": "DAEGU",
+  "5": "GWANGJU",
+  "6": "BUSAN",
+  "7": "ULSAN",
+  "8": "SEJONG",
+  "31": "GYEONGGI",
+  "32": "GANGWON",
+  "33": "CHUNGBUK",
+  "34": "CHUNGNAM",
+  "35": "GYEONGBUK",
+  "36": "GYEONGNAM",
+  "37": "JEONBUK",
+  "38": "JEONNAM",
+  "39": "JEJU",
+};
+
+const SearchReslutList = ({ keyword, areaCode }: Props) => {
   const navigate = useNavigate();
 
-  const { data, isLoading, fetchNextPage } = useInfiniteQuery({
+  const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: [keyword + location],
-    queryFn: ({ pageParam = 1 }) => getSearchResult(pageParam, keyword, location),
+    queryFn: ({ pageParam = 1 }) => getSearchResult(pageParam, keyword, areaCode),
     getNextPageParam: ({ data, page }) => {
       if (data.data.length !== 10) {
         return undefined;
@@ -48,7 +71,7 @@ const SearchReslutList = ({ keyword, location }: Props) => {
   });
 
   const handleSearchResultClick = (id: number, keyword: string, areaCode: string) => {
-    navigate(`/detail/${id}?keyword=${keyword}&area-code=${areaCode}`);
+    navigate(`/detail/${id}?keyword=${keyword}&area-code=${AREACODE[areaCode]}`);
   };
 
   if (isLoading) {
@@ -57,6 +80,7 @@ const SearchReslutList = ({ keyword, location }: Props) => {
 
   return (
     <SearchResultListLayout>
+      {!isFetching && searchResults.length === 0 ? <div>검색 결과가 없습니다.</div> : null}
       {searchResults.map((searchResult: SearchResult) => {
         return (
           <SearchResultLayout

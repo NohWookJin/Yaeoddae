@@ -1,32 +1,40 @@
 // library
+import { useState } from "react";
 import styled from "styled-components";
+import { SetURLSearchParams } from "react-router-dom";
 
 // icon
 import Search from "../../assets/icons/search.svg?react";
-import { useRef } from "react";
 
-interface InputProps {
+interface Props {
   placeholder: string;
   keyword: string;
-  setKeyword: React.Dispatch<React.SetStateAction<string>>;
+  setSearchParams: SetURLSearchParams;
   marginTop?: string;
   marginBottom?: string;
   errorState?: boolean;
   helpMessage?: string;
 }
 
-function SearchInput(data: InputProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+function SearchInput(props: Props) {
+  const [inputKeyword, setInputKeyword] = useState(props.keyword);
 
   return (
-    <Container $marginTop={data.marginTop} $marginBottom={data.marginBottom}>
+    <Container $marginTop={props.marginTop} $marginBottom={props.marginBottom}>
       <input
-        ref={inputRef}
         type="text"
-        placeholder={data.placeholder}
+        value={inputKeyword}
+        onChange={(e) => setInputKeyword(e.target.value)}
+        placeholder={props.placeholder}
         onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === "Enter") {
-            data.setKeyword(inputRef.current!.value);
+            props.setSearchParams((prev) => {
+              const prevAreaCode = prev.get("area-code") || "";
+              return {
+                ["area-code"]: prevAreaCode,
+                keyword: inputKeyword,
+              };
+            });
           }
         }}
       />
