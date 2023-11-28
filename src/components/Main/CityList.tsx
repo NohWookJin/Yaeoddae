@@ -27,7 +27,10 @@ function CityList({ areacode }: CityListProp) {
   if (isLoading) {
     return (
       <ListContainer>
-        <Loader />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
       </ListContainer>
     );
   }
@@ -51,29 +54,33 @@ const ListContainer = styled.div`
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   overflow: hidden;
 `;
 
-const Loader = styled.div`
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2rem;
-  height: 2rem;
-  border: 0.3rem solid gray;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-  @keyframes rotation {
+const Skeleton = styled.div`
+  width: 150px;
+  height: 140px;
+  border-radius: ${({ theme }) => theme.Br.default};
+  background-image: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1)
+  );
+  margin-bottom: 60px;
+  background-size: 400% 100%;
+  color: rgba(0, 0, 0, 0);
+
+  animation: skeleton-loading 7s linear infinite;
+  @keyframes skeleton-loading {
     0% {
-      transform: rotate(0deg);
+      background-position: 200% 0;
     }
     100% {
-      transform: rotate(360deg);
+      background-position: -200% 0;
     }
   }
 `;
