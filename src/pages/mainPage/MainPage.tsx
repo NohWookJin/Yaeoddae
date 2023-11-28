@@ -6,10 +6,10 @@ import SearchBar from "../../components/Main/SearchBar";
 import styled from "styled-components";
 
 export const areaCategory = [
-  { area: "서울", areaCode: "1" },
-  { area: "경기", areaCode: "31" },
-  { area: "강원", areaCode: "32" },
-  { area: "부산", areaCode: "6" },
+  { area: "서울", areaCode: "SEOUL" },
+  { area: "경기", areaCode: "GYEONGGI" },
+  { area: "강원", areaCode: "GANGWON" },
+  { area: "부산", areaCode: "BUSAN" },
 ];
 
 export default function MainPage() {
