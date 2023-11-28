@@ -47,6 +47,7 @@ export default CityList;
 
 const ListContainer = styled.div`
   min-width: 375px;
+  min-height: 400px;
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
