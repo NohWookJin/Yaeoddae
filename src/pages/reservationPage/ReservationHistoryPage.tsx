@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { getReservationHistory } from "../../api/reservation";
+import { getData } from "../../api/reservation";
 import ReservationHistoryItem from "../../components/Reservation/ReservationHistoryItem";
 
 export interface ReservationHistory {
@@ -23,7 +23,7 @@ function ReservationHistoryPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getReservationHistory();
+        const data = await getData("reservations");
         setReservationHistory(data.data);
       } catch (error) {
         console.log(error);

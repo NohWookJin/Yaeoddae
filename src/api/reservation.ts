@@ -46,15 +46,5 @@ const postCartReservation = async (data: CartReservation) => {
 
   return result.data;
 };
-const getReservationHistory = async () => {
-  const apiURL = `${API_BASE_URL}/reservations`;
-  const config = {
-    headers: { Authorization: `Bearer ${getAuth()}` },
-  };
-  const result = await axios.get(apiURL, config);
 
-  return result.data;
-};
-
-export { getData, postSingleReservation, postCartReservation, getReservationHistory };
-
+export { getData, postSingleReservation, postCartReservation };
