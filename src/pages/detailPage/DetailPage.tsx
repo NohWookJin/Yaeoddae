@@ -1,11 +1,6 @@
 // hooks
 import { useEffect, useState } from "react";
-
-// libraries
-import axios from "axios";
-
-// config
-import { API_BASE_URL } from "../../api/config";
+import { refreshAccommodation, refreshAccommodationRooms } from "../../api/detail";
 
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
@@ -37,45 +32,20 @@ export interface IAccommodationRooms {
 function DetailPage() {
   const [hotelAccommodation, setHotelAccommodation] = useState<null | IAccommodation>(null);
   const [roomAccommodation, setRoomAccommodation] = useState<IAccommodationRooms[]>([]);
+
   const { asTodayCheckIn, asTodayCheckOut } = useDate();
 
   const params = useParams();
   const { search } = useLocation();
 
-  const queryParams = new URLSearchParams(search);
+  const searchParams = new URLSearchParams(search);
+  const areaCode = searchParams.get("area-code") as string;
+  const accommodationId = params.id as string;
 
-  let keyword = queryParams.get("keyword") as string;
+  let keyword = searchParams.get("keyword") as string;
   if (keyword?.includes("[")) {
     keyword = keyword.split("[")[0] as string;
   }
-
-  const areaCode = queryParams.get("area-code") as string;
-
-  const accommodationId = params.id;
-
-  const refreshAccommodation = async (keyword: string, areaCode: string) => {
-    try {
-      const response = await axios.get(
-        `${API_BASE_URL}/accommodations?keyword=${keyword}&area-code=${areaCode}`
-      );
-
-      const { data } = response.data;
-      setHotelAccommodation(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const refreshAccommodationRooms = async (accommodationId: string) => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/rooms/${accommodationId}`);
-
-      const { data } = response.data;
-      setRoomAccommodation(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   useEffect(() => {
     history.replaceState(
@@ -84,8 +54,13 @@ function DetailPage() {
       `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
     );
 
-    refreshAccommodation(keyword as string, areaCode as string);
-    refreshAccommodationRooms(accommodationId as string);
+    refreshAccommodation(keyword, areaCode, setHotelAccommodation);
+    refreshAccommodationRooms(
+      accommodationId,
+      String(20 + asTodayCheckIn),
+      String(20 + asTodayCheckOut),
+      setRoomAccommodation
+    );
   }, [
     accommodationId,
     areaCode,
