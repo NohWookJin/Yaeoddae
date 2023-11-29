@@ -11,6 +11,7 @@ import PaymentCautions from "../../components/Reservation/PaymentCautions";
 import Loading from "../../components/Loading";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { scrollToTop } from "../../utils/scrollToTop";
+import { getData } from "../../api/reservation";
 
 export interface ReservationInfo {
   accommodationName: string;
@@ -21,6 +22,42 @@ export interface ReservationInfo {
   capacity: number;
   nightsCount: number;
   price: number;
+}
+
+export interface CartInfo {
+  id: number;
+  guest_number: number;
+  check_in: string;
+  check_out: string;
+  room: RoomInfo;
+  accommodation: AccommodationInfo;
+}
+
+export interface RoomInfo {
+  id: number;
+  roomTypeId: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  stock: number;
+  capacity: number;
+  accommodation: null;
+}
+
+export interface AccommodationInfo {
+  id: number;
+  accommodationType: string;
+  name: string;
+  location: {
+    address: string;
+    phone: string;
+    areaCode: string;
+    latitude: number;
+    longitude: number;
+  };
+  image: string;
+  description: string;
 }
 
 function ReservationPage() {
@@ -34,48 +71,63 @@ function ReservationPage() {
   const [reservationPersonContact, setReservationPersonContact] = useState<string>("");
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const reservationFromCart = searchParams.size > 0;
+  const cartIds = searchParams.get("cartIds");
 
   const location = useLocation();
   const reservationFromDetail = location.state;
 
-  const [reservationInfoList, setReservationInfoList] = useState<ReservationInfo[] | null>(null);
+  const [reservationInfoList, setReservationInfoList] = useState<
+    ReservationInfo[] | CartInfo[] | null
+  >(null);
 
   useEffect(() => {
-    if (reservationFromCart) {
-      console.log("다중");
+    if (cartIds) {
+      getCartReservationInfo(cartIds);
     } else if (reservationFromDetail !== null) {
       console.log("단일");
     } else {
       setReservationInfoList(null);
+      console.log("no data");
     }
-  }, [location, reservationFromCart, reservationFromDetail]);
+  }, [location, cartIds, reservationFromDetail]);
+
+  const getCartReservationInfo = async (cartId: string) => {
+    try {
+      const ids = cartId.split(",");
+      const data = await getData("carts");
+      const filteredData = await data.filter((item: CartInfo) => ids.includes(item.id.toString()));
+      setReservationInfoList(filteredData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getSingleReservationInfo = () => {
     if (!location.state) {
       console.log("단일 예약 정보 없음");
       return;
     }
-
-    const {
-      accommodationName,
-      accommodationId,
-      areaCode,
-      roomTypeId,
-      roomName,
-      checkIn,
-      checkOut,
-      guestNumber,
-      capacity,
-      price,
-    } = location.state;
   };
+
+  //   const {
+  //     accommodationName,
+  //     accommodationId,
+  //     areaCode,
+  //     roomTypeId,
+  //     roomName,
+  //     checkIn,
+  //     checkOut,
+  //     guestNumber,
+  //     capacity,
+  //     price,
+  //   } = location.state;
+  // };
 
   const priceToPay: number = Dummy.reduce((acc: number, item: ReservationInfo) => {
     return acc + item.price;
   }, 0);
 
-  if (!reservationInfoList) return <div>잘못된 접근 방식입니다</div>;
+  if (reservationInfoList === null) return <div>잘못된 접근 방식입니다</div>;
   else
     return (
       <>
