@@ -1,26 +1,55 @@
+// components & interface
+import { ICart } from "../../pages/cartPage/CartPage";
+import { useDate } from "../../hook/useDate";
+
+// styles
 import styled from "styled-components";
 
-function CartSection() {
+interface Cart {
+  list: ICart;
+}
+
+interface CartSectionProps {
+  isChecked: boolean;
+  onChange: () => void;
+}
+
+function CartSection({ list, isChecked, onChange }: Cart & CartSectionProps) {
+  const { accommodationGetResponse, roomGetResponse, guestNumber, checkIn, checkOut } = list;
+  const { formatDate, formatMonth } = useDate();
+
+  const checkInMonth = formatMonth(checkIn);
+  const checkInDay = formatDate(checkIn);
+
+  const checkOutMonth = formatMonth(checkOut);
+  const checkOutDay = formatDate(checkOut);
+
+  const formatPrice = roomGetResponse.price?.toLocaleString();
+
   return (
     <Container>
       <SectionTitle>
-        <input type="checkbox" />
-        <span>호텔 크레센도 서울</span>
-        <span>서울 강남구 삼성동 113-5</span>
+        <input type="checkbox" checked={isChecked} onChange={onChange} />
+        <span>{accommodationGetResponse.name}</span>
+        <span>{accommodationGetResponse.location.address}</span>
       </SectionTitle>
       <SectionDescription>
-        <DescriptionTop>프티 퀸 202호</DescriptionTop>
+        <DescriptionTop>{roomGetResponse.name}</DescriptionTop>
         <DescriptionBottom>
-          <img src="/mockImage.png" alt="" />
+          <img src={roomGetResponse.image} alt="room-image" />
           <div>
-            <span>11.20 ~ 11.21 . 1박</span>
-            <span>기준 2명 / 최대 4명</span>
+            <span>
+              {checkInMonth}월 {checkInDay}일 ~ {checkOutMonth}월 {checkOutDay}일
+            </span>
+            <span>
+              신청 {guestNumber}명 / 최대 {roomGetResponse.capacity}명
+            </span>
           </div>
         </DescriptionBottom>
       </SectionDescription>
       <SectionPrice>
         <span>숙박</span>
-        <span>170,000원</span>
+        <span>{formatPrice}원</span>
       </SectionPrice>
     </Container>
   );

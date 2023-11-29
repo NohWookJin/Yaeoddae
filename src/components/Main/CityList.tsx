@@ -1,39 +1,35 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import CityItem from "./CityItem";
 import styled from "styled-components";
 import { API_BASE_URL } from "../../api/config";
+import { useQuery } from "@tanstack/react-query";
 
 function CityList({ areacode }: CityListProp) {
-  const [res, setRes] = useState<null | ItemType[]>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState<null | string>(null);
+  const fetchData = () => {
+    return axios.get(`${API_BASE_URL}/accommodations/page/1?keyword=_&area-code=${areacode}`);
+  };
 
-  useEffect(() => {
-    axios
-      .get(`${API_BASE_URL}/accommodations/page/1?keyword=_&area-code=${areacode}`)
-      .then((response) => {
-        const res = response.data.data;
-        setRes(res.slice(0, 4));
-      })
-      .catch((err) => {
-        setIsError(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const { isLoading, data, isError, error } = useQuery({
+    queryKey: ["main", areacode],
+    queryFn: fetchData,
+  });
+
+  const res: ItemType[] = data?.data.data.slice(0, 4);
 
   if (isLoading) {
     return (
       <ListContainer>
-        <Loader />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
       </ListContainer>
     );
   }
 
   if (isError) {
-    return <ListContainer>{isError}</ListContainer>;
+    const errorMessage = (error as Error).message;
+    return <ListContainer>{errorMessage}</ListContainer>;
   }
 
   return (
@@ -51,29 +47,33 @@ const ListContainer = styled.div`
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   overflow: hidden;
 `;
 
-const Loader = styled.div`
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2rem;
-  height: 2rem;
-  border: 5px solid gray;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-  @keyframes rotation {
+const Skeleton = styled.div`
+  width: 150px;
+  height: 140px;
+  border-radius: ${({ theme }) => theme.Br.default};
+  background-image: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1)
+  );
+  margin-bottom: 60px;
+  background-size: 400% 100%;
+  color: rgba(0, 0, 0, 0);
+
+  animation: skeleton-loading 7s linear infinite;
+  @keyframes skeleton-loading {
     0% {
-      transform: rotate(0deg);
+      background-position: 200% 0;
     }
     100% {
-      transform: rotate(360deg);
+      background-position: -200% 0;
     }
   }
 `;

@@ -7,6 +7,7 @@ import { SectionContainer, SectionLabel } from "./reservationStyles";
 import { SectionDivider } from "./reservationStyles";
 import Input from "../Input";
 import Checkbox from "./Checkbox";
+import { handleInputChange } from "../../utils/handleInputChange";
 
 function ActualUserInfoSection({
   reservationPersonName,
@@ -18,6 +19,13 @@ function ActualUserInfoSection({
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [actualUserName, setActualUserName] = useState<string>("");
   const [actualUserContact, setActualUserContact] = useState<string>("");
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e, setActualUserName);
+  };
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e, setActualUserContact);
+  };
 
   useEffect(() => {
     if (isChecked) {
@@ -46,10 +54,10 @@ function ActualUserInfoSection({
           label={"성명"}
           placeholder={"성명을 입력해주세요"}
           type="text"
-          marginTop="20px"
           value={actualUserName}
           setValue={setActualUserName}
-          readOnly={isChecked}
+          onChange={handleNameChange}
+          marginTop="20px"
         />
         <Input
           isRequired={true}
@@ -58,8 +66,8 @@ function ActualUserInfoSection({
           type="text"
           value={actualUserContact}
           setValue={setActualUserContact}
+          onChange={handleContactChange}
           marginTop="10px"
-          readOnly={isChecked}
         />
       </SectionContainer>
       <SectionDivider />

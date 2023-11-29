@@ -15,6 +15,10 @@ import SearchResult from "../../types/searchResult";
 
 // icon
 import defaultHotel from "../../assets/icons/defaultHotel.svg";
+import noResult from "../../assets/icons/noResult.svg?react";
+
+// component
+import SkeletonSearchResultList from "./SkeletonSearchResultList";
 
 interface Props {
   keyword: string;
@@ -50,14 +54,15 @@ const SearchReslutList = ({ keyword, areaCode }: Props) => {
   const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: [keyword + location],
     queryFn: ({ pageParam = 1 }) => getSearchResult(pageParam, keyword, areaCode),
-    getNextPageParam: ({ data, page }) => {
-      if (data.data.length !== 10) {
+    getNextPageParam: ({ status, data, page }) => {
+      if (status === 204 || data.data.length !== 10) {
         return undefined;
       } else {
         return page + 1;
       }
     },
     refetchOnWindowFocus: false,
+    retry: 6,
   });
 
   const searchResults = useMemo(
@@ -74,13 +79,8 @@ const SearchReslutList = ({ keyword, areaCode }: Props) => {
     navigate(`/detail/${id}?keyword=${keyword}&area-code=${AREACODE[areaCode]}`);
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <SearchResultListLayout>
-      {!isFetching && searchResults.length === 0 ? <div>검색 결과가 없습니다.</div> : null}
       {searchResults.map((searchResult: SearchResult) => {
         return (
           <SearchResultLayout
@@ -96,11 +96,18 @@ const SearchReslutList = ({ keyword, areaCode }: Props) => {
             <SearchResultImg src={searchResult.image ? searchResult.image : defaultHotel} alt="" />
             <SearchResultInfoBox>
               <SearchResultName>{searchResult.name}</SearchResultName>
-              <SearchResultDesc>{searchResult.location.address}</SearchResultDesc>
+              <SearchResultAddress>{searchResult.location.address}</SearchResultAddress>
             </SearchResultInfoBox>
           </SearchResultLayout>
         );
       })}
+      {isLoading || isFetching ? <SkeletonSearchResultList /> : null}
+      {!isLoading && searchResults.length === 0 ? (
+        <NoResultBox>
+          <NoResultSVG />
+          검색 결과가 없습니다.
+        </NoResultBox>
+      ) : null}
       <Target ref={ref} />
     </SearchResultListLayout>
   );
@@ -109,20 +116,10 @@ const SearchReslutList = ({ keyword, areaCode }: Props) => {
 export default SearchReslutList;
 
 const SearchResultListLayout = styled.div`
-  margin: 0.5rem 0 0 0;
-
   width: 100%;
 
   &:hover {
     cursor: pointer;
-  }
-
-  & > div:first-child {
-    border-top: ${({ theme }) => theme.Border.thinBorder};
-  }
-
-  & > div {
-    border-bottom: ${({ theme }) => theme.Border.thinBorder};
   }
 `;
 
@@ -133,6 +130,12 @@ const SearchResultLayout = styled.div`
   gap: 0.5rem;
 
   padding: 1rem 0;
+
+  border-bottom: ${({ theme }) => theme.Border.thinBorder};
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SearchResultImg = styled.img`
@@ -152,10 +155,23 @@ const SearchResultName = styled.p`
   font-weight: 700;
 `;
 
-const SearchResultDesc = styled.p`
+const SearchResultAddress = styled.p`
   font-size: ${({ theme }) => theme.Fs.default};
 `;
 
 const Target = styled.div`
   height: 1px;
+
+  border: none;
+`;
+
+const NoResultBox = styled.div`
+  text-align: center;
+
+  font-weight: 700;
+`;
+
+const NoResultSVG = styled(noResult)`
+  margin: 2rem 0;
+  height: 5rem;
 `;

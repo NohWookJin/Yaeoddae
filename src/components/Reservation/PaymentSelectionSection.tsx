@@ -1,5 +1,4 @@
 // library
-import { useState } from "react";
 import styled from "styled-components";
 
 // component
@@ -10,9 +9,13 @@ import PaymentOptionBox from "./PaymentOptionBox";
 // constant
 import { PAYMENT_OPTIONS } from "./constants";
 
-function PaymentSelectionSection() {
-  const [selectedOption, setSelectedOption] = useState<string>("");
-
+function PaymentSelectionSection({
+  paymentType,
+  setPaymentType,
+}: {
+  paymentType: string;
+  setPaymentType: React.Dispatch<React.SetStateAction<string>>;
+}) {
   return (
     <>
       <SectionContainer>
@@ -26,8 +29,8 @@ function PaymentSelectionSection() {
               <PaymentOptionBox
                 key={index}
                 optionName={option.name}
-                selectedOption={selectedOption}
-                setSelectedOption={setSelectedOption}
+                selectedOption={paymentType}
+                setSelectedOption={setPaymentType}
               >
                 {option.children}
               </PaymentOptionBox>

@@ -3,36 +3,58 @@ import styled from "styled-components";
 
 // component
 import DateInfoWrapper from "./DateInfoWrapper";
-import { ReservationInfo } from "../../pages/reservationPage/ReservationPage";
 import { SectionContainer, SectionDivider } from "./reservationStyles";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
+import { calculateNumberOfNights, formatDate } from "../../utils/formatOrCalculateData";
 
 // icon
-import personIcon from "../../assets/personIcon.svg";
+import personIcon from "../../assets/icons/person.svg";
 
-function ReservationInfoSection({ reservationInfo }: { reservationInfo: ReservationInfo }) {
+//type
+import { ReservationInfo } from "../../types/reservationTypes";
+
+function ReservationInfoSection({
+  reservationInfoList,
+}: {
+  reservationInfoList: ReservationInfo[] | undefined;
+}) {
   return (
     <>
       <SectionContainer>
-        <AccommodationInfo>
-          <h1>{reservationInfo.accommodationName}</h1>
-          <h2>{reservationInfo.roomName}</h2>
-        </AccommodationInfo>
-        <DateInfo>
-          <DateInfoWrapper isCheckIn={true} date={reservationInfo.checkInDate} />
-          <DateInfoWrapper isCheckIn={false} date={reservationInfo.checkOutDate} />
-        </DateInfo>
-        <PersonNumberInfo>
-          <img src={personIcon} alt="인원" />
-          <span>
-            기준 {reservationInfo.guestNumber}명 / 최대 {reservationInfo.capacity}명
-          </span>
-        </PersonNumberInfo>
-        <PriceAndNightInfo>
-          <span>{reservationInfo.nightsCount}박 기준</span>
-          <span>{addCommasToNumber(reservationInfo.totalPrice)}원</span>
-        </PriceAndNightInfo>
-        <WarningMessage>취소 및 환불 불가</WarningMessage>
+        {reservationInfoList?.map((reservationInfo, index) => {
+          const formattedCheckIn = formatDate(reservationInfo.checkIn);
+          const formattedCheckOut = formatDate(reservationInfo.checkOut);
+          const nightsCount = calculateNumberOfNights(
+            reservationInfo.checkIn,
+            reservationInfo.checkOut
+          );
+          const price = addCommasToNumber(reservationInfo.roomGetResponse.price * nightsCount);
+
+          return (
+            <div key={index}>
+              <AccommodationInfo>
+                <h1>{reservationInfo.accommodationGetResponse.name}</h1>
+                <h2>{reservationInfo.roomGetResponse.name}</h2>
+              </AccommodationInfo>
+              <DateInfo>
+                <DateInfoWrapper isCheckIn={true} date={formattedCheckIn} />
+                <DateInfoWrapper isCheckIn={false} date={formattedCheckOut} />
+              </DateInfo>
+              <PersonNumberInfo>
+                <img src={personIcon} alt="인원" />
+                <span>
+                  기준 {reservationInfo.guestNumber}명 / 최대{" "}
+                  {reservationInfo.roomGetResponse.capacity}명
+                </span>
+              </PersonNumberInfo>
+              <PriceAndNightInfo>
+                <span>{nightsCount}박 기준</span>
+                <span>{price}원</span>
+              </PriceAndNightInfo>
+              <WarningMessage>취소 및 환불 불가</WarningMessage>
+            </div>
+          );
+        })}
       </SectionContainer>
       <SectionDivider />
     </>
@@ -91,6 +113,7 @@ const WarningMessage = styled.div`
   text-align: right;
   color: ${(props) => props.theme.Color.mainColor};
   font-size: 0.75rem;
+  margin-bottom: 10px;
 `;
 
 export default ReservationInfoSection;
