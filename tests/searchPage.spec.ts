@@ -11,7 +11,7 @@ test("검색 페이지 이용하기", async ({ page }) => {
 
   const title = page.getByRole("heading", { name: "플로팅웨일 설악도적폭포스테이" });
 
-  await expect(title).toBeVisible;
+  await expect(title).toContainText("플로팅웨일 설악도적폭포스테이");
 });
 
 test("검색 결과가 존재하지 않는 경우", async ({ page }) => {
@@ -19,8 +19,9 @@ test("검색 결과가 존재하지 않는 경우", async ({ page }) => {
   await page.getByPlaceholder("숙소명을 입력하세요").click();
   await page.getByPlaceholder("숙소명을 입력하세요").fill("asdfasdfasdf");
   await page.getByPlaceholder("숙소명을 입력하세요").press("Enter");
+  await page.getByText("검색 결과가 없습니다").click();
 
   const noResult = page.getByText("검색 결과가 없습니다");
 
-  await expect(noResult).toBeVisible;
+  await expect(noResult).toContainText("검색 결과가 없습니다");
 });
