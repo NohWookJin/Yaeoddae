@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import useUserStore from "../../components/Store/UserStore";
-import { useNavigate } from "react-router-dom";
 
 function MyPage() {
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState("");
-  const setStoreUserEmail = useUserStore((state) => state.setUserEmail);
-  const setIsLoggedIn = useUserStore((state) => state.setIsLoggedIn);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserData();
@@ -35,7 +30,6 @@ function MyPage() {
         const responseData = await response.json();
         const { email, name, phone } = responseData.data;
         setUserEmail(email);
-        setStoreUserEmail(email);
         setUserName(name);
         setUserPhone(phone);
       } else {
@@ -44,13 +38,6 @@ function MyPage() {
     } catch (error) {
       console.error("There was an error!", error);
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUserEmail("");
-    setIsLoggedIn(false);
-    navigate("/");
   };
 
   return (
@@ -84,7 +71,7 @@ function MyPage() {
       </ProfileFix>
       <CheckForm></CheckForm>
       <BottomMenu>
-        <button onClick={handleLogout}>로그아웃</button>
+        <button>로그아웃</button>
         <button>회원탈퇴</button>
       </BottomMenu>
     </MypageWrap>
