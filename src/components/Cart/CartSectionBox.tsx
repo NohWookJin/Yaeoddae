@@ -1,37 +1,36 @@
-// components & interface
+import { useEffect, useState } from "react";
+
+// components
 import CartSelection from "./CartSelection";
 import CartSection from "./CartSection";
-import { ICart } from "../../pages/cartPage/CartPage";
-import { useCart } from "../../store/getCart";
+
+// stores
+import { pickCartList } from "../../store/pickCartList";
+import { cartList } from "../../store/cartList";
 
 // styles
 import styled from "styled-components";
-import { useEffect, useState } from "react";
 
-interface Cart {
-  list: ICart[];
-}
-
-function CartSectionBox({ list }: Cart) {
-  const [lists, setLists] = useState<ICart[]>([]);
+function CartSectionBox() {
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkboxes, setCheckboxes] = useState<Array<boolean>>([]);
 
-  const { addCartItem } = useCart();
+  const list = cartList((state) => state.list);
+  const { addCartItem } = pickCartList();
 
   const handleTotalCheckboxChange = () => {
-    const updatedCheckboxes = new Array(lists.length).fill(!isCheckedAll);
+    const updatedCheckboxes = new Array(list.length).fill(!isCheckedAll);
     setCheckboxes(updatedCheckboxes);
     setIsCheckedAll(!isCheckedAll);
 
-    lists.forEach((item) => {
+    list.forEach((item) => {
       const { id, roomGetResponse } = item;
       addCartItem(id, roomGetResponse.price as number, !isCheckedAll);
     });
   };
 
   const handleCheckboxChange = (id: number, price: number, isChecked: boolean) => {
-    const isCheckedId = checkboxes.some((isChecked, index) => isChecked && lists[index].id === id);
+    const isCheckedId = checkboxes.some((isChecked, index) => isChecked && list[index].id === id);
 
     if (isCheckedId) {
       addCartItem(id, price, isChecked);
@@ -47,23 +46,22 @@ function CartSectionBox({ list }: Cart) {
     setCheckboxes(updatedCheckboxes);
     setIsCheckedAll(updatedCheckboxes.every((isChecked) => isChecked));
 
-    const { id, roomGetResponse } = lists[index];
+    const { id, roomGetResponse } = list[index];
     handleCheckboxChange(id, roomGetResponse.price as number, updatedCheckboxes[index]);
   };
 
   useEffect(() => {
-    setLists(list);
     setCheckboxes(new Array(list.length).fill(false));
   }, [list]);
 
   return (
     <Container>
       <CartSelection checked={isCheckedAll} onChange={handleTotalCheckboxChange} />
-      {lists.map((item, index) => {
+      {list.map((item, index) => {
         return (
           <CartSection
             key={item.id}
-            list={item}
+            roomList={item}
             isChecked={checkboxes[index]}
             onChange={() => handleEachCheckboxChange(index)}
           />

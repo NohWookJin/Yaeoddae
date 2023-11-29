@@ -1,4 +1,7 @@
+// styles
 import styled from "styled-components";
+
+import { cartList } from "../../store/cartList";
 
 interface ICartSelection {
   checked: boolean;
@@ -6,11 +9,15 @@ interface ICartSelection {
 }
 
 function CartSelection({ checked, onChange }: ICartSelection) {
+  const { list } = cartList();
+
   return (
     <Container>
       <Section>
         <input type="checkbox" checked={checked} onChange={onChange} />
-        <span>전체선택(2/2)</span>
+        <span>
+          전체선택 ({list.length}/{list.length})
+        </span>
       </Section>
     </Container>
   );

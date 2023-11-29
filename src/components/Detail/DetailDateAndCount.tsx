@@ -1,11 +1,15 @@
-// hook
 import { useEffect, useState } from "react";
-import { useDate } from "../../hook/useDate";
 import { useParams, useLocation } from "react-router-dom";
+
+// hooks
+import { useDate } from "../../hook/useDate";
+import { useDetailAPI } from "../../api/detail";
+
+// store
+import { useCountStore } from "../../store/memberCount";
 
 // components
 import DatePickModal from "./DatePickModal";
-import { useCountStore } from "../../store/memberCount";
 
 // icons
 import Member from "../../assets/icons/User.svg?react";
@@ -33,6 +37,7 @@ function DetailDateAndCount() {
 
   const params = useParams();
   const { search } = useLocation();
+  const { refreshAccommodationRooms } = useDetailAPI();
 
   const [isDateModalOpen, setIsDateModalOpen] = useState<boolean>(false);
   const [isUserChangeDate, setIsUserChangeDate] = useState<boolean>(false);
@@ -47,6 +52,12 @@ function DetailDateAndCount() {
     if (history.state) {
       setCheckIn(history.state.checkInAndCheckOut.checkIn);
       setCheckOut(history.state.checkInAndCheckOut.checkOut);
+
+      const accommodationId = Number(params.id);
+      const checkInForReRendering = `20${history.state.checkInAndCheckOut.checkInForReRendering}`;
+      const checkOutForReRendering = `20${history.state.checkInAndCheckOut.checkOutForReRendering}`;
+
+      refreshAccommodationRooms(accommodationId, checkInForReRendering, checkOutForReRendering);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history.state, setCheckIn, setCheckOut, setIsDateModalOpen]);

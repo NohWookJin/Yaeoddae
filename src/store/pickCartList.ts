@@ -9,9 +9,11 @@ interface CartListState {
   cart: CartItem[];
   total: number;
   addCartItem: (id: number, price: number, isChecked: boolean) => void;
+  removeCartItem: (id: number) => void;
+  resetCart: () => void;
 }
 
-export const useCart = create<CartListState>((set) => ({
+export const pickCartList = create<CartListState>((set) => ({
   cart: [],
   total: 0,
   addCartItem: (id, price, isChecked) => {
@@ -42,6 +44,22 @@ export const useCart = create<CartListState>((set) => ({
           total: updatedCart.reduce((sum, item) => sum + item.price, 0),
         };
       }
+    });
+  },
+  removeCartItem: (id) => {
+    set((prevState) => {
+      const updatedCart = prevState.cart.filter((item) => item.id !== id);
+
+      return {
+        cart: updatedCart,
+        total: updatedCart.reduce((sum, item) => sum + item.price, 0),
+      };
+    });
+  },
+  resetCart: () => {
+    set({
+      cart: [],
+      total: 0,
     });
   },
 }));

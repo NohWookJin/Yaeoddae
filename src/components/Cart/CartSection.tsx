@@ -1,12 +1,20 @@
-// components & interface
-import { ICart } from "../../pages/cartPage/CartPage";
+// components
+import useCartAPI from "../../api/cart";
+
+// hooks
 import { useDate } from "../../hook/useDate";
+
+//interface
+import { ICart } from "../../store/cartList";
+
+// store
+import { pickCartList } from "../../store/pickCartList";
 
 // styles
 import styled from "styled-components";
 
 interface Cart {
-  list: ICart;
+  roomList: ICart;
 }
 
 interface CartSectionProps {
@@ -14,17 +22,28 @@ interface CartSectionProps {
   onChange: () => void;
 }
 
-function CartSection({ list, isChecked, onChange }: Cart & CartSectionProps) {
-  const { accommodationGetResponse, roomGetResponse, guestNumber, checkIn, checkOut } = list;
+function CartSection({ roomList, isChecked, onChange }: Cart & CartSectionProps) {
   const { formatDate, formatMonth } = useDate();
+  const { refreshCart, removeCart } = useCartAPI();
+  const { removeCartItem } = pickCartList();
+
+  const { accommodationGetResponse, roomGetResponse, guestNumber, checkIn, checkOut } = roomList;
 
   const checkInMonth = formatMonth(checkIn);
   const checkInDay = formatDate(checkIn);
-
   const checkOutMonth = formatMonth(checkOut);
   const checkOutDay = formatDate(checkOut);
 
   const formatPrice = roomGetResponse.price?.toLocaleString();
+
+  const handleRemoveCart = () => {
+    removeCartItem(roomList.id);
+    removeCart(roomList.id);
+
+    setTimeout(() => {
+      refreshCart();
+    }, 300);
+  };
 
   return (
     <Container>
@@ -33,6 +52,9 @@ function CartSection({ list, isChecked, onChange }: Cart & CartSectionProps) {
         <span>{accommodationGetResponse.name}</span>
         <span>{accommodationGetResponse.location.address}</span>
       </SectionTitle>
+      <SectionDelete>
+        <span onClick={handleRemoveCart}>삭제</span>
+      </SectionDelete>
       <SectionDescription>
         <DescriptionTop>{roomGetResponse.name}</DescriptionTop>
         <DescriptionBottom>
@@ -68,6 +90,22 @@ const Container = styled.section`
   ${({ theme }) => `
     background-color: ${theme.Color.componentColor}
   `}
+`;
+
+const SectionDelete = styled.div`
+  position: absolute;
+  right: 25px;
+  cursor: pointer;
+  span {
+    color: ${({ theme }) => theme.Color.mainFontColor};
+    font-size: ${({ theme }) => theme.Fs.caption};
+  }
+  &:hover {
+    span {
+      transition: all 0.4s;
+      font-weight: 600;
+    }
+  }
 `;
 
 const SectionTitle = styled.div`
