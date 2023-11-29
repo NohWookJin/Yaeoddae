@@ -1,44 +1,97 @@
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// config
 import { API_BASE_URL } from "./config";
-import { IAccommodation, IAccommodationRooms } from "../pages/detailPage/DetailPage";
+
+// interfaces
+import { IAccommodation } from "../pages/detailPage/DetailPage";
+
+// store
+import { accommodationRoomsList } from "../store/accommodationList";
 
 type SetAccommodationType = (value: IAccommodation) => void;
 
-export const refreshAccommodation = async (
-  keyword: string,
-  areaCode: string,
-  setHotelAccommodation: SetAccommodationType
-) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/accommodations?keyword=${keyword}&area-code=${areaCode}`
-    );
+export const useDetailAPI = () => {
+  const navigate = useNavigate();
 
-    const { data } = response.data;
+  const { setAccommodationRooms } = accommodationRoomsList();
 
-    setHotelAccommodation(data);
-  } catch (e) {
-    console.log(e);
-  }
-};
+  // 호텔 정보 API
+  const refreshAccommodation = async (
+    keyword: string,
+    areaCode: string,
+    setHotelAccommodation: SetAccommodationType
+  ) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/accommodations?keyword=${keyword}&area-code=${areaCode}`
+      );
 
-type SetRoomAccommodationType = (value: IAccommodationRooms[]) => void;
+      const { data } = response.data;
 
-export const refreshAccommodationRooms = async (
-  accommodationId: string,
-  checkIn: string,
-  checkOut: string,
-  setRoomAccommodation: SetRoomAccommodationType
-) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/rooms/${accommodationId}?check-in=${checkIn}&check-out=${checkOut}`
-    );
+      setHotelAccommodation(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-    const { data } = response.data;
+  // 해당 호텔 객실 정보 API
+  const refreshAccommodationRooms = async (
+    accommodationId: number,
+    checkIn: string,
+    checkOut: string
+  ) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/rooms/${accommodationId}?check-in=${checkIn}&check-out=${checkOut}`
+      );
 
-    setRoomAccommodation(data);
-  } catch (e) {
-    console.log(e);
-  }
+      const { data } = response.data;
+
+      setAccommodationRooms(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const postAccommodationRooms = async (
+    roomTypeId: number,
+    accommodationId: number,
+    guestNumber: number,
+    checkIn: string,
+    checkOut: string,
+    keyword: string,
+    areaCode: string
+  ) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${API_BASE_URL}/carts`,
+        {
+          roomTypeId: roomTypeId,
+          accommodationId: accommodationId,
+          guestNumber: guestNumber,
+          checkIn: checkIn,
+          checkOut: checkOut,
+          keyword: keyword,
+          areaCode: areaCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response) {
+        navigate("/cart");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return { refreshAccommodation, refreshAccommodationRooms, postAccommodationRooms };
 };
