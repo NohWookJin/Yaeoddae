@@ -1,5 +1,6 @@
 // hooks
 import { useParams, useNavigate } from "react-router-dom";
+import { useDate } from "../../hook/useDate";
 
 // libraries
 import axios from "axios";
@@ -28,6 +29,9 @@ export interface AccommodationRoom {
 
 function DetailSectionBottom({ room }: AccommodationRoom) {
   const { name, stock, image, capacity, description, roomTypeId, price } = room;
+  const { formatMonth, formatDate } = useDate();
+
+  const formatPrice = price?.toLocaleString();
 
   const roomState = {
     name: name,
@@ -44,19 +48,27 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
   };
 
   const sendCart = async () => {
-    const searchParams = new URLSearchParams(location.search);
-
     const token = localStorage.getItem("token");
+
+    const searchParams = new URLSearchParams(location.search);
+    const checkIn = searchParams.get("checkIn") as string;
+    const checkOut = searchParams.get("checkOut") as string;
+    const accommodationId = params.id;
+    const guestNumber = searchParams.get("memberCount");
+    const accommodationName = searchParams.get("keyword");
+    const areaCode = searchParams.get("area-code");
 
     try {
       const response = await axios.post(
         `${API_BASE_URL}/carts`,
         {
-          roomId: roomTypeId,
-          accommodationId: parseInt(params.id as string),
-          guestNumber: parseInt(searchParams.get("memberCount") as string),
-          checkIn: searchParams.get("checkIn"),
-          checkOut: searchParams.get("checkOut"),
+          roomTypeId: roomTypeId,
+          accommodationId: accommodationId,
+          guestNumber: guestNumber,
+          checkIn: String(20 + checkIn),
+          checkOut: String(20 + checkOut),
+          keyword: accommodationName,
+          areaCode: areaCode,
         },
         {
           headers: {
@@ -65,7 +77,11 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
         }
       );
 
-      console.log(response.data);
+      console.log(response);
+
+      if (response) {
+        navigate("/cart");
+      }
     } catch (e) {
       console.log(e);
     }
@@ -73,15 +89,33 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
 
   const moveReservation = () => {
     const searchParams = new URLSearchParams(location.search);
-    const reservationData = {
-      accomodationId: params.id,
-      roomId: roomTypeId,
-      checkIn: searchParams.get("checkIn"),
-      checkOut: searchParams.get("checkOut"),
-      memberCount: searchParams.get("memberCount"),
+    const checkIn = searchParams.get("checkIn") as string;
+    const checkOut = searchParams.get("checkOut") as string;
+    const accommodationId = params.id;
+    const accomodationName = searchParams.get("keyword") as string;
+    const areaCode = searchParams.get("area-code") as string;
+    const guestNumber = searchParams.get("memberCount");
+    const checkInMonth = formatMonth(checkIn);
+    const checkInDay = formatDate(checkIn);
+    const checkOutMonth = formatMonth(checkOut);
+    const checkOutDay = formatDate(checkOut);
+    const checkInDate = `${checkInMonth}월 ${checkInDay}일`;
+    const checkOutDate = `${checkOutMonth}월 ${checkOutDay}일`;
+
+    const reservation = {
+      accomodationId: accommodationId,
+      accomodationName: accomodationName,
+      areaCode: areaCode,
+      roomTypeId: roomTypeId,
+      roomName: name,
+      checkIn: checkInDate,
+      checkOut: checkOutDate,
+      guestNumber: guestNumber,
+      capacity: capacity,
       price: price,
     };
-    navigate("/reservation", { state: { reservationData } });
+
+    navigate("/reservation", { state: { reservation } });
   };
 
   return (
@@ -93,7 +127,11 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
       <BottomSection>
         <PriceSection>
           <span>가격</span>
-          {stock !== 0 ? <span>{price}</span> : <span className="stockNonePrice">{price}</span>}
+          {stock !== 0 ? (
+            <span>{formatPrice}원</span>
+          ) : (
+            <span className="stockNonePrice">{formatPrice}원</span>
+          )}
         </PriceSection>
         <RoomSection>
           <span>객실 이용 안내</span>

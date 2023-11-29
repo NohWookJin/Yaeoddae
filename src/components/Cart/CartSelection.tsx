@@ -1,10 +1,15 @@
 import styled from "styled-components";
 
-function CartSelection() {
+interface ICartSelection {
+  checked: boolean;
+  onChange: () => void;
+}
+
+function CartSelection({ checked, onChange }: ICartSelection) {
   return (
     <Container>
       <Section>
-        <input type="checkbox" />
+        <input type="checkbox" checked={checked} onChange={onChange} />
         <span>전체선택(2/2)</span>
       </Section>
     </Container>

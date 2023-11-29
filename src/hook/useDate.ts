@@ -20,6 +20,18 @@ export const useDate = () => {
   const checkOutMoment = moment(checkOut, "MM월 DD일");
   const differenceInDays = checkOutMoment.diff(checkInMoment, "days");
 
+  const formatYear = (date: string) => {
+    return date.substring(2, 4);
+  };
+
+  const formatMonth = (date: string) => {
+    return date.replace(/-/g, "").substring(4, 6);
+  };
+
+  const formatDate = (date: string) => {
+    return date.replace(/-/g, "").substring(6, 8);
+  };
+
   return {
     today,
     formattedNextDate,
@@ -30,5 +42,8 @@ export const useDate = () => {
     differenceInDays,
     asTodayCheckIn,
     asTodayCheckOut,
+    formatYear,
+    formatMonth,
+    formatDate,
   };
 };
