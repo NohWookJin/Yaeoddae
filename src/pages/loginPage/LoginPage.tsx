@@ -29,6 +29,7 @@ function LoginPage() {
       if (response.ok) {
         const { token } = data.data;
         localStorage.setItem("token", token);
+        localStorage.setItem("email", email);
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/");
