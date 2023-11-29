@@ -73,7 +73,7 @@ const SearchResultSkeletonName = styled.div`
   width: 13rem;
   height: 1.125rem;
 
-  animation: changeColor 1s infinite alternate;
+  animation: changeColor 1s infinite ease-in-out alternate;
   @keyframes changeColor {
     from {
       background-color: ${({ theme }) => theme.Color.inactiveColor};
@@ -88,7 +88,7 @@ const SearchResultSkeletonAddress = styled.div`
   width: 10rem;
   height: 1rem;
 
-  animation: changeColor 1s infinite alternate;
+  animation: changeColor 1s infinite ease-in-out alternate;
   @keyframes changeColor {
     from {
       background-color: ${({ theme }) => theme.Color.inactiveColor};
