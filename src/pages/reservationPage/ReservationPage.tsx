@@ -1,6 +1,7 @@
 // library
 import { useEffect, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
 
 // component
 import ReservationInfoSection from "../../components/Reservation/ReservationInfoSection";
@@ -9,56 +10,23 @@ import ActualUserInfoSection from "../../components/Reservation/ActualUserInfoSe
 import PaymentSelectionSection from "../../components/Reservation/PaymentSelectionSection";
 import PaymentCautions from "../../components/Reservation/PaymentCautions";
 import Loading from "../../components/Loading";
+
+// api
+import { getData, postCartReservation, postSingleReservation } from "../../api/reservation";
+
+// function
+import { calculateNumberOfNights, removeHyphensFromDate } from "../../utils/formatOrCalculateData";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { scrollToTop } from "../../utils/scrollToTop";
-import { getData } from "../../api/reservation";
 
-export interface ReservationInfo {
-  accommodationName: string;
-  roomName: string;
-  checkIn: string;
-  checkOut: string;
-  guestNumber: number;
-  capacity: number;
-  nightsCount: number;
-  price: number;
-}
-
-export interface CartInfo {
-  id: number;
-  guest_number: number;
-  check_in: string;
-  check_out: string;
-  room: RoomInfo;
-  accommodation: AccommodationInfo;
-}
-
-export interface RoomInfo {
-  id: number;
-  roomTypeId: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  stock: number;
-  capacity: number;
-  accommodation: null;
-}
-
-export interface AccommodationInfo {
-  id: number;
-  accommodationType: string;
-  name: string;
-  location: {
-    address: string;
-    phone: string;
-    areaCode: string;
-    latitude: number;
-    longitude: number;
-  };
-  image: string;
-  description: string;
-}
+//type
+import {
+  CartReservation,
+  ReservationInfo,
+  ReservationRoomsProps,
+  SingleReservation,
+  StateInfo,
+} from "../../types/reservationTypes";
 
 function ReservationPage() {
   useEffect(() => {
@@ -67,72 +35,191 @@ function ReservationPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // 예약자 정보
   const [reservationPersonName, setReservationPersonName] = useState<string>("");
   const [reservationPersonContact, setReservationPersonContact] = useState<string>("");
 
+  // 결제수단
+  const [paymentType, setPaymentType] = useState<string>("");
+
+  // 카트 예약시 정보
   const [searchParams, setSearchParams] = useSearchParams();
   const cartIds = searchParams.get("cartIds");
 
+  // 단건 예약시 정보
   const location = useLocation();
   const reservationFromDetail = location.state;
 
-  const [reservationInfoList, setReservationInfoList] = useState<
-    ReservationInfo[] | CartInfo[] | null
-  >(null);
+  // 예약 정보
+  const [reservationInfoList, setReservationInfoList] = useState<ReservationInfo[]>([]);
+  const [hasNoData, setHasNoData] = useState<boolean>(false);
 
   useEffect(() => {
     if (cartIds) {
+      // 카트 예약
+      setIsLoading(true);
       getCartReservationInfo(cartIds);
+      setIsLoading(false);
     } else if (reservationFromDetail !== null) {
-      console.log("단일");
+      // 단건 예약
+      getSingleReservationInfo();
     } else {
-      setReservationInfoList(null);
-      console.log("no data");
+      // 잘못된 접근
+      setHasNoData(true);
     }
   }, [location, cartIds, reservationFromDetail]);
 
+  /** 카트 정보 fetch 후 선택된 item들을 예약 정보에 저장 */
   const getCartReservationInfo = async (cartId: string) => {
     try {
       const ids = cartId.split(",");
       const data = await getData("carts");
-      const filteredData = await data.filter((item: CartInfo) => ids.includes(item.id.toString()));
+      const filteredData = await data.data.filter((item: ReservationInfo) =>
+        ids.includes(item.id.toString())
+      );
       setReservationInfoList(filteredData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getSingleReservationInfo = () => {
-    if (!location.state) {
-      console.log("단일 예약 정보 없음");
+  /** 단건 예약 정보를 location.state에서 가져와서 예약 정보에 저장 */
+  const getSingleReservationInfo = async () => {
+    const singleReservationInfo: ReservationInfo = createReservationInfo(
+      location.state.reservation
+    );
+    setReservationInfoList([singleReservationInfo]);
+  };
+
+  /** 단건 예약 정보 state를 ReservationInfo 타입으로 변환 */
+  const createReservationInfo = (data: StateInfo): ReservationInfo => {
+    return {
+      id: Number(data.accomodationId),
+      guestNumber: data.guestNumber ?? 0,
+      checkIn: data.checkIn,
+      checkOut: data.checkOut,
+      roomGetResponse: {
+        id: data.roomTypeId,
+        roomTypeId: data.roomTypeId,
+        name: data.roomName,
+        description: "",
+        price: data.price,
+        image: "",
+        stock: 0,
+        capacity: data.capacity,
+        accommodation: null,
+      },
+      accommodationGetResponse: {
+        AccommodationId: Number(data.accomodationId),
+        accommodationType: "",
+        name: data.accomodationName,
+        location: {
+          address: "",
+          phone: "",
+          areaCode: data.areaCode,
+          latitude: 0,
+          longitude: 0,
+        },
+        image: "",
+        description: "",
+      },
+    };
+  };
+
+  /** 예약 정보를 ReservationRoomsProps 타입으로 변환*/
+  const convertToReservationRoomsProps = (
+    reservationInfo: ReservationInfo[]
+  ): ReservationRoomsProps[] => {
+    return reservationInfo.map((info) => {
+      const {
+        accommodationGetResponse: {
+          AccommodationId: accommodationId,
+          name: accommodationName,
+          location: { areaCode },
+        },
+        roomGetResponse: { roomTypeId },
+        checkIn,
+        checkOut,
+        guestNumber,
+      } = info;
+
+      return {
+        accommodationId,
+        accommodationName,
+        areaCode,
+        roomTypeId,
+        checkIn: removeHyphensFromDate(checkIn),
+        checkOut: removeHyphensFromDate(checkOut),
+        guestNumber,
+      };
+    });
+  }
+
+  /** post /reservations/from-cart api를 위한 req body 리턴 */
+  const convertToCartReservation = (
+    cartId: string,
+    paymentType: string,
+    reservationInfo: ReservationInfo[]
+  ): CartReservation => {
+    const cartIds: number[] = cartId.split(",").map((id: string) => parseInt(id));
+    const reservationRooms = convertToReservationRoomsProps(reservationInfo);
+
+    return {
+      cartIds,
+      paymentType,
+      reservationRooms,
+    };
+  };
+
+  /** post /reservations api를 위한 req body 리턴 */
+  const convertToSingleReservation = (
+    paymentType: string,
+    reservationInfo: ReservationInfo[]
+  ): SingleReservation => {
+    const reservationRooms = convertToReservationRoomsProps(reservationInfo);
+
+    return {
+      paymentType,
+      reservationRooms,
+    };
+  };
+
+  /** 카트 및 단건 예약 상황에 맞게 결제(예약 생성) api 호출 및 에러 핸들링 */
+  const postReservation = async () => {
+    if (paymentType === "") {
+      alert("결제 수단을 선택해주세요");
       return;
+    }
+    try {
+      if (cartIds) {
+        const data = convertToCartReservation(cartIds, paymentType, reservationInfoList);
+        console.log(data);
+        const res = await postCartReservation(data);
+        console.log(res.data);
+      } else if (reservationFromDetail !== null) {
+        const data = convertToSingleReservation(paymentType, reservationInfoList);
+        console.log(data);
+        const res = await postSingleReservation(data);
+        console.log(res.data);
+      } else {
+        console.log("aaa");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  //   const {
-  //     accommodationName,
-  //     accommodationId,
-  //     areaCode,
-  //     roomTypeId,
-  //     roomName,
-  //     checkIn,
-  //     checkOut,
-  //     guestNumber,
-  //     capacity,
-  //     price,
-  //   } = location.state;
-  // };
-
-  const priceToPay: number = Dummy.reduce((acc: number, item: ReservationInfo) => {
-    return acc + item.price;
+  const priceToPay: number = reservationInfoList.reduce((acc: number, item: ReservationInfo) => {
+    const nightsCount = calculateNumberOfNights(item.checkIn, item.checkOut);
+    return acc + item.roomGetResponse.price * nightsCount;
   }, 0);
 
-  if (reservationInfoList === null) return <div>잘못된 접근 방식입니다</div>;
+  if (hasNoData) return <div>잘못된 접근 방식입니다</div>;
   else
     return (
       <>
         {isLoading && <Loading />}
-        <ReservationInfoSection reservationInfoList={Dummy} />
+        <ReservationInfoSection reservationInfoList={reservationInfoList} />
         <ReservationPersonInfoSection
           reservationPersonName={reservationPersonName}
           setReservationPersonName={setReservationPersonName}
@@ -143,34 +230,34 @@ function ReservationPage() {
           reservationPersonName={reservationPersonName}
           reservationPersonContact={reservationPersonContact}
         />
-        <PaymentSelectionSection />
+        <PaymentSelectionSection paymentType={paymentType} setPaymentType={setPaymentType} />
         <PaymentCautions />
-        <button>{addCommasToNumber(priceToPay)}원 결제하기</button>
+        <SectionBottom>
+          <button onClick={postReservation}>{addCommasToNumber(priceToPay)}원 결제하기</button>
+        </SectionBottom>
       </>
     );
 }
 
-const Dummy: ReservationInfo[] = [
-  {
-    accommodationName: "글래드 강남 코엑스 센터",
-    roomName: "스탠다드 트윈",
-    checkIn: "2023.11.17(금)",
-    checkOut: "2023.11.19(일)",
-    capacity: 2,
-    guestNumber: 2,
-    nightsCount: 2,
-    price: 429000,
-  },
-  {
-    accommodationName: "스탠포드 호텔 서울",
-    roomName: "스탠다드 트윈",
-    checkIn: "2023.11.17(금)",
-    checkOut: "2023.11.19(일)",
-    capacity: 2,
-    guestNumber: 2,
-    nightsCount: 2,
-    price: 250000,
-  },
-];
-
 export default ReservationPage;
+
+const SectionBottom = styled.div`
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+
+  button {
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    padding: 1rem;
+    background-color: ${({ theme }) => theme.Color.mainColor};
+    color: ${({ theme }) => theme.Color.componentColor};
+    font-size: ${({ theme }) => theme.Fs.default};
+    font-weight: 600;
+    border-radius: ${({ theme }) => theme.Br.default};
+    &:hover {
+      transition: all 0.3s;
+      background-color: ${({ theme }) => theme.Color.hoverColor};
+    }
+  }
+`;
