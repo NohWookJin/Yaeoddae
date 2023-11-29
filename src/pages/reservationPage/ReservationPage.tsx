@@ -43,7 +43,7 @@ function ReservationPage() {
   const [paymentType, setPaymentType] = useState<string>("");
 
   // 카트 예약시 정보
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const cartIds = searchParams.get("cartIds");
 
   // 단건 예약시 정보
