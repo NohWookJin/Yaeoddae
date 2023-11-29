@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import useUserStore from "../../components/Store/UserStore";
+import { useNavigate } from "react-router-dom";
 
 function MyPage() {
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState("");
+  const setStoreUserEmail = useUserStore((state) => state.setUserEmail);
+  const setIsLoggedIn = useUserStore((state) => state.setIsLoggedIn);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserData();
@@ -27,10 +32,12 @@ function MyPage() {
       });
 
       if (response.ok) {
-        const userData = await response.json();
-        setUserEmail(userData.email);
-        setUserName(userData.name);
-        setUserPhone(userData.phone);
+        const responseData = await response.json();
+        const { email, name, phone } = responseData.data;
+        setUserEmail(email);
+        setStoreUserEmail(email);
+        setUserName(name);
+        setUserPhone(phone);
       } else {
         console.error("Failed to fetch user data");
       }
@@ -39,14 +46,21 @@ function MyPage() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUserEmail("");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   return (
     <MypageWrap>
       <ProfileFix>
-        <a>내 정보 수정 {">"}</a>
+        <p>내 정보 수정 {">"}</p>
       </ProfileFix>
       <InputWrap>
         <span>이메일</span>
-        <input placeholder="유저 이메일" value={userEmail} readOnly />
+        <input placeholder="유저 이메일" value={userEmail} />
         <button>수정</button>
       </InputWrap>
       <SpanWrap>
@@ -66,10 +80,11 @@ function MyPage() {
         <hr />
       </TextWrap>
       <ProfileFix>
-        <a>예약 내역 확인 {">"}</a>
+        <p>예약 내역 확인 {">"}</p>
       </ProfileFix>
+      <CheckForm></CheckForm>
       <BottomMenu>
-        <button>로그아웃</button>
+        <button onClick={handleLogout}>로그아웃</button>
         <button>회원탈퇴</button>
       </BottomMenu>
     </MypageWrap>
@@ -83,8 +98,8 @@ const MypageWrap = styled.div`
 `;
 
 const ProfileFix = styled.div`
-  padding: 30px 0;
-  a {
+  padding: 20px 0;
+  p {
     font-weight: bold;
   }
 `;
@@ -92,16 +107,36 @@ const ProfileFix = styled.div`
 const InputWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  padding-bottom: 26px;
+  padding-bottom: 10px;
+  input {
+    border: ${(props) => props.theme.Border.thickBorder};
+    border-radius: ${(props) => props.theme.Br.default};
+    padding: 0 10px;
+    &:hover {
+      border-color: ${(props) => props.theme.Color.hoverColor};
+    }
+    &:focus {
+      border-color: ${(props) => props.theme.Color.activeColor};
+    }
+  }
+  button {
+    border: ${(props) => props.theme.Border.thickBorder};
+    border-radius: 8px;
+    padding: 4px;
+    &:hover {
+      background-color: ${(props) => props.theme.Color.hoverColor};
+      color: ${(props) => props.theme.Color.componentColor};
+    }
+  }
 `;
 
 const SpanWrap = styled.div`
-  margin: 26px 0;
+  margin: 10px 0;
   display: flex;
   justify-content: left;
   span:nth-child(2) {
     margin-left: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -119,6 +154,28 @@ const TextWrap = styled.div`
   }
 `;
 
+const CheckForm = styled.div`
+  height: 56vh;
+`;
+
 const BottomMenu = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 50px;
+  padding: 0 10px;
   background-color: ${(props) => props.theme.Color.mutedFontColor};
+  button {
+    padding: 0 6px;
+    height: 25px;
+    font-size: ${(props) => props.theme.Fs.default};
+  }
+  button:first-child {
+    border-radius: ${(props) => props.theme.Br.default};
+    background-color: ${(props) => props.theme.Color.mainColor};
+    color: ${(props) => props.theme.Color.componentColor};
+    &:hover {
+      background-color: ${(props) => props.theme.Color.hoverColor};
+    }
+  }
 `;
