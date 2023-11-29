@@ -1,22 +1,32 @@
+import { useEffect, useState } from "react";
+
 // component & interface
 import DetailSectionBottom from "./DetailSectionBottom";
-import { IAccmodation } from "../../pages/detailPage/DetailPage";
+import { IAccommodationRooms } from "../../pages/detailPage/DetailPage";
+
+// zustand
 import { useCountStore } from "../../store/memberCount";
 
 interface AccommodationRooms {
-  accommodation: IAccmodation;
+  accommodation: IAccommodationRooms[];
 }
 
 function DetailSectionBottomBox({ accommodation }: AccommodationRooms) {
+  const [rooms, setRooms] = useState<IAccommodationRooms[]>([]);
+
+  useEffect(() => {
+    setRooms(accommodation);
+  }, [accommodation]);
+
   const member = useCountStore((state) => state.counts);
 
   return (
     <>
-      {accommodation.room.map((room) => {
+      {rooms.map((room) => {
         if (member > room.capacity) {
           return null;
         } else {
-          return <DetailSectionBottom key={room.id} room={room} />;
+          return <DetailSectionBottom key={room.roomTypeId} room={room} />;
         }
       })}
     </>

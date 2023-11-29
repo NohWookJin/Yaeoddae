@@ -1,17 +1,36 @@
+// hooks
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../../store/getCart";
+
+// styles
 import styled from "styled-components";
 
 function CartResevation() {
+  const { cart, total } = useCart();
+
+  const foramtTotal = total.toLocaleString();
+
+  const navigate = useNavigate();
+
+  const moveReservation = () => {
+    const cartIdCollection = cart.map((item) => item.id);
+    const cartIdsCollectionAsString = cartIdCollection.join(",");
+    const cartIdToReservation = cartIdsCollectionAsString.split(",").map(String);
+
+    navigate(`/reservation?cartIds=${cartIdToReservation}`);
+  };
+
   return (
     <Container>
       <SectionTop>
-        <span>총 2건</span>
+        <span>총 {cart.length}건</span>
         <div>
           <span>결제 금액</span>
-          <span>480,000원</span>
+          <span>{foramtTotal}원</span>
         </div>
       </SectionTop>
       <SectionBottom>
-        <button>예약하기</button>
+        <button onClick={moveReservation}>예약하기</button>
       </SectionBottom>
     </Container>
   );

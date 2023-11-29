@@ -1,7 +1,7 @@
 // hook
 import { useEffect, useState } from "react";
 import { useDate } from "../../hook/useDate";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 // components
 import DatePickModal from "./DatePickModal";
@@ -19,14 +19,23 @@ function DetailDateAndCount() {
   const increaseMember = useCountStore((state) => state.increaseCount);
   const decreaseMember = useCountStore((state) => state.decreaseCount);
 
-  const { today, formattedNextDate, checkIn, setCheckIn, checkOut, setCheckOut, differenceInDays } =
-    useDate();
+  const {
+    today,
+    formattedNextDate,
+    checkIn,
+    setCheckIn,
+    checkOut,
+    setCheckOut,
+    differenceInDays,
+    asTodayCheckIn,
+    asTodayCheckOut,
+  } = useDate();
+
+  const params = useParams();
+  const { search } = useLocation();
 
   const [isDateModalOpen, setIsDateModalOpen] = useState<boolean>(false);
   const [isUserChangeDate, setIsUserChangeDate] = useState<boolean>(false);
-
-  const location = useLocation();
-  const params = useParams();
 
   const handleDateModalClick = () => {
     setIsDateModalOpen((prev) => !prev);
@@ -35,21 +44,26 @@ function DetailDateAndCount() {
   useEffect(() => {
     setIsUserChangeDate(true);
 
-    if (location.state && location.state.checkInAndCheckOut) {
-      setCheckIn(location.state.checkInAndCheckOut.checkIn);
-      setCheckOut(location.state.checkInAndCheckOut.checkOut);
+    if (history.state) {
+      setCheckIn(history.state.checkInAndCheckOut.checkIn);
+      setCheckOut(history.state.checkInAndCheckOut.checkOut);
     }
-  }, [location, setCheckIn, setCheckOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history.state, setCheckIn, setCheckOut, setIsDateModalOpen]);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set("memberCount", member.toString());
-    history.replaceState(
-      { search: searchParams.toString() },
-      "",
-      `/detail/${params.id}?${searchParams}`
-    );
-  }, [location.search, member, params.id]);
+    const queryParams = new URLSearchParams(search);
+    const keyword = queryParams.get("keyword");
+    const areaCode = queryParams.get("area-code");
+
+    if (checkIn === "" || checkOut === "") {
+      history.replaceState(
+        null,
+        "",
+        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${member}`
+      );
+    }
+  }, [checkIn, checkOut, member, params.id, asTodayCheckIn, asTodayCheckOut, search]);
 
   return (
     <Container>

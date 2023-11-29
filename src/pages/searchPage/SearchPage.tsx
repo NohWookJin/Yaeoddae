@@ -36,13 +36,21 @@ function SearchPage() {
 export default SearchPage;
 
 const SearchPageLayout = styled.div`
-  padding: ${({ theme }) => theme.Padding.header};
+  padding: 0 1.25rem 0.75rem 1.25rem;
 `;
 
 const SearchPageHeader = styled.div`
+  position: sticky;
+  top: 2.75rem;
+
+  padding: 0.75rem 0 0.75rem 0;
+  border-bottom: ${({ theme }) => theme.Border.thinBorder};
+
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  background-color: #fff;
 `;
 
 const SelectLocationBox = styled.div`

@@ -1,4 +1,6 @@
+// hooks
 import { useEffect, useState } from "react";
+import { refreshAccommodation, refreshAccommodationRooms } from "../../api/detail";
 
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
@@ -7,55 +9,76 @@ import DetailSectionBottomBox from "../../components/Detail/DetailSectionBottomB
 
 // style
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDate } from "../../hook/useDate";
 
-export interface IAccmodation {
+export interface IAccommodation {
   id: number;
-  accommodation: {
-    name: string;
-    location: string;
-    image: string;
-  };
-  room: [
-    {
-      id: number;
-      roomTypeId: number;
-      name: string;
-      description: string;
-      image: string;
-      stock: number;
-      capacity: number;
-    },
-  ];
+  name: string;
+  image: string;
+  address: string;
+}
+
+export interface IAccommodationRooms {
+  roomTypeId: number;
+  name: string;
+  description: string;
+  image: string;
+  stock: number;
+  capacity: number;
+  price: number;
 }
 
 function DetailPage() {
-  const [accommodation, setAccommodation] = useState<null | IAccmodation>(null);
+  const [hotelAccommodation, setHotelAccommodation] = useState<null | IAccommodation>(null);
+  const [roomAccommodation, setRoomAccommodation] = useState<IAccommodationRooms[]>([]);
 
   const { asTodayCheckIn, asTodayCheckOut } = useDate();
 
-  const navigate = useNavigate();
   const params = useParams();
+  const { search } = useLocation();
+
+  const searchParams = new URLSearchParams(search);
+  const areaCode = searchParams.get("area-code") as string;
+  const accommodationId = params.id as string;
+
+  let keyword = searchParams.get("keyword") as string;
+  if (keyword?.includes("[")) {
+    keyword = keyword.split("[")[0] as string;
+  }
 
   useEffect(() => {
-    navigate(
-      `/detail/${params.id}?checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
+    history.replaceState(
+      null,
+      "",
+      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
     );
 
-    fetch("/mock/roomsData.json", {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((result) => setAccommodation(result));
-  }, [navigate, params.id, asTodayCheckIn, asTodayCheckOut]);
+    refreshAccommodation(keyword, areaCode, setHotelAccommodation);
+    refreshAccommodationRooms(
+      accommodationId,
+      String(20 + asTodayCheckIn),
+      String(20 + asTodayCheckOut),
+      setRoomAccommodation
+    );
+  }, [
+    accommodationId,
+    areaCode,
+    asTodayCheckIn,
+    asTodayCheckOut,
+    keyword,
+    params.areaCode,
+    params.id,
+    params.keyword,
+    search,
+  ]);
 
-  if (accommodation) {
+  if (hotelAccommodation && roomAccommodation) {
     return (
       <Container>
-        <DetailSectionTop accommodation={accommodation} />
+        <DetailSectionTop accommodation={hotelAccommodation} />
         <DetailDateAndCount />
-        <DetailSectionBottomBox accommodation={accommodation} />
+        <DetailSectionBottomBox accommodation={roomAccommodation} />
       </Container>
     );
   }

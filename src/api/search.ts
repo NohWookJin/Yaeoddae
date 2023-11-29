@@ -18,6 +18,11 @@ const getSearchResult = async (page: number, keyword: string, location: string) 
 
   const result = await axios.get(apiURL, { params });
 
+  if (result.status === 204) {
+    const data = { status: 204, data: [] };
+    return { ...result, data, page };
+  }
+
   return { ...result, page };
 };
 
