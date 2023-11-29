@@ -13,22 +13,22 @@ export const CAUTIONS_LIST = [
   },
 ];
 
-import kakaopayIcon from "../../assets/kakaopayIcon.png";
+import kakaopayIcon from "../../assets/icons/kakaopay.png";
 export const PAYMENT_OPTIONS = [
   {
-    name: "kakaopay",
+    name: "KAKAO_PAY",
     children: <img src={kakaopayIcon} alt="카카오페이" />,
   },
   {
-    name: "card",
+    name: "CARD",
     children: <span>카드</span>,
   },
   {
-    name: "phone",
+    name: "MOBILE",
     children: <span>휴대폰</span>,
   },
   {
-    name: "realtime-bank-transfer",
+    name: "ACCOUNT",
     children: <span>실시간계좌이체</span>,
   },
 ];

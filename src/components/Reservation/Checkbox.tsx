@@ -1,5 +1,5 @@
 // icon
-import checkIcon from "../../assets/checkIcon.svg";
+import checkIcon from "../../assets/icons/check.svg";
 
 function Checkbox({ isChecked }: { isChecked: boolean }) {
   return (
