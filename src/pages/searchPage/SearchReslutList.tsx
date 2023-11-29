@@ -15,6 +15,7 @@ import SearchResult from "../../types/searchResult";
 
 // icon
 import defaultHotel from "../../assets/icons/defaultHotel.svg";
+import noResult from "../../assets/icons/noResult.svg?react";
 
 // component
 import SkeletonSearchResultList from "./SkeletonSearchResultList";
@@ -53,8 +54,8 @@ const SearchReslutList = ({ keyword, areaCode }: Props) => {
   const { data, isLoading, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: [keyword + location],
     queryFn: ({ pageParam = 1 }) => getSearchResult(pageParam, keyword, areaCode),
-    getNextPageParam: ({ data, page }) => {
-      if (data.data.length !== 10) {
+    getNextPageParam: ({ status, data, page }) => {
+      if (status === 204 || data.data.length !== 10) {
         return undefined;
       } else {
         return page + 1;
@@ -101,6 +102,12 @@ const SearchReslutList = ({ keyword, areaCode }: Props) => {
         );
       })}
       {isLoading || isFetching ? <SkeletonSearchResultList /> : null}
+      {!isLoading && searchResults.length === 0 ? (
+        <NoResultBox>
+          <NoResultSVG />
+          검색 결과가 없습니다.
+        </NoResultBox>
+      ) : null}
       <Target ref={ref} />
     </SearchResultListLayout>
   );
@@ -156,4 +163,15 @@ const Target = styled.div`
   height: 1px;
 
   border: none;
+`;
+
+const NoResultBox = styled.div`
+  text-align: center;
+
+  font-weight: 700;
+`;
+
+const NoResultSVG = styled(noResult)`
+  margin: 2rem 0;
+  height: 5rem;
 `;
