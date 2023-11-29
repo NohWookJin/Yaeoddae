@@ -1,12 +1,15 @@
-// hooks
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../store/getCart";
+
+// store
+import { pickCartList } from "../../store/pickCartList";
 
 // styles
 import styled from "styled-components";
+import { cartList } from "../../store/cartList";
 
 function CartResevation() {
-  const { cart, total } = useCart();
+  const { cart, total, resetCart } = pickCartList();
+  const { list } = cartList();
 
   const foramtTotal = total.toLocaleString();
 
@@ -18,6 +21,11 @@ function CartResevation() {
     const cartIdToReservation = cartIdsCollectionAsString.split(",").map(String);
 
     navigate(`/reservation?cartIds=${cartIdToReservation}`);
+    resetCart();
+  };
+
+  const moveHome = () => {
+    navigate(`/`);
   };
 
   return (
@@ -30,7 +38,11 @@ function CartResevation() {
         </div>
       </SectionTop>
       <SectionBottom>
-        <button onClick={moveReservation}>예약하기</button>
+        {list.length !== 0 ? (
+          <button onClick={moveReservation}>예약하기</button>
+        ) : (
+          <button onClick={moveHome}>홈 이동</button>
+        )}
       </SectionBottom>
     </Container>
   );
