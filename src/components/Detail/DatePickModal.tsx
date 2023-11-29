@@ -24,6 +24,8 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [startDateForReRendering, setStartDateForReRendering] = useState<string>("");
+  const [endDateForReRendering, setEndDateForReRendering] = useState<string>("");
 
   const [queryStartDate, setQueryStartDate] = useState<string>("");
   const [queryEndDate, setQueryEndDate] = useState<string>("");
@@ -40,11 +42,15 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
     setQueryEndDate(moment(e[1]).format("YYMMDD"));
     setStartDate(startDateFormat);
     setEndDate(endDateFormat);
+    setStartDateForReRendering(moment(e[0]).format("YYMMDD"));
+    setEndDateForReRendering(moment(e[1]).format("YYMMDD"));
   };
 
   const checkInAndCheckOut = {
     checkIn: startDate,
     checkOut: endDate,
+    checkInForReRendering: startDateForReRendering,
+    checkOutForReRendering: endDateForReRendering,
   };
 
   const moveDetail = () => {
