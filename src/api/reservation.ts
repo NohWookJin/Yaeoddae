@@ -4,6 +4,9 @@ import axios from "axios";
 // config
 import { API_BASE_URL } from "./config";
 
+// type
+import { CartReservation, SingleReservation } from "../types/reservationTypes";
+
 const getAuth = () => {
   if (localStorage.getItem("token")) {
     const token = localStorage.getItem("token");
@@ -22,4 +25,26 @@ const getData = async (endPoint: string) => {
   return result.data;
 };
 
-export { getData };
+const postSingleReservation = async (data: SingleReservation) => {
+  const apiURL = `${API_BASE_URL}/reservations`;
+  const config = {
+    headers: { Authorization: `Bearer ${getAuth()}` },
+  };
+
+  const result = await axios.post(apiURL, data, config);
+
+  return result.data;
+};
+
+const postCartReservation = async (data: CartReservation) => {
+  const apiURL = `${API_BASE_URL}/reservations/from-cart`;
+  const config = {
+    headers: { Authorization: `Bearer ${getAuth()}` },
+  };
+
+  const result = await axios.post(apiURL, data, config);
+
+  return result.data;
+};
+
+export { getData, postSingleReservation, postCartReservation };
