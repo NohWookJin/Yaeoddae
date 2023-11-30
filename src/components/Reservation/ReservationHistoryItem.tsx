@@ -5,6 +5,9 @@ import styled from "styled-components";
 import { ReservationHistory } from "../../pages/reservationPage/ReservationHistoryPage";
 import HistoryRoom from "./HistoryRoom";
 
+// function
+import { formatDate } from "../../utils/formatOrCalculateData";
+
 function ReservationHistoryItem({ item }: { item: ReservationHistory }) {
   function getPaymentTypeName(): string {
     switch (item.paymentType) {
@@ -22,14 +25,15 @@ function ReservationHistoryItem({ item }: { item: ReservationHistory }) {
   }
 
   const payment = getPaymentTypeName();
+  const formattedDate = formatDate(item.createdAt.slice(0, 11));
 
   return (
     <HistoryContainer>
       <div>
-        <span>예약 일자: {item.created_at}</span>
+        <span>예약 일자: {formattedDate}</span>
         결제 수단: {payment}
       </div>
-      {item.reservation_rooms.map((room, index) => {
+      {item.reservationRooms.map((room, index) => {
         return <HistoryRoom key={index} room={room} />;
       })}
     </HistoryContainer>

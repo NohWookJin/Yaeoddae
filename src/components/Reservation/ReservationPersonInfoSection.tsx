@@ -4,6 +4,8 @@ import React from "react";
 // component
 import Input from "../Input";
 import { SectionContainer, SectionLabel, SectionDivider } from "./reservationStyles";
+
+// function
 import { handleInputChange } from "../../utils/handleInputChange";
 
 function ReservationPersonInfoSection({
