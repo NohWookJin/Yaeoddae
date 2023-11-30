@@ -12,8 +12,6 @@ function DetailSectionBottomBox() {
   const rooms = accommodationRoomsList((state) => state.accommodationRooms);
   const member = useCountStore((state) => state.counts);
 
-  console.log(rooms);
-
   return (
     <Container>
       {rooms.map((room) => {

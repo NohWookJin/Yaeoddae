@@ -17,6 +17,7 @@ export const useDate = () => {
 
   const checkInMoment = moment(checkIn, "MM월 DD일");
   const checkOutMoment = moment(checkOut, "MM월 DD일");
+
   const differenceInDays = checkOutMoment.diff(checkInMoment, "days");
 
   const formatYear = (date: string) => {

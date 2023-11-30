@@ -5,6 +5,7 @@ import { API_BASE_URL } from "./config";
 
 // store
 import { cartList } from "../store/cartList";
+import moment from "moment";
 
 const useCartAPI = () => {
   const { setList } = cartList();
@@ -20,7 +21,32 @@ const useCartAPI = () => {
       });
       const { data } = response.data;
 
-      setList(data);
+      const updatedData = data.map(
+        (item: {
+          roomGetResponse: { price: number };
+          checkIn: string;
+          checkOut: string;
+          price: number;
+        }) => {
+          const { checkIn, checkOut } = item;
+          const { price } = item.roomGetResponse;
+          const daysDiff = moment(checkOut, "YYYY-MM-DD").diff(
+            moment(checkIn, "YYYY-MM-DD"),
+            "days"
+          );
+          const updatedPrice = Number(daysDiff) * price;
+
+          return {
+            ...item,
+            roomGetResponse: {
+              ...item.roomGetResponse,
+              price: Number(updatedPrice),
+            },
+          };
+        }
+      );
+
+      setList(updatedData);
     } catch (e) {
       console.error(e);
     }

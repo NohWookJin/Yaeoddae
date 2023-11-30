@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
@@ -20,20 +20,34 @@ export interface IAccommodation {
 }
 function DetailPage() {
   const [hotelAccommodation, setHotelAccommodation] = useState<null | IAccommodation>(null);
+
   const { asTodayCheckIn, asTodayCheckOut } = useDate();
   const { refreshAccommodation, refreshAccommodationRooms } = useDetailAPI();
+
   const params = useParams();
   const { search } = useLocation();
+
   const searchParams = new URLSearchParams(search);
   const areaCode = searchParams.get("area-code") as string;
   const accommodationId = Number(params.id);
+
   let keyword = searchParams.get("keyword") as string;
   if (keyword?.includes("[")) {
     keyword = keyword.split("[")[0] as string;
   }
+
+  useEffect(() => {
+    history.replaceState(
+      null,
+      "",
+      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
+    );
+  }, [areaCode, asTodayCheckIn, asTodayCheckOut, keyword, params.id]);
+
   const accommodationQuery = useQuery(["accommodation", keyword, areaCode], () => {
     return refreshAccommodation(keyword, areaCode, setHotelAccommodation);
   });
+
   const roomsQuery = useQuery(["rooms", accommodationId, asTodayCheckIn, asTodayCheckOut], () => {
     return refreshAccommodationRooms(
       accommodationId,
@@ -41,6 +55,7 @@ function DetailPage() {
       String(20 + asTodayCheckOut)
     );
   });
+
   if (accommodationQuery.isLoading || roomsQuery.isLoading) {
     return (
       <Container>
@@ -48,12 +63,8 @@ function DetailPage() {
       </Container>
     );
   }
+
   if (accommodationQuery.data && roomsQuery.data && hotelAccommodation) {
-    history.replaceState(
-      null,
-      "",
-      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${2}`
-    );
     return (
       <Container>
         <DetailSectionTop accommodation={hotelAccommodation} />
@@ -62,6 +73,7 @@ function DetailPage() {
       </Container>
     );
   }
+
   if (accommodationQuery.error || roomsQuery.error) {
     return (
       <Container>
@@ -70,10 +82,13 @@ function DetailPage() {
     );
   }
 }
+
 export default DetailPage;
+
 const Container = styled.section`
   background-color: ${({ theme }) => theme.Color.backgroundColor}};
 `;
+
 const Skeleton = styled.div`
   width: 375px;
   height: 100vh;
