@@ -1,15 +1,64 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import useUserStore from "../../components/Store/UserStore";
-import { useNavigate } from "react-router-dom";
 
 function MyPage() {
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState("");
-  const setStoreUserEmail = useUserStore((state) => state.setUserEmail);
-  const setIsLoggedIn = useUserStore((state) => state.setIsLoggedIn);
-  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("userEmail");
+    if (savedEmail) {
+      setUserEmail(savedEmail);
+    }
+  }, []);
+
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserEmail(e.target.value);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(e.target.value);
+  };
+
+  const saveUserInfo = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await fetch("https://travel-server.up.railway.app/members/mypage", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          name: userName,
+        }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json(); // JSON 형태로 변환
+        console.log("User info updated successfully");
+        localStorage.setItem("userName", responseData.name); // responseData.name을 사용하여 이름 정보 저장
+      } else {
+        console.error("Failed to update user info");
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+    }
+
+    toggleEdit();
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -35,7 +84,6 @@ function MyPage() {
         const responseData = await response.json();
         const { email, name, phone } = responseData.data;
         setUserEmail(email);
-        setStoreUserEmail(email);
         setUserName(name);
         setUserPhone(phone);
       } else {
@@ -46,29 +94,37 @@ function MyPage() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUserEmail("");
-    setIsLoggedIn(false);
-    navigate("/");
-  };
-
   return (
     <MypageWrap>
       <ProfileFix>
         <p>내 정보 수정 {">"}</p>
       </ProfileFix>
       <InputWrap>
-        <span>이메일</span>
-        <input placeholder="유저 이메일" value={userEmail} />
-        <button>수정</button>
+        {isEditing ? (
+          <>
+            <input placeholder="유저 이메일" value={userEmail} onChange={handleEmailChange} />
+            <button onClick={saveUserInfo}>저장</button>
+          </>
+        ) : (
+          <>
+            <span>이메일 : {userEmail}</span>
+            <button onClick={toggleEdit}>수정</button>
+          </>
+        )}
       </InputWrap>
       <SpanWrap>
-        <span>예약자 이름</span>
-        <span>{userName || "Test"}</span>
+        {isEditing ? (
+          <>
+            <input placeholder="예약자 이름" value={userName} onChange={handleNameChange} />
+          </>
+        ) : (
+          <>
+            <span>유저 닉네임 : {userName || "Test"}</span>
+          </>
+        )}
       </SpanWrap>
       <SpanWrap>
-        <span>휴대폰 번호</span>
+        <span>휴대폰 번호 :</span>
         <span>{userPhone || "010-1234-5678"}</span>
       </SpanWrap>
       <TextWrap>
@@ -80,11 +136,11 @@ function MyPage() {
         <hr />
       </TextWrap>
       <ProfileFix>
-        <p>예약 내역 확인 {">"}</p>
+        <a href={"./reservationlist"}>예약 내역 확인 {">"}</a>
       </ProfileFix>
       <CheckForm></CheckForm>
       <BottomMenu>
-        <button onClick={handleLogout}>로그아웃</button>
+        <button>로그아웃</button>
         <button>회원탈퇴</button>
       </BottomMenu>
     </MypageWrap>
@@ -99,7 +155,8 @@ const MypageWrap = styled.div`
 
 const ProfileFix = styled.div`
   padding: 20px 0;
-  p {
+  p,
+  a {
     font-weight: bold;
   }
 `;
@@ -138,6 +195,17 @@ const SpanWrap = styled.div`
     margin-left: 20px;
     margin-bottom: 10px;
   }
+  input {
+    border: ${(props) => props.theme.Border.thickBorder};
+    border-radius: ${(props) => props.theme.Br.default};
+    padding: 0 10px;
+    &:hover {
+      border-color: ${(props) => props.theme.Color.hoverColor};
+    }
+    &:focus {
+      border-color: ${(props) => props.theme.Color.activeColor};
+    }
+  }
 `;
 
 const TextWrap = styled.div`
@@ -155,7 +223,7 @@ const TextWrap = styled.div`
 `;
 
 const CheckForm = styled.div`
-  height: 56vh;
+  height: 50vh;
 `;
 
 const BottomMenu = styled.div`
