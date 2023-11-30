@@ -47,9 +47,9 @@ function MyPage() {
       });
 
       if (response.ok) {
+        const responseData = await response.json(); // JSON 형태로 변환
         console.log("User info updated successfully");
-        localStorage.setItem("userEmail", userEmail);
-        localStorage.setItem("userName", userName);
+        localStorage.setItem("userName", responseData.name); // responseData.name을 사용하여 이름 정보 저장
       } else {
         console.error("Failed to update user info");
       }
