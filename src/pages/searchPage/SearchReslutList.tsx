@@ -70,9 +70,11 @@ const SearchReslutList = ({ keyword, areaCode }: Props) => {
     [data]
   );
 
-  const ref = useIntersect((entry, observer) => {
+  const ref = useIntersect(async (entry, observer) => {
     observer.unobserve(entry.target);
-    fetchNextPage();
+    if (!isFetching) {
+      await fetchNextPage();
+    }
   });
 
   const handleSearchResultClick = (id: number, keyword: string, areaCode: string) => {
