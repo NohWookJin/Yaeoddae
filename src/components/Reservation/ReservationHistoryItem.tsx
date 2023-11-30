@@ -31,7 +31,7 @@ function ReservationHistoryItem({ item }: { item: ReservationHistory }) {
     <HistoryContainer>
       <div>
         <span>예약 일자: {formattedDate}</span>
-        결제 수단: {payment}
+        <span>결제 수단: {payment}</span>
       </div>
       {item.reservationRooms.map((room, index) => {
         return <HistoryRoom key={index} room={room} />;
@@ -56,7 +56,7 @@ const HistoryContainer = styled.div`
     flex-direction: column;
     gap: 0.25rem;
 
-    span {
+    > span:first-child {
       font-size: ${({ theme }) => theme.Fs.default};
       font-weight: 700;
       color: ${({ theme }) => theme.Color.mainFontColor};
