@@ -7,6 +7,8 @@ import { SectionContainer, SectionLabel } from "./reservationStyles";
 import { SectionDivider } from "./reservationStyles";
 import Input from "../Input";
 import Checkbox from "./Checkbox";
+
+// function
 import { handleInputChange } from "../../utils/handleInputChange";
 
 function ActualUserInfoSection({
