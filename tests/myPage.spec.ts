@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("마이페이지 수정 및 로그아웃", async ({ page }) => {
   await page.goto("http://localhost:5173/");
+  await page.waitForSelector(".sc-iGctyi", { state: "visible" });
   await page.locator(".sc-iGctyi").click();
   await page.getByRole("button", { name: "로그인" }).click();
   await page.getByPlaceholder("이메일을 입력해주세요").click();
