@@ -136,7 +136,7 @@ function MyPage() {
         <hr />
       </TextWrap>
       <ProfileFix>
-        <a href={"./reservationlist"}>예약 내역 확인 {">"}</a>
+        <a href={"./reservation-history"}>예약 내역 확인 {">"}</a>
       </ProfileFix>
       <CheckForm></CheckForm>
       <BottomMenu>
