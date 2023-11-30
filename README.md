@@ -64,6 +64,7 @@
     - React query의 useInfiniteQuery를 백엔드 검색 결과 API와 연동하여 페이징 구현
       - 다음 페이지 이동 후 뒤로가기를 눌러도 캐싱을 통해 처음부터 데이터를 불러오지 않도록 구현
       - 로딩 시 isLoading, isFetching을 활용해 스켈레톤 컴포넌트 렌더링
+      - 검색 결과가 없을 경우 전용 컴포넌트 렌더링
 
 </details>
 
