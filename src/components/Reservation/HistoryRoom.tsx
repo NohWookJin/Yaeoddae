@@ -87,6 +87,6 @@ const ReservationDescription = styled.div`
 
 const RoomDivider = styled.div`
   width: 100%;
-  height: "0.125rem";
+  height: 0.125rem;
   background-color: ${({ theme }) => theme.Color.borderColor};
 `;

@@ -21,7 +21,7 @@ export interface ReservationHistory {
 }
 
 function ReservationHistoryPage() {
-  const [reservationHistory, setReservationHistory] = useState<ReservationHistory[]>();
+  // const [reservationHistory, setReservationHistory] = useState<ReservationHistory[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { getData } = useReservationApi();
 
