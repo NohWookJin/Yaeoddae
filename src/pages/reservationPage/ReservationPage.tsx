@@ -1,6 +1,6 @@
 // library
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
 // component
@@ -15,7 +15,11 @@ import Loading from "../../components/Loading";
 import { getData, postCartReservation, postSingleReservation } from "../../api/reservation";
 
 // function
-import { calculateNumberOfNights, removeHyphensFromDate } from "../../utils/formatOrCalculateData";
+import {
+  addHyphensToDate,
+  calculateNumberOfNights,
+  removeHyphensFromDate,
+} from "../../utils/formatOrCalculateData";
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { scrollToTop } from "../../utils/scrollToTop";
 
@@ -34,6 +38,7 @@ function ReservationPage() {
   }, []);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // 예약자 정보
   const [reservationPersonName, setReservationPersonName] = useState<string>("");
@@ -96,8 +101,8 @@ function ReservationPage() {
     return {
       id: Number(data.accomodationId),
       guestNumber: data.guestNumber ?? 0,
-      checkIn: data.checkIn,
-      checkOut: data.checkOut,
+      checkIn: addHyphensToDate(data.checkIn),
+      checkOut: addHyphensToDate(data.checkOut),
       roomGetResponse: {
         id: data.roomTypeId,
         roomTypeId: data.roomTypeId,
@@ -153,7 +158,7 @@ function ReservationPage() {
         guestNumber,
       };
     });
-  }
+  };
 
   /** post /reservations/from-cart api를 위한 req body 리턴 */
   const convertToCartReservation = (
@@ -191,21 +196,19 @@ function ReservationPage() {
       return;
     }
     try {
+      setIsLoading(true);
       if (cartIds) {
         const data = convertToCartReservation(cartIds, paymentType, reservationInfoList);
-        console.log(data);
-        const res = await postCartReservation(data);
-        console.log(res.data);
+        await postCartReservation(data);
       } else if (reservationFromDetail !== null) {
         const data = convertToSingleReservation(paymentType, reservationInfoList);
-        console.log(data);
-        const res = await postSingleReservation(data);
-        console.log(res.data);
-      } else {
-        console.log("aaa");
+        await postSingleReservation(data);
       }
+      alert("예약에 성공했습니다.");
+      navigate("/reservation-history");
     } catch (error) {
-      console.log(error);
+      alert("예약에 실패했습니다. 다시 시도해주세요.");
+      setIsLoading(false);
     }
   };
 
