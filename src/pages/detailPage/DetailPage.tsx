@@ -1,6 +1,4 @@
-// hooks
 import { useEffect, useState } from "react";
-import { refreshAccommodation, refreshAccommodationRooms } from "../../api/detail";
 
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
@@ -10,7 +8,10 @@ import DetailSectionBottomBox from "../../components/Detail/DetailSectionBottomB
 // style
 import styled from "styled-components";
 import { useLocation, useParams } from "react-router-dom";
+
+// hooks
 import { useDate } from "../../hook/useDate";
+import { useDetailAPI } from "../../api/detail";
 
 export interface IAccommodation {
   id: number;
@@ -19,35 +20,26 @@ export interface IAccommodation {
   address: string;
 }
 
-export interface IAccommodationRooms {
-  roomTypeId: number;
-  name: string;
-  description: string;
-  image: string;
-  stock: number;
-  capacity: number;
-  price: number;
-}
-
 function DetailPage() {
   const [hotelAccommodation, setHotelAccommodation] = useState<null | IAccommodation>(null);
-  const [roomAccommodation, setRoomAccommodation] = useState<IAccommodationRooms[]>([]);
 
   const { asTodayCheckIn, asTodayCheckOut } = useDate();
 
   const params = useParams();
   const { search } = useLocation();
 
-  const searchParams = new URLSearchParams(search);
-  const areaCode = searchParams.get("area-code") as string;
-  const accommodationId = params.id as string;
+  const { refreshAccommodation, refreshAccommodationRooms } = useDetailAPI();
 
-  let keyword = searchParams.get("keyword") as string;
-  if (keyword?.includes("[")) {
-    keyword = keyword.split("[")[0] as string;
-  }
+  const callAPI = () => {
+    const searchParams = new URLSearchParams(search);
+    const areaCode = searchParams.get("area-code") as string;
+    const accommodationId = Number(params.id);
 
-  useEffect(() => {
+    let keyword = searchParams.get("keyword") as string;
+    if (keyword?.includes("[")) {
+      keyword = keyword.split("[")[0] as string;
+    }
+
     history.replaceState(
       null,
       "",
@@ -58,27 +50,20 @@ function DetailPage() {
     refreshAccommodationRooms(
       accommodationId,
       String(20 + asTodayCheckIn),
-      String(20 + asTodayCheckOut),
-      setRoomAccommodation
+      String(20 + asTodayCheckOut)
     );
-  }, [
-    accommodationId,
-    areaCode,
-    asTodayCheckIn,
-    asTodayCheckOut,
-    keyword,
-    params.areaCode,
-    params.id,
-    params.keyword,
-    search,
-  ]);
+  };
 
-  if (hotelAccommodation && roomAccommodation) {
+  useEffect(() => {
+    callAPI();
+  }, []);
+
+  if (hotelAccommodation) {
     return (
       <Container>
         <DetailSectionTop accommodation={hotelAccommodation} />
         <DetailDateAndCount />
-        <DetailSectionBottomBox accommodation={roomAccommodation} />
+        <DetailSectionBottomBox />
       </Container>
     );
   }

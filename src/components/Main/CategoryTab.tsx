@@ -27,7 +27,7 @@ const CategoryContainer = styled.div`
   margin: 0 20px;
 `;
 
-const Category = styled.a`
+const Category = styled.div`
   width: 100%;
   text-align: center;
   font-size: ${({ theme }) => theme.Fs.default};

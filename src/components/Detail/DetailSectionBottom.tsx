@@ -1,12 +1,8 @@
-// hooks
 import { useParams, useNavigate } from "react-router-dom";
+
+// hooks
 import { useDate } from "../../hook/useDate";
-
-// libraries
-import axios from "axios";
-
-// config
-import { API_BASE_URL } from "../../api/config";
+import { useDetailAPI } from "../../api/detail";
 
 // icon
 import Cart from "../../assets/icons/cart.svg?react";
@@ -31,6 +27,8 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
   const { name, stock, image, capacity, description, roomTypeId, price } = room;
   const { formatMonth, formatDate } = useDate();
 
+  const { postAccommodationRooms } = useDetailAPI();
+
   const formatPrice = price?.toLocaleString();
 
   const roomState = {
@@ -48,43 +46,23 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
   };
 
   const sendCart = async () => {
-    const token = localStorage.getItem("token");
-
     const searchParams = new URLSearchParams(location.search);
-    const checkIn = searchParams.get("checkIn") as string;
-    const checkOut = searchParams.get("checkOut") as string;
-    const accommodationId = params.id;
-    const guestNumber = searchParams.get("memberCount");
-    const accommodationName = searchParams.get("keyword");
-    const areaCode = searchParams.get("area-code");
+    const checkIn = String(`20${searchParams.get("checkIn")}`);
+    const checkOut = String(`20${searchParams.get("checkOut")}`);
+    const accommodationId = Number(params.id);
+    const guestNumber = Number(searchParams.get("memberCount"));
+    const keyword = String(searchParams.get("keyword"));
+    const areaCode = String(searchParams.get("area-code"));
 
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/carts`,
-        {
-          roomTypeId: roomTypeId,
-          accommodationId: accommodationId,
-          guestNumber: guestNumber,
-          checkIn: String(20 + checkIn),
-          checkOut: String(20 + checkOut),
-          keyword: accommodationName,
-          areaCode: areaCode,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(response);
-
-      if (response) {
-        navigate("/cart");
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    postAccommodationRooms(
+      roomTypeId,
+      accommodationId,
+      guestNumber,
+      checkIn,
+      checkOut,
+      keyword,
+      areaCode
+    );
   };
 
   const moveReservation = () => {

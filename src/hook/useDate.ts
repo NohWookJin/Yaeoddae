@@ -4,7 +4,6 @@ import { useState } from "react";
 import moment from "moment";
 
 export const useDate = () => {
-  // custom hook
   const [checkIn, setCheckIn] = useState<string>("");
   const [checkOut, setCheckOut] = useState<string>("");
 
