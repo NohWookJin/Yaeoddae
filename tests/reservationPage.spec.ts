@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const login = async ({ page }) => {
-  await page.goto("http://127.0.0.1:5173/");
+  await page.goto("http://localhost:5173/");
   await page.locator("path:nth-child(2)").click();
   await page.getByRole("button", { name: "로그인" }).click();
   await page.getByPlaceholder("이메일을 입력해주세요").click();
@@ -27,7 +27,7 @@ test("예약 확인", async ({ page }) => {
     .click();
   await page.getByRole("button", { name: "원 결제하기" }).click();
   setTimeout(async () => {
-    await page.goto("http://127.0.0.1:5173/reservation-history");
+    await page.goto("http://localhost:5173/reservation-history");
   }, 10000);
 
   const expectData = {
