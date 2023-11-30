@@ -31,8 +31,11 @@ export const useDetailAPI = () => {
       const { data } = response.data;
 
       setHotelAccommodation(data);
+
+      return data;
     } catch (e) {
       console.error(e);
+      throw e;
     }
   };
 
@@ -50,6 +53,8 @@ export const useDetailAPI = () => {
       const { data } = response.data;
 
       setAccommodationRooms(data);
+
+      return data;
     } catch (e) {
       console.error(e);
     }
@@ -88,6 +93,8 @@ export const useDetailAPI = () => {
       if (response) {
         navigate("/cart");
       }
+
+      return response;
     } catch (e) {
       console.error(e);
     }
