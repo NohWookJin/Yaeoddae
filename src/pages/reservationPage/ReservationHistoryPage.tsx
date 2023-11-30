@@ -36,15 +36,10 @@ function ReservationHistoryPage() {
       const data = await getData("reservations");
       setIsLoading(false);
       setReservationHistory(data.data);
-      console.log(data);
     } catch (error) {
       console.log(error);
-      alert("예약 내역 조회를 실패했습니다. 다시 시도해주세요.");
-      setIsLoading(false);
     }
   };
-
-  console.log(reservationHistory);
 
   useEffect(() => {
     fetchData();
