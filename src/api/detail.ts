@@ -67,6 +67,8 @@ export const useDetailAPI = () => {
     try {
       const token = localStorage.getItem("token");
 
+      console.log(guestNumber);
+
       const response = await axios.post(
         `${API_BASE_URL}/carts`,
         {

@@ -62,7 +62,7 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
     history.replaceState(
       { checkInAndCheckOut },
       "",
-      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${queryStartDate}&checkOut=${queryEndDate}&countMember=${member}`
+      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${queryStartDate}&checkOut=${queryEndDate}&memberCount=${member}`
     );
     setIsOpen((prev) => !prev);
   };

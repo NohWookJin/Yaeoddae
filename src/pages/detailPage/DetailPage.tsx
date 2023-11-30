@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 
 // components
 import DetailSectionTop from "../../components/Detail/DetailSectionTop";
-import DetailDateAndCount from "../../components/Detail/DetailDateAndCount";
 import DetailSectionBottomBox from "../../components/Detail/DetailSectionBottomBox";
-
-// style
-import styled from "styled-components";
-import { useLocation, useParams } from "react-router-dom";
+import DetailDateAndCount from "../../components/Detail/DetailDateAndCount";
 
 // hooks
 import { useDate } from "../../hook/useDate";
 import { useDetailAPI } from "../../api/detail";
+
+// library
+import { useQuery } from "@tanstack/react-query";
+
+// style
+import styled from "styled-components";
+import { useLocation, useParams } from "react-router-dom";
 
 export interface IAccommodation {
   id: number;
@@ -29,6 +32,10 @@ function DetailPage() {
   const { search } = useLocation();
 
   const { refreshAccommodation, refreshAccommodationRooms } = useDetailAPI();
+
+  // const {isLoading, isError, data} = useQuery({
+  //   queryKey: []
+  // })
 
   const callAPI = () => {
     const searchParams = new URLSearchParams(search);

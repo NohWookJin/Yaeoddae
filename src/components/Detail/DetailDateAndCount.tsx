@@ -23,6 +23,9 @@ function DetailDateAndCount() {
   const increaseMember = useCountStore((state) => state.increaseCount);
   const decreaseMember = useCountStore((state) => state.decreaseCount);
 
+  const [checkInAfter, setCheckInAfter] = useState<string>("");
+  const [checkOutAfter, setCheckOutAfter] = useState<string>("");
+
   const {
     today,
     formattedNextDate,
@@ -57,6 +60,9 @@ function DetailDateAndCount() {
       const checkInForReRendering = `20${history.state.checkInAndCheckOut.checkInForReRendering}`;
       const checkOutForReRendering = `20${history.state.checkInAndCheckOut.checkOutForReRendering}`;
 
+      setCheckInAfter(history.state.checkInAndCheckOut.checkInForReRendering);
+      setCheckOutAfter(history.state.checkInAndCheckOut.checkOutForReRendering);
+
       refreshAccommodationRooms(accommodationId, checkInForReRendering, checkOutForReRendering);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,8 +79,24 @@ function DetailDateAndCount() {
         "",
         `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${member}`
       );
+    } else {
+      history.replaceState(
+        null,
+        "",
+        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${checkInAfter}&checkOut=${checkOutAfter}&memberCount=${member}`
+      );
     }
-  }, [checkIn, checkOut, member, params.id, asTodayCheckIn, asTodayCheckOut, search]);
+  }, [
+    checkIn,
+    checkOut,
+    member,
+    params.id,
+    asTodayCheckIn,
+    asTodayCheckOut,
+    search,
+    checkInAfter,
+    checkOutAfter,
+  ]);
 
   return (
     <Container>

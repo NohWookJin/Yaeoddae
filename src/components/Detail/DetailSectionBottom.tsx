@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 
 // hooks
-import { useDate } from "../../hook/useDate";
 import { useDetailAPI } from "../../api/detail";
 
 // icon
@@ -25,7 +24,6 @@ export interface AccommodationRoom {
 
 function DetailSectionBottom({ room }: AccommodationRoom) {
   const { name, stock, image, capacity, description, roomTypeId, price } = room;
-  const { formatMonth, formatDate } = useDate();
 
   const { postAccommodationRooms } = useDetailAPI();
 
@@ -67,18 +65,12 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
 
   const moveReservation = () => {
     const searchParams = new URLSearchParams(location.search);
-    const checkIn = searchParams.get("checkIn") as string;
-    const checkOut = searchParams.get("checkOut") as string;
+    const checkIn = String(`20${searchParams.get("checkIn")}`);
+    const checkOut = String(`20${searchParams.get("checkOut")}`);
     const accommodationId = params.id;
     const accomodationName = searchParams.get("keyword") as string;
     const areaCode = searchParams.get("area-code") as string;
     const guestNumber = searchParams.get("memberCount");
-    const checkInMonth = formatMonth(checkIn);
-    const checkInDay = formatDate(checkIn);
-    const checkOutMonth = formatMonth(checkOut);
-    const checkOutDay = formatDate(checkOut);
-    const checkInDate = `${checkInMonth}월 ${checkInDay}일`;
-    const checkOutDate = `${checkOutMonth}월 ${checkOutDay}일`;
 
     const reservation = {
       accomodationId: accommodationId,
@@ -86,8 +78,8 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
       areaCode: areaCode,
       roomTypeId: roomTypeId,
       roomName: name,
-      checkIn: checkInDate,
-      checkOut: checkOutDate,
+      checkIn: checkIn,
+      checkOut: checkOut,
       guestNumber: guestNumber,
       capacity: capacity,
       price: price,
