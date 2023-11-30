@@ -7,15 +7,6 @@ import { HistoryRoomProps } from "../../pages/reservationPage/ReservationHistory
 import dummy from "../../assets/dummy.png";
 
 function HistoryRoom({ room }: { room: HistoryRoomProps }) {
-  // const [roomInfo, setRoomInfo] = useState();
-  // const fetchRoomInfo = async () => {
-  //   const res = getData(`rooms/`)
-  // }
-
-  // useEffect(() => {
-  //   const res = await
-  // }, [room]);
-
   return (
     <>
       <RoomDivider />

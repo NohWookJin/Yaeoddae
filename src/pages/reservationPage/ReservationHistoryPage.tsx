@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { getData } from "../../api/reservation";
+import useReservationApi from "../../api/reservation";
 import ReservationHistoryItem from "../../components/Reservation/ReservationHistoryItem";
+import Loading from "../../components/Loading";
 
 export interface HistoryRoomProps {
   id: number;
@@ -21,28 +22,40 @@ export interface ReservationHistory {
 
 function ReservationHistoryPage() {
   const [reservationHistory, setReservationHistory] = useState<ReservationHistory[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { getData } = useReservationApi();
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getData("reservations");
+      setIsLoading(false);
+      // setReservationHistory(data.data);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      alert("예약 내역 조회를 실패했습니다. 다시 시도해주세요.");
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getData("reservations");
-        setReservationHistory(data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchData();
   }, []);
+
   return (
-    <PageContainer>
-      {Dummy?.length !== 0 ? (
-        Dummy?.map((item, index) => {
-          return <ReservationHistoryItem key={index} item={item} />;
-        })
-      ) : (
-        <div>예약 내역이 없습니다.</div>
-      )}
-    </PageContainer>
+    <>
+      {isLoading && <Loading />}
+      <PageContainer>
+        {Dummy?.length !== 0 ? (
+          Dummy?.map((item, index) => {
+            return <ReservationHistoryItem key={index} item={item} />;
+          })
+        ) : (
+          <ErrorPage>예약 내역이 없습니다.</ErrorPage>
+        )}
+      </PageContainer>
+    </>
   );
 }
 
@@ -94,4 +107,12 @@ const PageContainer = styled.section`
   flex-direction: column;
   padding: 20px 16px;
   gap: 16px;
+`;
+
+const ErrorPage = styled.div`
+  display: flex;
+  padding-top: 100px;
+  width: 100%;
+  justify-content: center;
+  font-weight: bold;
 `;
