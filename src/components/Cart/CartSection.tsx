@@ -34,7 +34,9 @@ function CartSection({ roomList, isChecked, onChange }: Cart & CartSectionProps)
   const checkOutMonth = formatMonth(checkOut);
   const checkOutDay = formatDate(checkOut);
 
-  const formatPrice = roomGetResponse.price?.toLocaleString();
+  const price = roomGetResponse.price;
+
+  const formatPirce = Number(price).toLocaleString();
 
   const handleRemoveCart = () => {
     removeCartItem(roomList.id);
@@ -71,7 +73,7 @@ function CartSection({ roomList, isChecked, onChange }: Cart & CartSectionProps)
       </SectionDescription>
       <SectionPrice>
         <span>숙박</span>
-        <span>{formatPrice}원</span>
+        <span>{formatPirce}원</span>
       </SectionPrice>
     </Container>
   );
