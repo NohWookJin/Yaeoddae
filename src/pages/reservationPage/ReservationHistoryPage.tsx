@@ -1,27 +1,32 @@
+// library
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+
+// api
 import useReservationApi from "../../api/reservation";
+
+// component
 import ReservationHistoryItem from "../../components/Reservation/ReservationHistoryItem";
 import Loading from "../../components/Loading";
 
 export interface HistoryRoomProps {
   id: number;
-  room_id: number;
-  check_in: string;
-  check_out: string;
-  guest_number: number;
-  status: string;
+  checkIn: string;
+  checkOut: string;
+  guestNumber: number;
+  room: { capacity: number; image: string; name: string; price: number };
+  accommodation: { name: string; AccommodationId: number; location: { areaCode: string } };
 }
 
 export interface ReservationHistory {
   id: number;
-  created_at: string;
+  createdAt: string;
   paymentType: string;
-  reservation_rooms: HistoryRoomProps[];
+  reservationRooms: HistoryRoomProps[];
 }
 
 function ReservationHistoryPage() {
-  // const [reservationHistory, setReservationHistory] = useState<ReservationHistory[]>();
+  const [reservationHistory, setReservationHistory] = useState<ReservationHistory[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { getData } = useReservationApi();
 
@@ -30,7 +35,7 @@ function ReservationHistoryPage() {
     try {
       const data = await getData("reservations");
       setIsLoading(false);
-      // setReservationHistory(data.data);
+      setReservationHistory(data.data);
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -38,6 +43,8 @@ function ReservationHistoryPage() {
       setIsLoading(false);
     }
   };
+
+  console.log(reservationHistory);
 
   useEffect(() => {
     fetchData();
@@ -47,8 +54,8 @@ function ReservationHistoryPage() {
     <>
       {isLoading && <Loading />}
       <PageContainer>
-        {Dummy?.length !== 0 ? (
-          Dummy?.map((item, index) => {
+        {reservationHistory?.length !== 0 ? (
+          reservationHistory?.map((item, index) => {
             return <ReservationHistoryItem key={index} item={item} />;
           })
         ) : (
@@ -60,47 +67,6 @@ function ReservationHistoryPage() {
 }
 
 export default ReservationHistoryPage;
-
-const Dummy: ReservationHistory[] = [
-  {
-    id: 1,
-    created_at: "2023.11.29(수)",
-    paymentType: "KAKAO_PAY",
-    reservation_rooms: [
-      {
-        id: 4930294802894,
-        room_id: 1,
-        check_in: "2023.11.29(수)",
-        check_out: "2023.11.30(목)",
-        guest_number: 2,
-        status: "RESERVED",
-      },
-      {
-        id: 4930294802823,
-        room_id: 1,
-        check_in: "2023.11.29(수)",
-        check_out: "2023.11.30(금)",
-        guest_number: 1,
-        status: "RESERVED",
-      },
-    ],
-  },
-  {
-    id: 1,
-    created_at: "2023.11.30(수)",
-    paymentType: "CARD",
-    reservation_rooms: [
-      {
-        id: 4930294802894,
-        room_id: 1,
-        check_in: "2023.12.01(금)",
-        check_out: "2023.12.02(토)",
-        guest_number: 2,
-        status: "RESERVED",
-      },
-    ],
-  },
-];
 
 const PageContainer = styled.section`
   display: flex;

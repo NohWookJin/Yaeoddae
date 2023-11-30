@@ -4,6 +4,8 @@ import styled from "styled-components";
 // component
 import DateInfoWrapper from "./DateInfoWrapper";
 import { SectionContainer, SectionDivider } from "./reservationStyles";
+
+// function
 import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { calculateNumberOfNights, formatDate } from "../../utils/formatOrCalculateData";
 
