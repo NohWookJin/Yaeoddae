@@ -31,8 +31,11 @@ export const useDetailAPI = () => {
       const { data } = response.data;
 
       setHotelAccommodation(data);
+
+      return data;
     } catch (e) {
       console.error(e);
+      throw e;
     }
   };
 
@@ -50,6 +53,8 @@ export const useDetailAPI = () => {
       const { data } = response.data;
 
       setAccommodationRooms(data);
+
+      return data;
     } catch (e) {
       console.error(e);
     }
@@ -66,8 +71,6 @@ export const useDetailAPI = () => {
   ) => {
     try {
       const token = localStorage.getItem("token");
-
-      console.log(guestNumber);
 
       const response = await axios.post(
         `${API_BASE_URL}/carts`,
@@ -90,6 +93,8 @@ export const useDetailAPI = () => {
       if (response) {
         navigate("/cart");
       }
+
+      return response;
     } catch (e) {
       console.error(e);
     }
