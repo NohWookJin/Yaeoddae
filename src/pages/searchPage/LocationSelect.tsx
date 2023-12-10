@@ -8,29 +8,29 @@ interface Props {
   setSearchParams: SetURLSearchParams;
 }
 
+const optionList = [
+  { label: "전체", value: "" },
+  { label: "서울", value: "SEOUL" },
+  { label: "인천", value: "INCHEON" },
+  { label: "대전", value: "DAEJEON" },
+  { label: "대구", value: "DAEGU" },
+  { label: "광주", value: "GWANGJU" },
+  { label: "부산", value: "BUSAN" },
+  { label: "울산", value: "ULSAN" },
+  { label: "세종", value: "SEJONG" },
+  { label: "경기", value: "GYEONGGI" },
+  { label: "강원", value: "GANGWON" },
+  { label: "충북", value: "CHUNGBUK" },
+  { label: "충남", value: "CHUNGNAM" },
+  { label: "경북", value: "GYEONGBUK" },
+  { label: "경남", value: "GYEONGNAM" },
+  { label: "전북", value: "JEONBUK" },
+  { label: "전남", value: "JEONNAM" },
+  { label: "제주", value: "JEJU" },
+];
+
 function LocationSelect({ areaCode, setSearchParams }: Props) {
   const selectRef = useRef<SelectInstance>(null);
-
-  const optionList = [
-    { label: "전체", value: "" },
-    { label: "서울", value: "SEOUL" },
-    { label: "인천", value: "INCHEON" },
-    { label: "대전", value: "DAEJEON" },
-    { label: "대구", value: "DAEGU" },
-    { label: "광주", value: "GWANGJU" },
-    { label: "부산", value: "BUSAN" },
-    { label: "울산", value: "ULSAN" },
-    { label: "세종", value: "SEJONG" },
-    { label: "경기", value: "GYEONGGI" },
-    { label: "강원", value: "GANGWON" },
-    { label: "충북", value: "CHUNGBUK" },
-    { label: "충남", value: "CHUNGNAM" },
-    { label: "경북", value: "GYEONGBUK" },
-    { label: "경남", value: "GYEONGNAM" },
-    { label: "전북", value: "JEONBUK" },
-    { label: "전남", value: "JEONNAM" },
-    { label: "제주", value: "JEJU" },
-  ];
 
   const location = optionList.filter((option) => option.value === areaCode);
 
