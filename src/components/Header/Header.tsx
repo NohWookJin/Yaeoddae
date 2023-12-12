@@ -16,7 +16,7 @@ import ArrowLeft from "../../assets/icons/arrowLeft.svg?react";
 
 function Header() {
   const navigate = useNavigate();
-  const currentPath = useLocation().pathname;
+  const { pathname: currentPath } = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleListClick = () => {
@@ -41,9 +41,9 @@ function Header() {
       return (
         <>
           <HeaderLayout>
-            <ListSVG onClick={handleListClick} />
-            <HeaderLogoSVG onClick={handleTitleClick} />
-            <CartSVG onClick={handleCartClick} />
+            <ListBtn onClick={handleListClick} />
+            <HeaderLogoBtn onClick={handleTitleClick} />
+            <CartBtn onClick={handleCartClick} />
           </HeaderLayout>
           <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         </>
@@ -52,9 +52,9 @@ function Header() {
     case "detail":
       return (
         <HeaderLayout $isBorderBottom>
-          <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
-          <HeaderLogoSVG onClick={handleTitleClick} />
-          <CartSVG onClick={handleCartClick} />
+          <ArrowLeftBtn id="arrowLeft" onClick={handleArrowLeftClick} />
+          <HeaderLogoBtn onClick={handleTitleClick} />
+          <CartBtn onClick={handleCartClick} />
         </HeaderLayout>
       );
 
@@ -62,7 +62,7 @@ function Header() {
       return (
         <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
-            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+            <ArrowLeftBtn id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>장바구니</HeaderTitle>
           </HeaderLeftBox>
         </HeaderLayout>
@@ -72,7 +72,7 @@ function Header() {
       return (
         <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
-            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+            <ArrowLeftBtn id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>객실상세</HeaderTitle>
           </HeaderLeftBox>
         </HeaderLayout>
@@ -82,7 +82,7 @@ function Header() {
       return (
         <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
-            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+            <ArrowLeftBtn id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>내 정보 관리</HeaderTitle>
           </HeaderLeftBox>
         </HeaderLayout>
@@ -92,7 +92,7 @@ function Header() {
       return (
         <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
-            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+            <ArrowLeftBtn id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>예약</HeaderTitle>
           </HeaderLeftBox>
         </HeaderLayout>
@@ -102,7 +102,7 @@ function Header() {
       return (
         <HeaderLayout $isBorderBottom>
           <HeaderLeftBox>
-            <ArrowLeftSVG id="arrowLeft" onClick={handleArrowLeftClick} />
+            <ArrowLeftBtn id="arrowLeft" onClick={handleArrowLeftClick} />
             <HeaderTitle>예약 내역 조회</HeaderTitle>
           </HeaderLeftBox>
         </HeaderLayout>
@@ -139,23 +139,53 @@ const HeaderLeftBox = styled.div`
   gap: 0.5rem;
 `;
 
+type BtnProps = {
+  onClick: () => void;
+  id?: string;
+};
+
 const HeaderLogoSVG = styled(HeaderLogo)`
-  cursor: pointer;
   fill: ${({ theme }) => theme.Color.mainColor};
   margin: 0 0 0 0.25rem;
 `;
 
-const ArrowLeftSVG = styled(ArrowLeft)`
-  cursor: pointer;
-`;
+const HeaderLogoBtn = ({ onClick }: BtnProps) => {
+  return (
+    <button onClick={onClick}>
+      <HeaderLogoSVG />
+    </button>
+  );
+};
 
-const ListSVG = styled(List)`
-  cursor: pointer;
-`;
+const ArrowLeftSVG = styled(ArrowLeft)``;
 
-const CartSVG = styled(Cart)`
-  cursor: pointer;
-`;
+const ArrowLeftBtn = ({ onClick, id }: BtnProps) => {
+  return (
+    <button id={id} onClick={onClick}>
+      <ArrowLeftSVG />
+    </button>
+  );
+};
+
+const ListSVG = styled(List)``;
+
+const ListBtn = ({ onClick }: BtnProps) => {
+  return (
+    <button onClick={onClick}>
+      <ListSVG />
+    </button>
+  );
+};
+
+const CartSVG = styled(Cart)``;
+
+const CartBtn = ({ onClick }: BtnProps) => {
+  return (
+    <button onClick={onClick}>
+      <CartSVG />
+    </button>
+  );
+};
 
 const HeaderTitle = styled.p`
   font-weight: 700;
