@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 function MyPage() {
   const [userEmail, setUserEmail] = useState("");
@@ -34,27 +35,29 @@ function MyPage() {
         return;
       }
 
-      const response = await fetch("https://travel-server.up.railway.app/members/mypage", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const response = await axios.patch(
+        "https://travel-server.up.railway.app/members/mypage",
+        {
           email: userEmail,
           name: userName,
-        }),
-      });
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      if (response.ok) {
-        const responseData = await response.json(); // JSON 형태로 변환
-        console.log("User info updated successfully");
-        localStorage.setItem("userName", responseData.name); // responseData.name을 사용하여 이름 정보 저장
+      if (response.data) {
+        const responseData = response.data;
+        console.log("사용자 정보가 성공적으로 업데이트되었습니다");
+        localStorage.setItem("userName", responseData.name);
       } else {
-        console.error("Failed to update user info");
+        console.error("사용자 정보 업데이트에 실패했습니다");
       }
     } catch (error) {
-      console.error("There was an error!", error);
+      console.error("오류가 발생했습니다!", error);
     }
 
     toggleEdit();
@@ -72,25 +75,23 @@ function MyPage() {
         return;
       }
 
-      const response = await fetch("https://travel-server.up.railway.app/members/mypage", {
-        method: "GET",
+      const response = await axios.get("https://travel-server.up.railway.app/members/mypage", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (response.ok) {
-        const responseData = await response.json();
-        const { email, name, phone } = responseData.data;
+      if (response.data) {
+        const { email, name, phone } = response.data.data;
         setUserEmail(email);
         setUserName(name);
         setUserPhone(phone);
       } else {
-        console.error("Failed to fetch user data");
+        console.error("사용자 데이터를 가져오지 못했습니다");
       }
     } catch (error) {
-      console.error("There was an error!", error);
+      console.error("오류가 발생했습니다!", error);
     }
   };
 
