@@ -1,4 +1,4 @@
-export interface ReservationRoomsProps {
+interface ReservationRoomsProps {
   accommodationId: number;
   accommodationName: string;
   areaCode: string;
@@ -8,16 +8,16 @@ export interface ReservationRoomsProps {
   guestNumber: number;
 }
 
-export interface SingleReservation {
+interface SingleReservation {
   paymentType: string;
   reservationRooms: ReservationRoomsProps[];
 }
 
-export interface CartReservation extends SingleReservation {
+interface CartReservation extends SingleReservation {
   cartIds: number[];
 }
 
-export interface StateInfo {
+interface StateInfo {
   accomodationId: string;
   accomodationName: string;
   areaCode: string;
@@ -30,7 +30,7 @@ export interface StateInfo {
   roomTypeId: number;
 }
 
-export interface ReservationInfo {
+interface ReservationInfo {
   id: number;
   guestNumber: number;
   checkIn: string;
@@ -39,7 +39,7 @@ export interface ReservationInfo {
   accommodationGetResponse: AccommodationInfo;
 }
 
-export interface RoomInfo {
+interface RoomInfo {
   id: number;
   roomTypeId: number;
   name: string;
@@ -51,7 +51,7 @@ export interface RoomInfo {
   accommodation: null;
 }
 
-export interface AccommodationInfo {
+interface AccommodationInfo {
   AccommodationId: number;
   accommodationType: string;
   name: string;
@@ -65,3 +65,13 @@ export interface AccommodationInfo {
   image: string;
   description: string;
 }
+
+export type {
+  ReservationRoomsProps,
+  SingleReservation,
+  CartReservation,
+  StateInfo,
+  ReservationInfo,
+  RoomInfo,
+  AccommodationInfo,
+};

@@ -24,7 +24,7 @@ import { addCommasToNumber } from "../../utils/addCommasToNumber";
 import { scrollToTop } from "../../utils/scrollToTop";
 
 //type
-import {
+import type {
   CartReservation,
   ReservationInfo,
   ReservationRoomsProps,

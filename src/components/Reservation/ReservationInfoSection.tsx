@@ -13,7 +13,7 @@ import { calculateNumberOfNights, formatDate } from "../../utils/formatOrCalcula
 import personIcon from "../../assets/icons/person.svg";
 
 //type
-import { ReservationInfo } from "../../types/reservationTypes";
+import type { ReservationInfo } from "../../types/reservationTypes";
 
 function ReservationInfoSection({
   reservationInfoList,
