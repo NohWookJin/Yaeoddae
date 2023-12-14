@@ -24,11 +24,9 @@ export const useDetailAPI = () => {
     setHotelAccommodation: SetAccommodationType
   ) => {
     try {
-      const response = await axios.get(
+      const { data } = await axios.get(
         `${API_BASE_URL}/accommodations?keyword=${keyword}&area-code=${areaCode}`
       );
-
-      const { data } = response.data;
 
       setHotelAccommodation(data);
 
@@ -46,11 +44,9 @@ export const useDetailAPI = () => {
     checkOut: string
   ) => {
     try {
-      const response = await axios.get(
+      const { data } = await axios.get(
         `${API_BASE_URL}/rooms/${accommodationId}?check-in=${checkIn}&check-out=${checkOut}`
       );
-
-      const { data } = response.data;
 
       setAccommodationRooms(data);
 
@@ -90,7 +86,7 @@ export const useDetailAPI = () => {
         }
       );
 
-      if (response) {
+      if (response && response.status >= 200 && response.status < 300) {
         navigate("/cart");
       }
 

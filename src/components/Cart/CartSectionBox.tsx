@@ -15,7 +15,7 @@ function CartSectionBox() {
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkboxes, setCheckboxes] = useState<Array<boolean>>([]);
 
-  const list = cartList((state) => state.list);
+  const { list } = cartList();
   const { addCartItem } = pickCartList();
 
   const handleTotalCheckboxChange = () => {
@@ -47,7 +47,9 @@ function CartSectionBox() {
     setIsCheckedAll(updatedCheckboxes.every((isChecked) => isChecked));
 
     const { id, roomGetResponse } = list[index];
-    handleCheckboxChange(id, roomGetResponse.price as number, updatedCheckboxes[index]);
+    if (roomGetResponse.price !== undefined) {
+      handleCheckboxChange(id, roomGetResponse.price, updatedCheckboxes[index]);
+    }
   };
 
   useEffect(() => {

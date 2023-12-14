@@ -28,13 +28,16 @@ const useCartAPI = () => {
           checkOut: string;
           price: number;
         }) => {
-          const { checkIn, checkOut } = item;
-          const { price } = item.roomGetResponse;
+          const {
+            checkIn,
+            checkOut,
+            roomGetResponse: { price },
+          } = item;
           const daysDiff = moment(checkOut, "YYYY-MM-DD").diff(
             moment(checkIn, "YYYY-MM-DD"),
             "days"
           );
-          const updatedPrice = Number(daysDiff) * price;
+          const updatedPrice = daysDiff * price;
 
           return {
             ...item,
