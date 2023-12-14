@@ -1,11 +1,6 @@
-// library
 import axios from "axios";
 import { useNavigate } from "react-router";
-
-// config
 import { API_BASE_URL } from "./config";
-
-// type
 import { CartReservation, SingleReservation } from "../types/reservationTypes";
 
 const useReservationApi = () => {
@@ -18,7 +13,24 @@ const useReservationApi = () => {
     }
   };
 
-  const instance = axios.create();
+  const instance = axios.create({
+    baseURL: API_BASE_URL,
+    headers: { Authorization: `Bearer  + ${getAuth()}` },
+  });
+
+  instance.interceptors.request.use(
+    (config) => {
+      const token = getAuth();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      console.log("interceptor request error: ", error);
+      Promise.reject(error);
+    }
+  );
 
   instance.interceptors.response.use(
     (response) => {
@@ -27,7 +39,6 @@ const useReservationApi = () => {
     (error) => {
       const redirectPath = location.pathname + location.search;
       const handle401 = () => {
-        // 토큰 만료 시 로그인 화면으로 보냄
         alert("인증 수단이 만료되었습니다. 다시 로그인 후 이용해 주세요");
         navigate(`/login?redirectUrl=${redirectPath}`);
       };
@@ -41,36 +52,24 @@ const useReservationApi = () => {
     }
   );
 
-  /** endPoint를 입력하면 해당 주소로 get 요청 후 res.data를 return하는 함수 */
   const getData = async (endPoint: string) => {
-    const apiURL = `${API_BASE_URL}/${endPoint}`;
-    const config = {
-      headers: { Authorization: `Bearer ${getAuth()}` },
-    };
-    const result = await instance.get(apiURL, config);
+    const apiURL = `/${endPoint}`;
+    const { data } = await instance.get(apiURL);
 
-    return result.data;
+    return data;
   };
 
-  const postSingleReservation = async (data: SingleReservation) => {
-    const apiURL = `${API_BASE_URL}/reservations`;
-    const config = {
-      headers: { Authorization: `Bearer ${getAuth()}` },
-    };
+  const postSingleReservation = async (postData: SingleReservation) => {
+    const apiURL = `/reservations`;
+    const { data } = await instance.post(apiURL, postData);
 
-    const result = await instance.post(apiURL, data, config);
-
-    return result.data;
+    return data;
   };
-  const postCartReservation = async (data: CartReservation) => {
-    const apiURL = `${API_BASE_URL}/reservations/from-cart`;
-    const config = {
-      headers: { Authorization: `Bearer ${getAuth()}` },
-    };
+  const postCartReservation = async (postData: CartReservation) => {
+    const apiURL = `/reservations/from-cart`;
+    const { data } = await instance.post(apiURL, postData);
 
-    const result = await instance.post(apiURL, data, config);
-
-    return result.data;
+    return data;
   };
 
   return { getData, postSingleReservation, postCartReservation };
