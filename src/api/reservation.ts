@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { API_BASE_URL } from "./config";
-import { CartReservation, SingleReservation } from "../types/reservationTypes";
+import type { CartReservation, SingleReservation } from "../types/reservationTypes";
 
 const useReservationApi = () => {
   const navigate = useNavigate();
