@@ -28,7 +28,7 @@ export const useDetailAPI = () => {
         `${API_BASE_URL}/accommodations?keyword=${keyword}&area-code=${areaCode}`
       );
 
-      setHotelAccommodation(data);
+      setHotelAccommodation(data.data);
 
       return data;
     } catch (e) {
@@ -48,7 +48,7 @@ export const useDetailAPI = () => {
         `${API_BASE_URL}/rooms/${accommodationId}?check-in=${checkIn}&check-out=${checkOut}`
       );
 
-      setAccommodationRooms(data);
+      setAccommodationRooms(data.data);
 
       return data;
     } catch (e) {
