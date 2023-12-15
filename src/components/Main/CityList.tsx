@@ -9,18 +9,13 @@ function CityList({ areacode }: CityListProp) {
     return axios.get(`${API_BASE_URL}/accommodations/page/1?keyword=_&area-code=${areacode}`);
   };
 
-  const { data, isError, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ["main", areacode],
     queryFn: fetchData,
     suspense: true,
   });
 
   const res: ItemType[] = data?.data.data.slice(0, 4);
-
-  if (isError) {
-    const errorMessage = (error as Error).message;
-    return <ListContainer>{errorMessage}</ListContainer>;
-  }
 
   return (
     <ListContainer>
