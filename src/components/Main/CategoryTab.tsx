@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { areaCategory } from "../../pages/mainPage/MainPage";
+import { areaCategory } from "../Main/Constant/areaCategory";
 
 function CategoryTab({ setCurrentPage }: CategoryTabProps) {
   const handleClick = (index: number) => {

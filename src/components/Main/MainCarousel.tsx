@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import CityList from "./CityList";
-import { areaCategory } from "../../pages/mainPage/MainPage";
+import { areaCategory } from "../Main/Constant/areaCategory";
 
 function MainCarousel({ currentPage }: CurrentPageProp) {
   return (
