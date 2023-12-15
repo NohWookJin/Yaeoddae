@@ -19,16 +19,16 @@ interface Props {
 }
 
 function DatePickModal({ isOpen, setIsOpen }: Props) {
-  const today = moment(new Date()).format("MM월 DD일");
-  const member = useCountStore((state) => state.counts);
+  const today = moment().format("MM월 DD일");
+  const { counts: memberCounts } = useCountStore();
 
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [startDateForReRendering, setStartDateForReRendering] = useState<string>("");
-  const [endDateForReRendering, setEndDateForReRendering] = useState<string>("");
+  const [checkIn, setCheckIn] = useState<string | null>(null);
+  const [checkOut, setCheckOut] = useState<string | null>(null);
+  const [checkInForRerendering, setCheckInForRerendering] = useState("");
+  const [checkOutForRerendering, setCheckOutForRerendering] = useState("");
 
-  const [queryStartDate, setQueryStartDate] = useState<string>("");
-  const [queryEndDate, setQueryEndDate] = useState<string>("");
+  const [queryStartDate, setQueryStartDate] = useState("");
+  const [queryEndDate, setQueryEndDate] = useState("");
 
   const params = useParams();
   const { search } = useLocation();
@@ -40,17 +40,17 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
     const endDateFormat = moment(e[1]).format("MM월 DD일");
     setQueryStartDate(moment(e[0]).format("YYMMDD"));
     setQueryEndDate(moment(e[1]).format("YYMMDD"));
-    setStartDate(startDateFormat);
-    setEndDate(endDateFormat);
-    setStartDateForReRendering(moment(e[0]).format("YYMMDD"));
-    setEndDateForReRendering(moment(e[1]).format("YYMMDD"));
+    setCheckIn(startDateFormat);
+    setCheckOut(endDateFormat);
+    setCheckInForRerendering(moment(e[0]).format("YYMMDD"));
+    setCheckOutForRerendering(moment(e[1]).format("YYMMDD"));
   };
 
   const checkInAndCheckOut = {
-    checkIn: startDate,
-    checkOut: endDate,
-    checkInForReRendering: startDateForReRendering,
-    checkOutForReRendering: endDateForReRendering,
+    checkIn: checkIn,
+    checkOut: checkOut,
+    checkInForReRendering: checkInForRerendering,
+    checkOutForReRendering: checkOutForRerendering,
   };
 
   const moveDetail = () => {
@@ -59,12 +59,14 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
     const keyword = queryParams.get("keyword");
     const areaCode = queryParams.get("area-code");
 
-    history.replaceState(
-      { checkInAndCheckOut },
-      "",
-      `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${queryStartDate}&checkOut=${queryEndDate}&memberCount=${member}`
-    );
-    setIsOpen((prev) => !prev);
+    if (keyword !== null && areaCode !== null) {
+      history.replaceState(
+        { checkInAndCheckOut },
+        "",
+        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${queryStartDate}&checkOut=${queryEndDate}&memberCount=${memberCounts}`
+      );
+      setIsOpen((prev) => !prev);
+    }
   };
 
   const handleBackGroundClick = () => {
@@ -92,25 +94,25 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
           locale="ko-KO"
           next2Label={null}
           prev2Label={null}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          formatDay={(locale, date) => moment(date).format("D")}
+          formatDay={(_, date) => moment(date).format("D")}
           showNeighboringMonth={false}
         />
       </CalendarContainer>
       <ModalBottom>
         <ModalBottomUp>
           <span>선택 날짜</span>
-          {startDate === "" ? (
-            <div>
-              <span>{today} ~ </span>
-            </div>
-          ) : (
-            <div>
-              <span>{startDate} ~ </span>
-              <span>{endDate}</span>
-            </div>
-          )}
+          <div>
+            {checkIn === null ? (
+              <>
+                <span>{today} ~ </span>
+              </>
+            ) : (
+              <>
+                <span>{checkIn} ~ </span>
+                <span>{checkOut}</span>
+              </>
+            )}
+          </div>
         </ModalBottomUp>
         <ModalBottomDown>
           <div onClick={moveDetail}>선택하기</div>
@@ -123,20 +125,24 @@ function DatePickModal({ isOpen, setIsOpen }: Props) {
 export default DatePickModal;
 
 const ModalLayout = styled.div<{ $isOpen: boolean }>`
-  z-index: 2;
-  background-color: ${({ theme }) => theme.Color.backgroundColor};
-  transition: all 0.75s ease;
+  width: 375px;
+  height: 100%;
+
   position: fixed;
+  left: 50%;
   bottom: -100%;
+  transform: translateX(-50%);
+  z-index: 2;
+
   ${(props) =>
     props.$isOpen &&
     css`
       bottom: 0;
     `}
-  width: 375px;
-  height: 100%;
-  transform: translateX(-50%);
-  left: 50%;
+
+  transition: all 0.75s ease;
+
+  background-color: ${({ theme }) => theme.Color.backgroundColor};
 `;
 
 const ModalTop = styled.div`

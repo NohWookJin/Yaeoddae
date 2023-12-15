@@ -26,7 +26,7 @@ export interface AccommodationRoom {
   };
 }
 
-interface accommodationSend {
+interface AccommodationSending {
   roomTypeId: number;
   accommodationId: number;
   guestNumber: number;
@@ -39,7 +39,7 @@ interface accommodationSend {
 function DetailSectionBottom({ room }: AccommodationRoom) {
   const { name, stock, image, capacity, description, roomTypeId, price } = room;
 
-  const [currentState, setCurrentState] = useState<accommodationSend>({
+  const [currentState, setCurrentState] = useState<AccommodationSending>({
     roomTypeId: roomTypeId,
     accommodationId: 0,
     guestNumber: 0,
@@ -54,10 +54,10 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
   const formatPrice = price?.toLocaleString();
 
   const roomState = {
-    name: name,
-    description: description,
-    image: image,
-    capacity: capacity,
+    name,
+    description,
+    image,
+    capacity,
   };
 
   const navigate = useNavigate();
@@ -96,24 +96,27 @@ function DetailSectionBottom({ room }: AccommodationRoom) {
 
   const sendCart = async () => {
     const searchParams = new URLSearchParams(location.search);
-    const checkIn = String(`20${searchParams.get("checkIn")}`);
-    const checkOut = String(`20${searchParams.get("checkOut")}`);
+    const checkIn = `20${searchParams.get("checkIn")}`;
+    const checkOut = `20${searchParams.get("checkOut")}`;
     const accommodationId = Number(params.id);
     const guestNumber = Number(searchParams.get("memberCount"));
     const keyword = String(searchParams.get("keyword"));
     const areaCode = String(searchParams.get("area-code"));
-    setCurrentState({
-      roomTypeId: roomTypeId,
-      checkIn: checkIn,
-      checkOut: checkOut,
-      accommodationId: accommodationId,
-      guestNumber: guestNumber,
-      keyword: keyword,
-      areaCode: areaCode,
-    });
-    setTimeout(() => {
-      sendQuery.refetch();
-    }, 300);
+
+    if (accommodationId !== null && guestNumber !== null && keyword !== null && areaCode !== null) {
+      setCurrentState({
+        roomTypeId: roomTypeId,
+        checkIn: checkIn,
+        checkOut: checkOut,
+        accommodationId: accommodationId,
+        guestNumber: guestNumber,
+        keyword: keyword,
+        areaCode: areaCode,
+      });
+      setTimeout(() => {
+        sendQuery.refetch();
+      }, 300);
+    }
   };
 
   const moveReservation = () => {

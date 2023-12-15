@@ -16,9 +16,11 @@ function CartResevation() {
   const navigate = useNavigate();
 
   const moveReservation = () => {
-    const cartIdCollection = cart.map((item) => item.id);
-    const cartIdsCollectionAsString = cartIdCollection.join(",");
-    const cartIdToReservation = cartIdsCollectionAsString.split(",").map(String);
+    const cartIdToReservation = cart
+      .map((item) => item.id)
+      .join(",")
+      .split(",")
+      .map(String);
 
     navigate(`/reservation?cartIds=${cartIdToReservation}`);
     resetCart();

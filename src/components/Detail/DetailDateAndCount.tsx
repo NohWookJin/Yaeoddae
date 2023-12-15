@@ -19,9 +19,7 @@ import Calendar from "../../assets/icons/Calendar.svg?react";
 import styled from "styled-components";
 
 function DetailDateAndCount() {
-  const member = useCountStore((state) => state.counts);
-  const increaseMember = useCountStore((state) => state.increaseCount);
-  const decreaseMember = useCountStore((state) => state.decreaseCount);
+  const { counts: memberCount, increaseCount, decreaseCount } = useCountStore();
 
   const [checkInAfter, setCheckInAfter] = useState<string>("");
   const [checkOutAfter, setCheckOutAfter] = useState<string>("");
@@ -77,19 +75,19 @@ function DetailDateAndCount() {
       history.replaceState(
         null,
         "",
-        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${member}`
+        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${asTodayCheckIn}&checkOut=${asTodayCheckOut}&memberCount=${memberCount}`
       );
     } else {
       history.replaceState(
         null,
         "",
-        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${checkInAfter}&checkOut=${checkOutAfter}&memberCount=${member}`
+        `/detail/${params.id}?keyword=${keyword}&area-code=${areaCode}&checkIn=${checkInAfter}&checkOut=${checkOutAfter}&memberCount=${memberCount}`
       );
     }
   }, [
     checkIn,
     checkOut,
-    member,
+    memberCount,
     params.id,
     asTodayCheckIn,
     asTodayCheckOut,
@@ -131,13 +129,13 @@ function DetailDateAndCount() {
         <MemberCountSectionLeft>
           <MemberSVG />
           <div>
-            <span>{member}명</span>
+            <span>{memberCount}명</span>
           </div>
         </MemberCountSectionLeft>
         <div>
-          <button onClick={increaseMember}>증가</button>
-          {member > 1 && (
-            <button onClick={decreaseMember} style={{ paddingLeft: "0.3rem" }}>
+          <button onClick={increaseCount}>증가</button>
+          {memberCount > 1 && (
+            <button onClick={decreaseCount} style={{ paddingLeft: "0.3rem" }}>
               감소
             </button>
           )}
